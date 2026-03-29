@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>En Vivo — Cronos Sport Media</title>
+  <meta name="description" content="Escucha la radio de Cronos Sport Media en vivo las 24 horas y sigue nuestras transmisiones deportivas en tiempo real por YouTube.">
+  <meta property="og:title" content="En Vivo — Cronos Sport Media">
+  <meta property="og:description" content="Radio en vivo 24/7 y transmisiones deportivas en tiempo real.">
+  <meta property="og:type" content="website">
+  <!-- [PENDIENTE CONFIRMAR: og:url y og:image] -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <!-- [PENDIENTE CONFIRMAR: favicon — DEC-P05] -->
+
+  <style>
+    /* ================================================
+       RESET
+       ================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    ul, ol { list-style: none; }
+    a { text-decoration: none; color: inherit; }
+    img, iframe { max-width: 100%; display: block; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ================================================
+       VARIABLES — BRAND.md
+       ================================================ */
+    :root {
+      --color-primary:    #0D1B2A;
+      --color-secondary:  #1B2D45;
+      --color-accent:     #FF6B35;
+      --color-accent-alt: #00D4FF;
+      --color-text:       #F0F0F0;
+      --color-text-muted: #A0AEC0;
+      --color-live:       #FF0000;
+      --font-heading:     'Montserrat', sans-serif;
+      --font-body:        'Inter', sans-serif;
+      --header-height:    64px;
+      --max-width:        1120px;
+      --radius:           8px;
+      --radius-sm:        4px;
+    }
+
+    /* ================================================
+       GLOBAL
+       ================================================ */
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; color: var(--color-text); background: var(--color-primary); overflow-x: hidden; }
+    h1, h2, h3 { font-family: var(--font-heading); line-height: 1.2; }
+    h1 { font-weight: 800; font-size: 1.75rem; }
+    h2 { font-weight: 700; font-size: 1.5rem; }
+    h3 { font-weight: 700; font-size: 1.25rem; }
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--color-accent); color: #fff;
+      padding: .875rem 1.75rem; border-radius: 6px;
+      font-family: var(--font-heading); font-weight: 700; font-size: 1rem;
+      transition: background .2s, transform .15s, box-shadow .2s; min-height: 44px;
+    }
+    .btn-primary:hover { background: #e55a28; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,.35); }
+
+    .section-label { font-family: var(--font-heading); font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--color-accent); margin-bottom: .75rem; }
+    .divider { width: 48px; height: 3px; background: var(--color-accent); border-radius: 2px; margin: 0 auto 1rem; }
+
+    .live-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--color-live); color: white; padding: .25rem .75rem;
+      border-radius: var(--radius-sm); font-size: .75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .05em; font-family: var(--font-heading);
+    }
+    .live-badge::before { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse-dot 1.5s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    :focus-visible { outline: 2px solid var(--color-accent-alt); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+    /* ================================================
+       SCROLL ANIMATIONS
+       ================================================ */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .stagger-1 { transition-delay: .1s; }
+    .stagger-2 { transition-delay: .2s; }
+
+    /* ================================================
+       HEADER
+       ================================================ */
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: rgba(13,27,42,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+    .header__logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; }
+    .header__logo span { color: var(--color-accent); }
+
+    .nav { display: none; }
+    .nav__list { display: flex; align-items: center; gap: 2rem; }
+    .nav__link { font-family: var(--font-body); font-weight: 500; font-size: .9rem; color: var(--color-text-muted); transition: color .2s; padding: .25rem 0; position: relative; }
+    .nav__link:hover, .nav__link--active { color: var(--color-text); }
+    .nav__link--active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: var(--color-accent); border-radius: 1px; }
+
+    .nav-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 10px; z-index: 110; }
+    .nav-toggle__bar { display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) { opacity: 0; }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav--mobile-open { display: flex; }
+    .nav--mobile-open .nav__list { position: fixed; inset: 0; flex-direction: column; justify-content: center; gap: 2.5rem; background: var(--color-primary); z-index: 105; }
+    .nav--mobile-open .nav__link { font-size: 1.25rem; color: var(--color-text); }
+
+    /* ================================================
+       PAGE HERO — interior (no fullscreen, compacto)
+       ================================================ */
+    .page-hero {
+      padding: calc(var(--header-height) + 3rem) 1.25rem 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,107,53,.04) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .page-hero::before {
+      content: ''; position: absolute; top: -60px; right: -80px;
+      width: 320px; height: 320px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,53,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .page-hero__eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--font-heading); font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .14em; color: var(--color-accent-alt);
+      border: 1px solid rgba(0,212,255,.2); padding: .3rem .9rem; border-radius: 20px;
+      margin-bottom: 1rem;
+      opacity: 0; animation: fade-up .6s ease .1s forwards;
+    }
+    .page-hero__title {
+      font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: .5rem;
+      opacity: 0; animation: fade-up .6s ease .2s forwards;
+    }
+    .page-hero__title em { font-style: normal; color: var(--color-accent); }
+    .page-hero__desc {
+      color: var(--color-text-muted); font-size: 1rem; max-width: 520px; margin: 0 auto;
+      opacity: 0; animation: fade-up .6s ease .3s forwards;
+    }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ================================================
+       SECCIÓN RADIO
+       ================================================ */
+    .radio-section { padding: 4rem 1.25rem; }
+    .section-header { text-align: center; margin-bottom: 2.5rem; }
+
+    .radio-player {
+      max-width: 680px; margin: 0 auto;
+      background: var(--color-secondary);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,.07);
+      position: relative;
+      overflow: hidden;
+    }
+    .radio-player::before {
+      content: ''; position: absolute; top: -60px; left: -60px;
+      width: 200px; height: 200px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,53,.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .radio-player__badge { display: flex; justify-content: center; margin-bottom: 1.25rem; }
+    .radio-player__icon {
+      width: 64px; height: 64px; margin: 0 auto 1.25rem;
+      border-radius: 50%; background: rgba(255,107,53,.15);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .radio-player__icon svg { width: 32px; height: 32px; fill: var(--color-accent); }
+    .radio-player__title { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700; margin-bottom: .5rem; }
+    .radio-player__sub { color: var(--color-text-muted); font-size: .9rem; margin-bottom: 1.5rem; }
+
+    /* Placeholder info mientras no hay embed */
+    .radio-placeholder {
+      background: rgba(255,107,53,.06);
+      border: 1px dashed rgba(255,107,53,.25);
+      border-radius: 6px;
+      padding: 1.25rem;
+      font-size: .85rem;
+      color: var(--color-text-muted);
+    }
+    .radio-placeholder strong { color: var(--color-accent); display: block; margin-bottom: .25rem; font-family: var(--font-heading); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
+
+    /* ================================================
+       SECCIÓN YOUTUBE / TRANSMISIÓN EN VIVO
+       ================================================ */
+    .live-section {
+      padding: 4rem 1.25rem;
+      background: var(--color-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    .live-section::before {
+      content: ''; position: absolute; bottom: -80px; right: -80px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,0,0,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Contenedor responsive 16:9 */
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--color-primary);
+      border: 1px solid rgba(255,255,255,.07);
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .video-container iframe {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%; border: 0;
+    }
+
+    /* Estado: sin transmisión activa */
+    .no-live {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem; text-align: center; padding: 2rem;
+    }
+    .no-live__icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(255,0,0,.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .no-live__icon svg { width: 26px; height: 26px; stroke: var(--color-live); }
+    .no-live__title { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; }
+    .no-live__sub { color: var(--color-text-muted); font-size: .875rem; max-width: 360px; }
+
+    /* ================================================
+       CÓMO SEGUIRNOS — sección info
+       ================================================ */
+    .follow-section { padding: 4rem 1.25rem; }
+    .follow-grid { display: grid; gap: 1.25rem; max-width: var(--max-width); margin: 0 auto; }
+
+    .follow-card {
+      background: var(--color-secondary); border-radius: var(--radius);
+      padding: 1.5rem; border: 1px solid rgba(255,255,255,.05);
+      display: flex; align-items: flex-start; gap: 1rem;
+      transition: border-color .25s, transform .2s;
+    }
+    .follow-card:hover { border-color: rgba(0,212,255,.2); transform: translateY(-2px); }
+    .follow-card__icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      border-radius: 10px; background: rgba(0,212,255,.1);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .follow-card__icon svg { width: 20px; height: 20px; stroke: var(--color-accent-alt); }
+    .follow-card__title { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: .25rem; }
+    .follow-card__text { color: var(--color-text-muted); font-size: .875rem; }
+
+    /* ================================================
+       FOOTER
+       ================================================ */
+    .footer { padding: 3rem 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,.06); text-align: center; }
+    .footer__brand { font-family: var(--font-heading); font-weight: 800; font-size: 1rem; margin-bottom: 1.5rem; }
+    .footer__brand span { color: var(--color-accent); }
+    .footer__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .footer__nav a { font-size: .875rem; color: var(--color-text-muted); transition: color .2s; }
+    .footer__nav a:hover { color: var(--color-text); }
+    .footer__social { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .footer__social a { width: 40px; height: 40px; border-radius: 50%; background: var(--color-secondary); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); transition: background .2s, color .2s, transform .2s; }
+    .footer__social a:hover { background: var(--color-accent); color: #fff; transform: translateY(-2px); }
+    .footer__social svg { width: 18px; height: 18px; }
+    .footer__copy { font-size: .8rem; color: var(--color-text-muted); opacity: .6; }
+
+    /* ================================================
+       RESPONSIVE
+       ================================================ */
+    @media (min-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 2rem; }
+      .nav-toggle { display: none; }
+      .nav { display: flex; }
+      .follow-grid { grid-template-columns: repeat(3, 1fr); }
+      .radio-player { padding: 3rem 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Cronos Sport Media — Inicio">
+        Cronos <span>Sport</span> Media
+      </a>
+      <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="main-nav">
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+      </button>
+      <nav class="nav" id="main-nav" aria-label="Navegación principal">
+        <ul class="nav__list">
+          <li><a href="index.html"    class="nav__link">Home</a></li>
+          <li><a href="en-vivo.html"  class="nav__link nav__link--active" aria-current="page">En Vivo</a></li>
+          <li><a href="podcast.html"  class="nav__link">Podcast</a></li>
+          <li><a href="nosotros.html" class="nav__link">Nosotros</a></li>
+          <li><a href="contacto.html" class="nav__link">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- PAGE HERO -->
+    <section class="page-hero" aria-labelledby="page-title">
+      <div class="page-hero__eyebrow">Transmisiones en tiempo real</div>
+      <h1 id="page-title" class="page-hero__title">En <em>Vivo</em></h1>
+      <p class="page-hero__desc">
+        Sigue nuestras transmisiones en tiempo real. Radio, streaming y cobertura deportiva al instante.
+      </p>
+    </section>
+
+    <!-- RADIO EN VIVO -->
+    <section class="radio-section" aria-labelledby="radio-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="divider"></div>
+          <p class="section-label">Radio online</p>
+          <h2 id="radio-title">Escucha nuestra radio</h2>
+          <p style="color:var(--color-text-muted);margin-top:.75rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.95rem;">
+            Señal de audio las 24 horas con música de todos los estilos y contenido deportivo en vivo.
+          </p>
+        </div>
+
+        <div class="radio-player reveal">
+          <div class="radio-player__badge">
+            <span class="live-badge">En vivo</span>
+          </div>
+          <div class="radio-player__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+              <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+          </div>
+          <p class="radio-player__title">Radio Cronos Sport Media</p>
+          <p class="radio-player__sub">[PENDIENTE CONFIRMAR: horarios de programación]</p>
+
+          <!--
+            TODO DEC-P01: reemplazar .radio-placeholder por el iframe del proveedor.
+            Ejemplo Zeno.fm:
+            <iframe src="https://player.zeno.fm/[ID]" width="100%" height="112" loading="lazy" allow="autoplay"></iframe>
+          -->
+          <div class="radio-placeholder">
+            <strong>Reproductor próximamente</strong>
+            Estamos configurando la señal de streaming. ¡Vuelve pronto!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSMISIÓN EN VIVO (YOUTUBE) -->
+    <section class="live-section" aria-labelledby="youtube-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="divider"></div>
+          <p class="section-label">Transmisión en vivo</p>
+          <h2 id="youtube-title">Cobertura deportiva</h2>
+          <p style="color:var(--color-text-muted);margin-top:.75rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.95rem;">
+            Cuando hay evento, lo transmitimos en vivo. Sigue la cobertura aquí o en nuestro canal de YouTube.
+          </p>
+        </div>
+
+        <div class="video-container reveal">
+          <!--
+            TODO DEC-P14: reemplazar .no-live por el iframe de YouTube cuando haya transmisión activa.
+            Embed de YouTube Live:
+            <iframe
+              src="https://www.youtube.com/embed/live_stream?channel=[CHANNEL_ID]"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+
+            Embed de video específico:
+            <iframe
+              src="https://www.youtube.com/embed/[VIDEO_ID]"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+          -->
+          <div class="no-live">
+            <div class="no-live__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+            </div>
+            <p class="no-live__title">Sin transmisión en este momento</p>
+            <p class="no-live__sub">
+              No hay transmisión en vivo en este momento. Síguenos en redes para enterarte cuándo es la próxima.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CÓMO SEGUIRNOS -->
+    <section class="follow-section" aria-labelledby="follow-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="divider"></div>
+          <p class="section-label">No te pierdas nada</p>
+          <h2 id="follow-title">¿Cómo estar al tanto?</h2>
+        </div>
+
+        <div class="follow-grid">
+          <div class="follow-card reveal stagger-1">
+            <div class="follow-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+            </div>
+            <div>
+              <p class="follow-card__title">Canal de YouTube</p>
+              <p class="follow-card__text">Suscríbete a nuestro canal y activa las notificaciones para no perderte ninguna transmisión en vivo.</p>
+            </div>
+          </div>
+
+          <div class="follow-card reveal stagger-2">
+            <div class="follow-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </div>
+            <div>
+              <p class="follow-card__title">Instagram</p>
+              <p class="follow-card__text">Anunciamos cada transmisión en nuestro Instagram. Síguenos para ver los horarios con anticipación.</p>
+            </div>
+          </div>
+
+          <div class="follow-card reveal stagger-3">
+            <div class="follow-card__icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.4"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.4"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg>
+            </div>
+            <div>
+              <p class="follow-card__title">Radio 24/7</p>
+              <p class="follow-card__text">La señal de radio está disponible las 24 horas. Música y contenido deportivo siempre que quieras.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p class="footer__brand">Cronos <span>Sport</span> Media</p>
+      <nav class="footer__nav" aria-label="Navegación del footer">
+        <a href="index.html">Home</a>
+        <a href="en-vivo.html">En Vivo</a>
+        <a href="podcast.html">Podcast</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+      <div class="footer__social" aria-label="Redes sociales">
+        <!-- [PENDIENTE CONFIRMAR: URLs reales — DEC-P06] -->
+        <a href="#" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="#" aria-label="YouTube" rel="noopener noreferrer" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+        </a>
+        <a href="#" aria-label="Twitter" rel="noopener noreferrer" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+        </a>
+      </div>
+      <p class="footer__copy">&copy; 2026 Cronos Sport Media. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    var toggle = document.querySelector('.nav-toggle');
+    var nav    = document.querySelector('.nav');
+    var links  = document.querySelectorAll('.nav__link');
+    if (toggle && nav) {
+      function open()  { toggle.setAttribute('aria-expanded','true');  toggle.setAttribute('aria-label','Cerrar menú'); nav.classList.add('nav--mobile-open'); document.body.style.overflow='hidden'; }
+      function close() { toggle.setAttribute('aria-expanded','false'); toggle.setAttribute('aria-label','Abrir menú');  nav.classList.remove('nav--mobile-open'); document.body.style.overflow=''; }
+      toggle.addEventListener('click', function(){ toggle.getAttribute('aria-expanded')==='true' ? close() : open(); });
+      links.forEach(function(l){ l.addEventListener('click', close); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape' && toggle.getAttribute('aria-expanded')==='true'){ close(); toggle.focus(); } });
+    }
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      revealEls.forEach(function(el){ io.observe(el); });
+    } else { revealEls.forEach(function(el){ el.classList.add('is-visible'); }); }
+  })();
+  </script>
+
+</body>
+</html>
