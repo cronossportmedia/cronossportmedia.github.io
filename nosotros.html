@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosotros — Cronos Sport Media</title>
+  <meta name="description" content="Cronos Sport Media es una agencia de noticias que forma periodistas en distintas disciplinas informativas, con foco en el mundo del deporte.">
+  <meta property="og:title" content="Nosotros — Cronos Sport Media">
+  <meta property="og:description" content="Conoce quiénes somos, qué hacemos y por qué lo hacemos.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    ul, ol { list-style: none; }
+    a { text-decoration: none; color: inherit; }
+    img, iframe { max-width: 100%; display: block; }
+    button { font: inherit; cursor: pointer; border: none; background: none; }
+
+    :root {
+      --color-primary:    #0D1B2A;
+      --color-secondary:  #1B2D45;
+      --color-accent:     #FF6B35;
+      --color-accent-alt: #00D4FF;
+      --color-text:       #F0F0F0;
+      --color-text-muted: #A0AEC0;
+      --color-live:       #FF0000;
+      --font-heading:     'Montserrat', sans-serif;
+      --font-body:        'Inter', sans-serif;
+      --header-height:    64px;
+      --max-width:        1120px;
+      --radius:           8px;
+      --radius-sm:        4px;
+    }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; color: var(--color-text); background: var(--color-primary); overflow-x: hidden; }
+    h1, h2, h3 { font-family: var(--font-heading); line-height: 1.2; }
+    h1 { font-weight: 800; font-size: 1.75rem; }
+    h2 { font-weight: 700; font-size: 1.5rem; }
+    h3 { font-weight: 700; font-size: 1.1rem; }
+    p { line-height: 1.75; }
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+
+    .section-label { font-family: var(--font-heading); font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .12em; color: var(--color-accent); margin-bottom: .75rem; }
+    .divider { width: 48px; height: 3px; background: var(--color-accent); border-radius: 2px; margin: 0 auto 1rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    :focus-visible { outline: 2px solid var(--color-accent-alt); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.is-visible { opacity: 1; transform: translateY(0); }
+    .reveal-left { opacity: 0; transform: translateX(-28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal-left.is-visible { opacity: 1; transform: translateX(0); }
+    .reveal-right { opacity: 0; transform: translateX(28px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal-right.is-visible { opacity: 1; transform: translateX(0); }
+    .stagger-1 { transition-delay: .1s; }
+    .stagger-2 { transition-delay: .2s; }
+    .stagger-3 { transition-delay: .3s; }
+    .stagger-4 { transition-delay: .4s; }
+
+    /* HEADER */
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: rgba(13,27,42,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+    .header__logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; }
+    .header__logo span { color: var(--color-accent); }
+    .nav { display: none; }
+    .nav__list { display: flex; align-items: center; gap: 2rem; }
+    .nav__link { font-family: var(--font-body); font-weight: 500; font-size: .9rem; color: var(--color-text-muted); transition: color .2s; padding: .25rem 0; position: relative; }
+    .nav__link:hover, .nav__link--active { color: var(--color-text); }
+    .nav__link--active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: var(--color-accent); border-radius: 1px; }
+    .nav-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 10px; z-index: 110; }
+    .nav-toggle__bar { display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px; transition: transform .3s, opacity .3s; }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) { opacity: 0; }
+    .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav--mobile-open { display: flex; }
+    .nav--mobile-open .nav__list { position: fixed; inset: 0; flex-direction: column; justify-content: center; gap: 2.5rem; background: var(--color-primary); z-index: 105; }
+    .nav--mobile-open .nav__link { font-size: 1.25rem; color: var(--color-text); }
+
+    /* PAGE HERO */
+    .page-hero {
+      padding: calc(var(--header-height) + 3rem) 1.25rem 3rem;
+      text-align: center; position: relative; overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,107,53,.04) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .page-hero::before {
+      content: ''; position: absolute; top: -60px; right: -80px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,107,53,.09) 0%, transparent 70%); pointer-events: none;
+    }
+    .page-hero__eyebrow {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--font-heading); font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .14em; color: var(--color-accent-alt);
+      border: 1px solid rgba(0,212,255,.2); padding: .3rem .9rem; border-radius: 20px; margin-bottom: 1rem;
+      opacity: 0; animation: fade-up .6s ease .1s forwards;
+    }
+    .page-hero__title { font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: .5rem; opacity: 0; animation: fade-up .6s ease .2s forwards; }
+    .page-hero__title em { font-style: normal; color: var(--color-accent); }
+    .page-hero__desc { color: var(--color-text-muted); font-size: 1rem; max-width: 520px; margin: 0 auto; opacity: 0; animation: fade-up .6s ease .3s forwards; }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* MISIÓN */
+    .mision-section { padding: 4.5rem 1.25rem; }
+    .mision-inner { max-width: 780px; margin: 0 auto; }
+    .mision-inner p { color: var(--color-text-muted); font-size: 1.05rem; margin-bottom: 1.25rem; }
+    .mision-inner p:last-child { margin-bottom: 0; }
+    .mision-inner p strong { color: var(--color-text); font-weight: 500; }
+
+    /* SUBMARCAS */
+    .submarcas-section { padding: 4rem 1.25rem; background: var(--color-secondary); }
+    .submarcas-grid { display: grid; gap: 1.5rem; max-width: var(--max-width); margin: 0 auto; }
+
+    .submarca-card {
+      background: var(--color-primary); border-radius: var(--radius);
+      padding: 2rem 1.75rem; border: 1px solid rgba(255,255,255,.05);
+      transition: border-color .25s, transform .25s; position: relative; overflow: hidden;
+    }
+    .submarca-card::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%;
+      background: var(--card-color, var(--color-accent)); border-radius: 0 2px 2px 0;
+      transform: scaleY(0); transition: transform .3s ease;
+    }
+    .submarca-card:hover { border-color: rgba(255,107,53,.2); transform: translateY(-3px); }
+    .submarca-card:hover::before { transform: scaleY(1); }
+    .submarca-card--alt { --card-color: var(--color-accent-alt); }
+    .submarca-card--alt:hover { border-color: rgba(0,212,255,.2); }
+
+    .submarca-card__tag {
+      display: inline-block; font-family: var(--font-heading); font-size: .7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: .25rem .75rem; border-radius: var(--radius-sm); margin-bottom: 1rem;
+    }
+    .submarca-card__tag--primary { background: rgba(255,107,53,.12); color: var(--color-accent); }
+    .submarca-card__tag--alt     { background: rgba(0,212,255,.1); color: var(--color-accent-alt); }
+
+    .submarca-card__name { font-size: 1.35rem; font-weight: 800; margin-bottom: .5rem; }
+    .submarca-card__desc { color: var(--color-text-muted); font-size: .9rem; line-height: 1.65; }
+
+    /* VALORES */
+    .valores-section { padding: 4.5rem 1.25rem; }
+    .valores-grid { display: grid; gap: 1.25rem; max-width: var(--max-width); margin: 0 auto; }
+
+    .valor-item {
+      display: flex; gap: 1.25rem; align-items: flex-start;
+      background: var(--color-secondary); border-radius: var(--radius);
+      padding: 1.5rem; border: 1px solid rgba(255,255,255,.05);
+      transition: border-color .2s;
+    }
+    .valor-item:hover { border-color: rgba(255,107,53,.15); }
+
+    .valor-item__num {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800;
+      color: rgba(255,107,53,.25); line-height: 1; flex-shrink: 0; min-width: 2rem;
+    }
+    .valor-item__title { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: .35rem; }
+    .valor-item__text  { color: var(--color-text-muted); font-size: .875rem; line-height: 1.6; }
+
+    /* EQUIPO */
+    .equipo-section { padding: 4rem 1.25rem; background: var(--color-secondary); }
+    .equipo-grid { display: grid; gap: 1.5rem; max-width: var(--max-width); margin: 0 auto; }
+
+    .equipo-placeholder {
+      background: var(--color-primary); border-radius: var(--radius);
+      padding: 2rem; text-align: center;
+      border: 1px dashed rgba(255,255,255,.1);
+    }
+    .equipo-placeholder__avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--color-secondary);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .equipo-placeholder__avatar svg { width: 32px; height: 32px; stroke: var(--color-text-muted); opacity: .4; }
+    .equipo-placeholder__name { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: .25rem; color: var(--color-text-muted); opacity: .5; }
+    .equipo-placeholder__role { font-size: .8rem; color: var(--color-text-muted); opacity: .4; }
+    .equipo-note { text-align: center; margin-top: 1.5rem; color: var(--color-text-muted); font-size: .85rem; opacity: .6; }
+
+    /* CTA BOTTOM */
+    .cta-section {
+      padding: 4.5rem 1.25rem; text-align: center;
+      background: linear-gradient(180deg, transparent 0%, rgba(255,107,53,.04) 100%);
+    }
+    .cta-section h2 { margin-bottom: .75rem; }
+    .cta-section p { color: var(--color-text-muted); max-width: 480px; margin: 0 auto 2rem; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: var(--color-accent); color: #fff;
+      padding: .875rem 1.75rem; border-radius: 6px;
+      font-family: var(--font-heading); font-weight: 700; font-size: 1rem;
+      transition: background .2s, transform .15s, box-shadow .2s; min-height: 44px;
+    }
+    .btn-primary:hover { background: #e55a28; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,53,.35); }
+
+    /* FOOTER */
+    .footer { padding: 3rem 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,.06); text-align: center; }
+    .footer__brand { font-family: var(--font-heading); font-weight: 800; font-size: 1rem; margin-bottom: 1.5rem; }
+    .footer__brand span { color: var(--color-accent); }
+    .footer__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .footer__nav a { font-size: .875rem; color: var(--color-text-muted); transition: color .2s; }
+    .footer__nav a:hover { color: var(--color-text); }
+    .footer__social { display: flex; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; }
+    .footer__social a { width: 40px; height: 40px; border-radius: 50%; background: var(--color-secondary); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); transition: background .2s, color .2s, transform .2s; }
+    .footer__social a:hover { background: var(--color-accent); color: #fff; transform: translateY(-2px); }
+    .footer__social svg { width: 18px; height: 18px; }
+    .footer__copy { font-size: .8rem; color: var(--color-text-muted); opacity: .6; }
+
+    @media (min-width: 768px) {
+      h1 { font-size: 2.5rem; }
+      h2 { font-size: 2rem; }
+      .nav-toggle { display: none; }
+      .nav { display: flex; }
+      .submarcas-grid { grid-template-columns: repeat(2, 1fr); }
+      .valores-grid   { grid-template-columns: repeat(2, 1fr); }
+      .equipo-grid    { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .valores-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" role="banner">
+    <div class="header__inner">
+      <a href="index.html" class="header__logo" aria-label="Cronos Sport Media — Inicio">
+        Cronos <span>Sport</span> Media
+      </a>
+      <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="main-nav">
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+        <span class="nav-toggle__bar"></span>
+      </button>
+      <nav class="nav" id="main-nav" aria-label="Navegación principal">
+        <ul class="nav__list">
+          <li><a href="index.html"    class="nav__link">Home</a></li>
+          <li><a href="en-vivo.html"  class="nav__link">En Vivo</a></li>
+          <li><a href="podcast.html"  class="nav__link">Podcast</a></li>
+          <li><a href="nosotros.html" class="nav__link nav__link--active" aria-current="page">Nosotros</a></li>
+          <li><a href="contacto.html" class="nav__link">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+
+    <!-- PAGE HERO -->
+    <section class="page-hero" aria-labelledby="page-title">
+      <div class="page-hero__eyebrow">La agencia detrás del micrófono</div>
+      <h1 id="page-title" class="page-hero__title"><em>Nosotros</em></h1>
+      <p class="page-hero__desc">
+        Conoce quiénes somos, qué hacemos y por qué lo hacemos.
+      </p>
+    </section>
+
+    <!-- MISIÓN -->
+    <section class="mision-section" aria-labelledby="mision-title">
+      <div class="container">
+        <div class="reveal" style="text-align:center;margin-bottom:2.5rem;">
+          <div class="divider"></div>
+          <p class="section-label">Quiénes somos</p>
+          <h2 id="mision-title">Nuestra misión</h2>
+        </div>
+        <div class="mision-inner reveal">
+          <p>
+            <strong>Cronos Sport Media</strong> es una agencia de noticias que ofrece a periodistas la oportunidad de formarse como profesionales en distintas fuentes informativas. Creemos que el periodismo deportivo necesita nuevas voces, preparadas y comprometidas con la verdad.
+          </p>
+          <p>
+            Nuestro espacio combina tres formatos: radio en vivo con streaming de audio y música variada, podcasts deportivos con enfoque educativo y productivo, y transmisiones en vivo de eventos y análisis.
+          </p>
+          <p>
+            No solo informamos: <strong>formamos periodistas, abrimos micrófonos y damos lugar a nuevas voces</strong> en el periodismo deportivo. Para venezolanos en el mundo y para todo el que vive el deporte con pasión.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUBMARCAS -->
+    <section class="submarcas-section" aria-labelledby="submarcas-title">
+      <div class="container">
+        <div class="reveal" style="text-align:center;margin-bottom:2.5rem;">
+          <div class="divider"></div>
+          <p class="section-label">Estructura de la marca</p>
+          <h2 id="submarcas-title">Dos submarcas, una visión</h2>
+        </div>
+        <div class="submarcas-grid">
+          <div class="submarca-card reveal stagger-1">
+            <span class="submarca-card__tag submarca-card__tag--primary">Noticias</span>
+            <p class="submarca-card__name">Cronos Media</p>
+            <p class="submarca-card__desc">El área de periodismo e información general de la agencia. Formación de periodistas, cobertura de noticias y producción de contenido editorial.</p>
+          </div>
+          <div class="submarca-card submarca-card--alt reveal stagger-2">
+            <span class="submarca-card__tag submarca-card__tag--alt">Deportes</span>
+            <p class="submarca-card__name">Sport Media</p>
+            <p class="submarca-card__desc">El área deportiva: podcasts, transmisiones en vivo, análisis de partidos, entrevistas a atletas y cobertura de eventos deportivos de todas las disciplinas.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VALORES -->
+    <section class="valores-section" aria-labelledby="valores-title">
+      <div class="container">
+        <div class="reveal" style="text-align:center;margin-bottom:2.5rem;">
+          <div class="divider"></div>
+          <p class="section-label">Lo que nos define</p>
+          <h2 id="valores-title">Nuestros valores</h2>
+        </div>
+        <div class="valores-grid">
+          <div class="valor-item reveal stagger-1">
+            <span class="valor-item__num">01</span>
+            <div>
+              <p class="valor-item__title">Profesionalismo</p>
+              <p class="valor-item__text">Información verificada, periodismo responsable. Sin exageraciones, sin datos inventados. La verdad deportiva primero.</p>
+            </div>
+          </div>
+          <div class="valor-item reveal stagger-2">
+            <span class="valor-item__num">02</span>
+            <div>
+              <p class="valor-item__title">Formación</p>
+              <p class="valor-item__text">Cada micrófono es una oportunidad de aprendizaje. Formamos a la próxima generación de periodistas deportivos.</p>
+            </div>
+          </div>
+          <div class="valor-item reveal stagger-3">
+            <span class="valor-item__num">03</span>
+            <div>
+              <p class="valor-item__title">Pasión deportiva</p>
+              <p class="valor-item__text">El deporte es nuestra razón de ser. Cubrimos con la energía de quienes lo viven, no solo de quienes lo observan.</p>
+            </div>
+          </div>
+          <div class="valor-item reveal stagger-4">
+            <span class="valor-item__num">04</span>
+            <div>
+              <p class="valor-item__title">Accesibilidad</p>
+              <p class="valor-item__text">Contenido gratuito y abierto para todos. El buen periodismo deportivo no debería tener barreras de acceso.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EQUIPO -->
+    <section class="equipo-section" aria-labelledby="equipo-title">
+      <div class="container">
+        <div class="reveal" style="text-align:center;margin-bottom:2.5rem;">
+          <div class="divider"></div>
+          <p class="section-label">Las personas detrás</p>
+          <h2 id="equipo-title">El equipo</h2>
+        </div>
+
+        <!--
+          TODO: Reemplazar estas cards placeholder con el equipo real.
+          [PENDIENTE CONFIRMAR: nombres, roles y fotos del equipo — CONTEXT.md regla anti-alucinación]
+          Para cada persona: nombre, rol y foto (formato recomendado: imagen cuadrada, mínimo 200x200px, formato .webp).
+        -->
+        <div class="equipo-grid">
+          <div class="equipo-placeholder reveal stagger-1">
+            <div class="equipo-placeholder__avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <p class="equipo-placeholder__name">[Nombre]</p>
+            <p class="equipo-placeholder__role">[Pendiente confirmar]</p>
+          </div>
+          <div class="equipo-placeholder reveal stagger-2">
+            <div class="equipo-placeholder__avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <p class="equipo-placeholder__name">[Nombre]</p>
+            <p class="equipo-placeholder__role">[Pendiente confirmar]</p>
+          </div>
+          <div class="equipo-placeholder reveal stagger-3">
+            <div class="equipo-placeholder__avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <p class="equipo-placeholder__name">[Nombre]</p>
+            <p class="equipo-placeholder__role">[Pendiente confirmar]</p>
+          </div>
+        </div>
+        <p class="equipo-note">Los perfiles del equipo se actualizarán cuando se confirmen los datos.</p>
+      </div>
+    </section>
+
+    <!-- CTA CONTACTO -->
+    <section class="cta-section" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="reveal">
+          <div class="divider"></div>
+          <h2 id="cta-title">¿Quieres ser parte?</h2>
+          <p>Si quieres sumarte al equipo, proponer contenido o simplemente conocernos mejor, escríbenos.</p>
+          <a href="contacto.html" class="btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Contáctanos
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p class="footer__brand">Cronos <span>Sport</span> Media</p>
+      <nav class="footer__nav" aria-label="Navegación del footer">
+        <a href="index.html">Home</a>
+        <a href="en-vivo.html">En Vivo</a>
+        <a href="podcast.html">Podcast</a>
+        <a href="nosotros.html">Nosotros</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+      <div class="footer__social" aria-label="Redes sociales">
+        <a href="#" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="#" aria-label="YouTube" rel="noopener noreferrer" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+        </a>
+        <a href="#" aria-label="Twitter" rel="noopener noreferrer" target="_blank">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+        </a>
+      </div>
+      <p class="footer__copy">&copy; 2026 Cronos Sport Media. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    var toggle = document.querySelector('.nav-toggle');
+    var nav    = document.querySelector('.nav');
+    var links  = document.querySelectorAll('.nav__link');
+    if (toggle && nav) {
+      function open()  { toggle.setAttribute('aria-expanded','true');  toggle.setAttribute('aria-label','Cerrar menú'); nav.classList.add('nav--mobile-open'); document.body.style.overflow='hidden'; }
+      function close() { toggle.setAttribute('aria-expanded','false'); toggle.setAttribute('aria-label','Abrir menú');  nav.classList.remove('nav--mobile-open'); document.body.style.overflow=''; }
+      toggle.addEventListener('click', function(){ toggle.getAttribute('aria-expanded')==='true' ? close() : open(); });
+      links.forEach(function(l){ l.addEventListener('click', close); });
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape' && toggle.getAttribute('aria-expanded')==='true'){ close(); toggle.focus(); } });
+    }
+    var allReveal = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      allReveal.forEach(function(el){ io.observe(el); });
+    } else { allReveal.forEach(function(el){ el.classList.add('is-visible'); }); }
+  })();
+  </script>
+
+</body>
+</html>
