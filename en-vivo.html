@@ -287,6 +287,97 @@
       .follow-grid { grid-template-columns: repeat(3, 1fr); }
       .radio-player { padding: 3rem 2.5rem; }
     }
+
+    /* ================================================
+       RADIO PLAYER NATIVO — controles custom
+       ================================================ */
+    .radio-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--color-primary);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+
+    .radio-btn {
+      width: 52px; height: 52px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      cursor: pointer; border: none;
+    }
+    .radio-btn:hover { background: #e55a28; transform: scale(1.07); box-shadow: 0 6px 20px rgba(255,107,53,.4); }
+    .radio-btn:active { transform: scale(1); }
+    .radio-btn svg { width: 20px; height: 20px; }
+
+    .radio-info { flex: 1; min-width: 0; }
+    .radio-info__label {
+      display: block;
+      font-family: var(--font-body);
+      font-size: .85rem;
+      color: var(--color-text-muted);
+      margin-bottom: .4rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Animación de ondas de audio */
+    .radio-wave {
+      display: flex; align-items: flex-end; gap: 3px; height: 18px;
+      opacity: 0; transition: opacity .3s;
+    }
+    .radio-wave.is-playing { opacity: 1; }
+    .radio-wave span {
+      display: block; width: 3px; border-radius: 2px;
+      background: var(--color-accent);
+    }
+    .radio-wave span:nth-child(1) { height: 8px;  animation: wave 1.2s ease-in-out infinite; }
+    .radio-wave span:nth-child(2) { height: 14px; animation: wave 1.2s ease-in-out infinite .15s; }
+    .radio-wave span:nth-child(3) { height: 18px; animation: wave 1.2s ease-in-out infinite .3s; }
+    .radio-wave span:nth-child(4) { height: 12px; animation: wave 1.2s ease-in-out infinite .45s; }
+    .radio-wave span:nth-child(5) { height: 6px;  animation: wave 1.2s ease-in-out infinite .6s; }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(1); }
+      50%       { transform: scaleY(.4); }
+    }
+
+    /* Control de volumen */
+    .radio-volume {
+      display: flex; align-items: center; gap: .5rem; flex-shrink: 0;
+      color: var(--color-text-muted);
+    }
+    .radio-volume input[type="range"] {
+      width: 70px; height: 4px;
+      -webkit-appearance: none; appearance: none;
+      background: rgba(255,255,255,.15); border-radius: 2px; cursor: pointer;
+    }
+    .radio-volume input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px;
+      border-radius: 50%; background: var(--color-accent); cursor: pointer;
+    }
+    .radio-volume input[type="range"]::-moz-range-thumb {
+      width: 14px; height: 14px; border: none;
+      border-radius: 50%; background: var(--color-accent); cursor: pointer;
+    }
+
+    /* Fallback accordion */
+    .radio-fallback {
+      margin-top: .5rem;
+      font-size: .8rem;
+      color: var(--color-text-muted);
+    }
+    .radio-fallback summary {
+      cursor: pointer; list-style: none;
+      opacity: .6; transition: opacity .2s;
+      text-align: center;
+    }
+    .radio-fallback summary:hover { opacity: 1; }
+    .radio-fallback summary::-webkit-details-marker { display: none; }
+
   </style>
 </head>
 <body>
@@ -341,6 +432,8 @@
           <div class="radio-player__badge">
             <span class="live-badge">En vivo</span>
           </div>
+
+          <!-- INFO DE LA ESTACIÓN -->
           <div class="radio-player__icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -348,17 +441,48 @@
             </svg>
           </div>
           <p class="radio-player__title">Radio Cronos Sport Media</p>
-          <p class="radio-player__sub">[PENDIENTE CONFIRMAR: horarios de programación]</p>
+          <p class="radio-player__sub">Señal en vivo las 24 horas — música y contenido deportivo</p>
 
-          <!--
-            TODO DEC-P01: reemplazar .radio-placeholder por el iframe del proveedor.
-            Ejemplo Zeno.fm:
-            <iframe src="https://player.zeno.fm/[ID]" width="100%" height="112" loading="lazy" allow="autoplay"></iframe>
-          -->
-          <div class="radio-placeholder">
-            <strong>Reproductor próximamente</strong>
-            Estamos configurando la señal de streaming. ¡Vuelve pronto!
+          <!-- PLAYER NATIVO HTML5 -->
+          <!-- Stream Zeno.fm: https://stream.zeno.fm/twjyzsaviyivv -->
+          <div class="radio-controls">
+            <button class="radio-btn" id="radio-play-btn" aria-label="Reproducir radio">
+              <!-- Ícono play -->
+              <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <!-- Ícono pause (oculto por defecto) -->
+              <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+
+            <div class="radio-info">
+              <span class="radio-info__label" id="radio-status">Presiona play para escuchar</span>
+              <div class="radio-wave" id="radio-wave" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <div class="radio-volume">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <input type="range" id="radio-volume" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+            </div>
           </div>
+
+          <!-- Elemento audio oculto -->
+          <audio id="radio-audio" preload="none">
+            <source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg">
+          </audio>
+
+          <!-- FALLBACK: iframe de Zeno.fm si el audio nativo falla -->
+          <details class="radio-fallback">
+            <summary>¿No escuchas la radio? Prueba el reproductor alternativo</summary>
+            <iframe
+              src="https://player.zeno.fm/twjyzsaviyivv"
+              width="100%"
+              height="112"
+              loading="lazy"
+              allow="autoplay"
+              style="border:none;border-radius:6px;margin-top:.75rem;">
+            </iframe>
+          </details>
         </div>
       </div>
     </section>
@@ -514,6 +638,69 @@
       var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
       revealEls.forEach(function(el){ io.observe(el); });
     } else { revealEls.forEach(function(el){ el.classList.add('is-visible'); }); }
+    /* 3. Radio player nativo */
+    var audio     = document.getElementById('radio-audio');
+    var playBtn   = document.getElementById('radio-play-btn');
+    var iconPlay  = document.getElementById('icon-play');
+    var iconPause = document.getElementById('icon-pause');
+    var statusLbl = document.getElementById('radio-status');
+    var wave      = document.getElementById('radio-wave');
+    var volCtrl   = document.getElementById('radio-volume');
+
+    if (audio && playBtn) {
+      var isPlaying = false;
+
+      function startPlay() {
+        audio.src = 'https://stream.zeno.fm/twjyzsaviyivv';
+        audio.load();
+        audio.play().then(function() {
+          isPlaying = true;
+          iconPlay.style.display  = 'none';
+          iconPause.style.display = '';
+          statusLbl.textContent   = 'Escuchando Radio Cronos Sport Media...';
+          wave.classList.add('is-playing');
+          playBtn.setAttribute('aria-label', 'Pausar radio');
+        }).catch(function() {
+          statusLbl.textContent = 'Error al cargar. Prueba el reproductor alternativo.';
+        });
+      }
+
+      function stopPlay() {
+        audio.pause();
+        audio.src = '';
+        isPlaying = false;
+        iconPlay.style.display  = '';
+        iconPause.style.display = 'none';
+        statusLbl.textContent   = 'Presiona play para escuchar';
+        wave.classList.remove('is-playing');
+        playBtn.setAttribute('aria-label', 'Reproducir radio');
+      }
+
+      playBtn.addEventListener('click', function() {
+        isPlaying ? stopPlay() : startPlay();
+      });
+
+      if (volCtrl) {
+        audio.volume = parseFloat(volCtrl.value);
+        volCtrl.addEventListener('input', function() {
+          audio.volume = parseFloat(this.value);
+        });
+      }
+
+      audio.addEventListener('error', function() {
+        statusLbl.textContent = 'Error de conexión. Prueba el reproductor alternativo.';
+        stopPlay();
+      });
+
+      audio.addEventListener('waiting', function() {
+        statusLbl.textContent = 'Cargando señal...';
+      });
+
+      audio.addEventListener('playing', function() {
+        statusLbl.textContent = 'Escuchando Radio Cronos Sport Media...';
+      });
+    }
+
   })();
   </script>
 
