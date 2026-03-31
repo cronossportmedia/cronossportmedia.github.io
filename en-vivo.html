@@ -237,7 +237,17 @@
     }
     .no-live__icon svg { width: 26px; height: 26px; stroke: var(--color-live); }
     .no-live__title { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; }
-    .no-live__sub { color: var(--color-text-muted); font-size: .875rem; max-width: 360px; }
+    .no-live__sub { color: var(--color-text-muted); font-size: .875rem; max-width: 360px; line-height: 1.6; }
+    .no-live__btn {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--font-heading); font-weight: 700; font-size: .8rem;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: #fff; background: var(--color-live);
+      padding: .6rem 1.25rem; border-radius: 6px;
+      transition: background .2s, transform .15s;
+      text-decoration: none; margin-top: .5rem;
+    }
+    .no-live__btn:hover { background: #cc0000; transform: translateY(-1px); }
 
     /* ================================================
        CÓMO SEGUIRNOS — sección info
@@ -287,6 +297,97 @@
       .follow-grid { grid-template-columns: repeat(3, 1fr); }
       .radio-player { padding: 3rem 2.5rem; }
     }
+
+    /* ================================================
+       RADIO PLAYER NATIVO — controles custom
+       ================================================ */
+    .radio-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--color-primary);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+
+    .radio-btn {
+      width: 52px; height: 52px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      cursor: pointer; border: none;
+    }
+    .radio-btn:hover { background: #e55a28; transform: scale(1.07); box-shadow: 0 6px 20px rgba(255,107,53,.4); }
+    .radio-btn:active { transform: scale(1); }
+    .radio-btn svg { width: 20px; height: 20px; }
+
+    .radio-info { flex: 1; min-width: 0; }
+    .radio-info__label {
+      display: block;
+      font-family: var(--font-body);
+      font-size: .85rem;
+      color: var(--color-text-muted);
+      margin-bottom: .4rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Animación de ondas de audio */
+    .radio-wave {
+      display: flex; align-items: flex-end; gap: 3px; height: 18px;
+      opacity: 0; transition: opacity .3s;
+    }
+    .radio-wave.is-playing { opacity: 1; }
+    .radio-wave span {
+      display: block; width: 3px; border-radius: 2px;
+      background: var(--color-accent);
+    }
+    .radio-wave span:nth-child(1) { height: 8px;  animation: wave 1.2s ease-in-out infinite; }
+    .radio-wave span:nth-child(2) { height: 14px; animation: wave 1.2s ease-in-out infinite .15s; }
+    .radio-wave span:nth-child(3) { height: 18px; animation: wave 1.2s ease-in-out infinite .3s; }
+    .radio-wave span:nth-child(4) { height: 12px; animation: wave 1.2s ease-in-out infinite .45s; }
+    .radio-wave span:nth-child(5) { height: 6px;  animation: wave 1.2s ease-in-out infinite .6s; }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(1); }
+      50%       { transform: scaleY(.4); }
+    }
+
+    /* Control de volumen */
+    .radio-volume {
+      display: flex; align-items: center; gap: .5rem; flex-shrink: 0;
+      color: var(--color-text-muted);
+    }
+    .radio-volume input[type="range"] {
+      width: 70px; height: 4px;
+      -webkit-appearance: none; appearance: none;
+      background: rgba(255,255,255,.15); border-radius: 2px; cursor: pointer;
+    }
+    .radio-volume input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 14px; height: 14px;
+      border-radius: 50%; background: var(--color-accent); cursor: pointer;
+    }
+    .radio-volume input[type="range"]::-moz-range-thumb {
+      width: 14px; height: 14px; border: none;
+      border-radius: 50%; background: var(--color-accent); cursor: pointer;
+    }
+
+    /* Fallback accordion */
+    .radio-fallback {
+      margin-top: .5rem;
+      font-size: .8rem;
+      color: var(--color-text-muted);
+    }
+    .radio-fallback summary {
+      cursor: pointer; list-style: none;
+      opacity: .6; transition: opacity .2s;
+      text-align: center;
+    }
+    .radio-fallback summary:hover { opacity: 1; }
+    .radio-fallback summary::-webkit-details-marker { display: none; }
+
   </style>
 </head>
 <body>
@@ -342,6 +443,8 @@
           <div class="radio-player__badge">
             <span class="live-badge">En vivo</span>
           </div>
+
+          <!-- INFO DE LA ESTACIÓN -->
           <div class="radio-player__icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -349,17 +452,48 @@
             </svg>
           </div>
           <p class="radio-player__title">Radio Cronos Sport Media</p>
-          <p class="radio-player__sub">[PENDIENTE CONFIRMAR: horarios de programación]</p>
+          <p class="radio-player__sub">Señal en vivo las 24 horas — música y contenido deportivo</p>
 
-          <!--
-            TODO DEC-P01: reemplazar .radio-placeholder por el iframe del proveedor.
-            Ejemplo Zeno.fm:
-            <iframe src="https://player.zeno.fm/[ID]" width="100%" height="112" loading="lazy" allow="autoplay"></iframe>
-          -->
-          <div class="radio-placeholder">
-            <strong>Reproductor próximamente</strong>
-            Estamos configurando la señal de streaming. ¡Vuelve pronto!
+          <!-- PLAYER NATIVO HTML5 -->
+          <!-- Stream Zeno.fm: https://stream.zeno.fm/twjyzsaviyivv -->
+          <div class="radio-controls">
+            <button class="radio-btn" id="radio-play-btn" aria-label="Reproducir radio">
+              <!-- Ícono play -->
+              <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <!-- Ícono pause (oculto por defecto) -->
+              <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+
+            <div class="radio-info">
+              <span class="radio-info__label" id="radio-status">Presiona play para escuchar</span>
+              <div class="radio-wave" id="radio-wave" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <div class="radio-volume">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <input type="range" id="radio-volume" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+            </div>
           </div>
+
+          <!-- Elemento audio oculto -->
+          <audio id="radio-audio" preload="none">
+            <source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg">
+          </audio>
+
+          <!-- FALLBACK: iframe de Zeno.fm si el audio nativo falla -->
+          <details class="radio-fallback">
+            <summary>¿No escuchas la radio? Prueba el reproductor alternativo</summary>
+            <iframe
+              src="https://player.zeno.fm/twjyzsaviyivv"
+              width="100%"
+              height="112"
+              loading="lazy"
+              allow="autoplay"
+              style="border:none;border-radius:6px;margin-top:.75rem;">
+            </iframe>
+          </details>
         </div>
       </div>
     </section>
@@ -400,14 +534,38 @@
               loading="lazy">
             </iframe>
           -->
-          <iframe
-            src="https://www.youtube.com/embed?listType=user_uploads&list=CronosSportMedia"
-            title="Cronos Sport Media — Canal de YouTube"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            loading="lazy">
-          </iframe>
-        </div>
+          <!--
+            Estado dinámico del live de YouTube.
+            Se actualiza automáticamente via YouTube Data API v3.
+            Ver sección de JS al final del archivo para la lógica.
+          -->
+          <div id="youtube-container" class="video-container">
+            <!-- Panel de carga inicial -->
+            <div class="no-live" id="yt-loading">
+              <div class="no-live__icon" style="background:rgba(0,212,255,.1);">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-alt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+              </div>
+              <p class="no-live__title" style="color:var(--color-text-muted);font-size:.95rem;">Verificando transmisión...</p>
+            </div>
+
+            <!-- Panel: SIN transmisión -->
+            <div class="no-live" id="yt-offline" style="display:none;">
+              <div class="no-live__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+              </div>
+              <p class="no-live__title">Sin transmisión en este momento</p>
+              <p class="no-live__sub">
+                No hay transmisión en vivo ahora mismo. Suscríbete al canal y activa las notificaciones para enterarte cuando empecemos.
+              </p>
+              <a href="https://www.youtube.com/@CronosSportMedia" target="_blank" rel="noopener noreferrer" class="no-live__btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                Visitar canal de YouTube
+              </a>
+            </div>
+
+            <!-- Panel: CON transmisión en vivo (se inyecta el iframe por JS) -->
+            <div id="yt-live" style="display:none; position:absolute; inset:0;"></div>
+          </div>
 
         <!-- Enlace directo al canal -->
         <div style="text-align:center;margin-top:1.5rem;" class="reveal">
@@ -515,6 +673,165 @@
       var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
       revealEls.forEach(function(el){ io.observe(el); });
     } else { revealEls.forEach(function(el){ el.classList.add('is-visible'); }); }
+    /* ── 3. YouTube Live Detection ────────────────────────────────
+       Consulta YouTube Data API v3 cada 2 minutos para detectar si
+       el canal @CronosSportMedia está transmitiendo en vivo.
+       Muestra el embed automáticamente si hay live activo,
+       o el panel "sin transmisión" si no lo hay.
+
+       API Key restringida a: cronossportmedia.github.io
+       Cuota: 10,000 unidades/día gratis. Esta consulta usa ~200 unidades
+       por chequeo. Con intervalo de 2 minutos = ~144,000 unidades/día
+       en uso continuo. Ajustar CHECK_INTERVAL_MS si fuera necesario.
+    ──────────────────────────────────────────────────────────────── */
+    (function () {
+      var API_KEY    = 'AIzaSyDw_uZhewsS45yPejNyQj9wjvrvplcTAFQ';
+      var CHANNEL_ID = '';                 // ← se obtiene automáticamente desde el handle
+      var HANDLE     = 'CronosSportMedia';
+      var CHECK_INTERVAL_MS = 120000;      // chequear cada 2 minutos
+
+      var elLoading = document.getElementById('yt-loading');
+      var elOffline = document.getElementById('yt-offline');
+      var elLive    = document.getElementById('yt-live');
+
+      // Si no hay API key configurada todavía, mostrar estado offline directamente
+      if (!API_KEY || API_KEY === 'TU_API_KEY_AQUI') {
+        if (elLoading) elLoading.style.display = 'none';
+        if (elOffline) elOffline.style.display = 'flex';
+        return;
+      }
+
+      function showOffline() {
+        if (elLoading) elLoading.style.display = 'none';
+        if (elLive)    elLive.style.display    = 'none';
+        if (elOffline) elOffline.style.display = 'flex';
+      }
+
+      function showLive(videoId) {
+        if (elLoading) elLoading.style.display = 'none';
+        if (elOffline) elOffline.style.display = 'none';
+        if (elLive) {
+          elLive.style.display = 'block';
+          // Solo inyectar el iframe si no existe ya (evita recargar)
+          if (!elLive.querySelector('iframe')) {
+            elLive.innerHTML =
+              '<iframe src="https://www.youtube.com/embed/' + videoId +
+              '?autoplay=1&rel=0" title="Cronos Sport Media — En Vivo"' +
+              ' allow="accelerometer; autoplay; clipboard-write; encrypted-media;' +
+              ' gyroscope; picture-in-picture; web-share" allowfullscreen' +
+              ' style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>';
+          }
+        }
+      }
+
+      function checkLive() {
+        // Buscar transmisiones en vivo activas en el canal
+        var url = 'https://www.googleapis.com/youtube/v3/search' +
+          '?part=snippet&channelId=' + CHANNEL_ID +
+          '&eventType=live&type=video' +
+          '&key=' + API_KEY;
+
+        fetch(url)
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (data.items && data.items.length > 0) {
+              showLive(data.items[0].id.videoId);
+            } else {
+              // Si había live antes, limpiar el iframe
+              if (elLive && elLive.querySelector('iframe')) {
+                elLive.innerHTML = '';
+              }
+              showOffline();
+            }
+          })
+          .catch(function () { showOffline(); });
+      }
+
+      function resolveChannelId() {
+        // Resolver el Channel ID desde el handle usando la API
+        var url = 'https://www.googleapis.com/youtube/v3/channels' +
+          '?part=id&forHandle=' + HANDLE + '&key=' + API_KEY;
+
+        fetch(url)
+          .then(function (res) { return res.json(); })
+          .then(function (data) {
+            if (data.items && data.items.length > 0) {
+              CHANNEL_ID = data.items[0].id;
+              checkLive();
+              setInterval(checkLive, CHECK_INTERVAL_MS);
+            } else {
+              showOffline();
+            }
+          })
+          .catch(function () { showOffline(); });
+      }
+
+      resolveChannelId();
+    })();
+
+    /* 3. Radio player nativo */
+    var audio     = document.getElementById('radio-audio');
+    var playBtn   = document.getElementById('radio-play-btn');
+    var iconPlay  = document.getElementById('icon-play');
+    var iconPause = document.getElementById('icon-pause');
+    var statusLbl = document.getElementById('radio-status');
+    var wave      = document.getElementById('radio-wave');
+    var volCtrl   = document.getElementById('radio-volume');
+
+    if (audio && playBtn) {
+      var isPlaying = false;
+
+      function startPlay() {
+        audio.src = 'https://stream.zeno.fm/twjyzsaviyivv';
+        audio.load();
+        audio.play().then(function() {
+          isPlaying = true;
+          iconPlay.style.display  = 'none';
+          iconPause.style.display = '';
+          statusLbl.textContent   = 'Escuchando Radio Cronos Sport Media...';
+          wave.classList.add('is-playing');
+          playBtn.setAttribute('aria-label', 'Pausar radio');
+        }).catch(function() {
+          statusLbl.textContent = 'Error al cargar. Prueba el reproductor alternativo.';
+        });
+      }
+
+      function stopPlay() {
+        audio.pause();
+        audio.src = '';
+        isPlaying = false;
+        iconPlay.style.display  = '';
+        iconPause.style.display = 'none';
+        statusLbl.textContent   = 'Presiona play para escuchar';
+        wave.classList.remove('is-playing');
+        playBtn.setAttribute('aria-label', 'Reproducir radio');
+      }
+
+      playBtn.addEventListener('click', function() {
+        isPlaying ? stopPlay() : startPlay();
+      });
+
+      if (volCtrl) {
+        audio.volume = parseFloat(volCtrl.value);
+        volCtrl.addEventListener('input', function() {
+          audio.volume = parseFloat(this.value);
+        });
+      }
+
+      audio.addEventListener('error', function() {
+        statusLbl.textContent = 'Error de conexión. Prueba el reproductor alternativo.';
+        stopPlay();
+      });
+
+      audio.addEventListener('waiting', function() {
+        statusLbl.textContent = 'Cargando señal...';
+      });
+
+      audio.addEventListener('playing', function() {
+        statusLbl.textContent = 'Escuchando Radio Cronos Sport Media...';
+      });
+    }
+
   })();
   </script>
 
