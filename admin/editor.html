@@ -851,17 +851,27 @@
 
     try {
       if (articleId) {
-        // Edición
+        // Edición de artículo existente — update directo
         await updateDoc(doc(db, 'articles', articleId), payload);
         showToast(
           targetStatus === 'review' ? 'Enviado a revisión.' : 'Borrador guardado.',
           'success'
         );
       } else {
-        // Nuevo artículo
-        payload.created_at = serverTimestamp();
-        const ref = await addDoc(collection(db, 'articles'), payload);
+        // Artículo nuevo — la Security Rule de create solo permite status:'draft'.
+        // Siempre creamos como draft primero, luego actualizamos a review si corresponde.
+        const draftPayload = { ...payload, status: 'draft', created_at: serverTimestamp() };
+        const ref = await addDoc(collection(db, 'articles'), draftPayload);
         articleId = ref.id;
+
+        // Si el target era 'review', hacer el update a review en segunda operación
+        if (targetStatus === 'review') {
+          await updateDoc(doc(db, 'articles', articleId), {
+            status:     'review',
+            updated_at: serverTimestamp(),
+          });
+        }
+
         // Actualizar URL sin recargar
         history.replaceState(null, '', `editor.html?id=${articleId}`);
         document.getElementById('pageTitle').textContent = 'Editar artículo';
