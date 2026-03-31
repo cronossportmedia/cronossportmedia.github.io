@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Cargando... — Cronos Sport Media</title>
+  <meta name="description" id="metaDescription" content="Cronos Sport Media — Donde el deporte se cuenta de verdad.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- DOMPurify para sanitizar HTML del artículo -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary:   #0D1B2A;
+      --color-secondary: #1B2D45;
+      --color-accent:    #FF6B35;
+      --color-accent-alt:#00D4FF;
+      --color-text:      #F0F0F0;
+      --color-muted:     #A0AEC0;
+      --font-heading:    'Montserrat', sans-serif;
+      --font-body:       'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--color-primary); color: var(--color-text); line-height: 1.6; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── Header ─────────────────────────────────────────────── */
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s, backdrop-filter 0.3s; }
+    header.scrolled { background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
+    .logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .logo span { color: var(--color-accent); }
+    nav { display: flex; align-items: center; gap: 1.5rem; }
+    nav a { font-size: 0.875rem; font-weight: 500; color: var(--color-muted); transition: color 0.2s; }
+    nav a:hover, nav a.active { color: var(--color-text); }
+    nav a.active { color: var(--color-accent); }
+    .hamburger { display: none; background: none; border: none; color: var(--color-text); cursor: pointer; }
+    .hamburger svg { width: 24px; height: 24px; }
+    .nav-mobile { display: none; position: fixed; inset: 0; background: var(--color-primary); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; }
+    .nav-mobile a.active { color: var(--color-accent); }
+    .nav-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--color-text); cursor: pointer; }
+    .nav-close svg { width: 28px; height: 28px; }
+
+    /* ─── Article layout ─────────────────────────────────────── */
+    .article-wrap { max-width: 740px; margin: 0 auto; padding: 6rem 1.5rem 4rem; }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; color: var(--color-muted);
+      margin-bottom: 2rem;
+      transition: color 0.18s;
+    }
+    .back-link:hover { color: var(--color-accent); }
+    .back-link svg { width: 14px; height: 14px; }
+
+    /* Header del artículo */
+    .article-category {
+      display: inline-flex; align-items: center;
+      background: rgba(255,107,53,0.12); color: var(--color-accent);
+      border-radius: 99px; padding: 0.2rem 0.75rem;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .article-title {
+      font-family: var(--font-heading); font-weight: 800;
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      line-height: 1.2; margin-bottom: 1rem;
+    }
+    .article-excerpt {
+      font-size: 1.05rem; color: var(--color-muted);
+      line-height: 1.65; margin-bottom: 1.5rem;
+      border-left: 3px solid var(--color-accent);
+      padding-left: 1rem;
+    }
+    .article-meta {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.8rem; color: var(--color-muted);
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .article-meta-sep { opacity: 0.3; }
+
+    /* Imagen destacada */
+    .article-featured-img {
+      width: 100%; border-radius: 10px; margin-bottom: 2rem;
+      max-height: 460px; object-fit: cover;
+    }
+
+    /* Cuerpo del artículo */
+    .article-body {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: rgba(240,240,240,0.92);
+    }
+    .article-body h2 { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--color-text); }
+    .article-body h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: var(--color-text); }
+    .article-body p  { margin-bottom: 1.25rem; }
+    .article-body ul, .article-body ol { margin: 0 0 1.25rem 1.5rem; }
+    .article-body li { margin-bottom: 0.4rem; }
+    .article-body strong { font-weight: 600; color: var(--color-text); }
+    .article-body em { font-style: italic; }
+    .article-body a  { color: var(--color-accent-alt); text-decoration: underline; text-underline-offset: 3px; }
+    .article-body a:hover { color: var(--color-accent); }
+    .article-body blockquote {
+      border-left: 3px solid var(--color-accent);
+      padding: 0.75rem 1.25rem; margin: 1.5rem 0;
+      background: rgba(255,107,53,0.05); border-radius: 0 8px 8px 0;
+      color: var(--color-muted); font-style: italic;
+    }
+    .article-body img { border-radius: 8px; margin: 1.5rem 0; width: 100%; }
+
+    /* Tags */
+    .article-tags { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .tags-label { font-size: 0.78rem; color: var(--color-muted); font-weight: 600; margin-right: 0.25rem; }
+    .tag-pill { padding: 0.25rem 0.75rem; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.15); border-radius: 99px; font-size: 0.75rem; color: var(--color-accent-alt); }
+
+    /* ─── Estados ────────────────────────────────────────────── */
+    .state-center { padding: 6rem 1.5rem; text-align: center; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
+    .state-center svg { width: 48px; height: 48px; margin: 0 auto 1.25rem; opacity: 0.25; }
+    .state-center h2 { font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text); }
+    .spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--color-accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.25rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-back { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; padding: 0.55rem 1.25rem; background: var(--color-accent); border-radius: 8px; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; transition: background 0.18s; }
+    .btn-back:hover { background: #e85d2a; }
+
+    /* ─── Footer ─────────────────────────────────────────────── */
+    footer { background: var(--color-secondary); border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem 1.5rem; text-align: center; color: var(--color-muted); font-size: 0.8rem; }
+    .footer-nav { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .footer-nav a { color: var(--color-muted); transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--color-accent); }
+
+    @media (max-width: 768px) {
+      nav { display: none; }
+      .hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="siteHeader">
+    <a href="index.html" class="logo">Cronos <span>Sport</span> Media</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="en-vivo.html">En Vivo</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="noticias.html" class="active">Noticias</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </header>
+
+  <nav class="nav-mobile" id="mobileNav">
+    <button class="nav-close" id="navClose">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <a href="index.html">Inicio</a>
+    <a href="en-vivo.html">En Vivo</a>
+    <a href="podcast.html">Podcast</a>
+    <a href="noticias.html" class="active">Noticias</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="contacto.html">Contacto</a>
+  </nav>
+
+  <div id="appRoot">
+    <!-- Estado de carga inicial -->
+    <div class="state-center">
+      <div class="spinner"></div>
+      <p>Cargando artículo...</p>
+    </div>
+  </div>
+
+  <footer>
+    <nav class="footer-nav">
+      <a href="index.html">Inicio</a>
+      <a href="en-vivo.html">En Vivo</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+    <p>© <span id="year"></span> Cronos Sport Media. Todos los derechos reservados.</p>
+  </footer>
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, where, limit, getDocs }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey:            "AIzaSyACGQlXKkdJsvsuIn77ZQ06SghlTvUTDLI",
+      authDomain:        "cronossportmedia-e07ef.firebaseapp.com",
+      projectId:         "cronossportmedia-e07ef",
+      storageBucket:     "cronossportmedia-e07ef.firebasestorage.app",
+      messagingSenderId: "898405181430",
+      appId:             "1:898405181430:web:12ad5dc59fa049c26609d7"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db  = getFirestore(app);
+
+    // ─── Header scroll ───────────────────────────────────────
+    window.addEventListener('scroll', () => {
+      document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 40);
+    });
+    document.getElementById('hamburgerBtn').addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.add('open');
+    });
+    document.getElementById('navClose').addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.remove('open');
+    });
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // ─── Obtener slug de la URL ──────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const slug   = params.get('slug');
+
+    if (!slug) {
+      renderNotFound();
+    } else {
+      loadArticle(slug);
+    }
+
+    async function loadArticle(slug) {
+      try {
+        const q    = query(
+          collection(db, 'articles'),
+          where('slug', '==', slug),
+          where('status', '==', 'published'),
+          limit(1)
+        );
+        const snap = await getDocs(q);
+
+        if (snap.empty) { renderNotFound(); return; }
+
+        const article = { id: snap.docs[0].id, ...snap.docs[0].data() };
+        renderArticle(article);
+
+      } catch (err) {
+        console.error(err);
+        renderError();
+      }
+    }
+
+    function renderArticle(a) {
+      // Actualizar meta tags
+      document.getElementById('pageTitle').textContent = `${a.title} — Cronos Sport Media`;
+      document.getElementById('metaDescription').setAttribute('content', a.excerpt || '');
+
+      const date = formatDate(a.published_at);
+      const cat  = formatCat(a.category);
+
+      // Sanitizar HTML del cuerpo con DOMPurify
+      const safeBody = DOMPurify.sanitize(a.body || '', {
+        ALLOWED_TAGS: ['p','br','h2','h3','strong','em','u','ul','ol','li','a','blockquote','img'],
+        ALLOWED_ATTR: ['href','src','alt','title','target','rel'],
+        FORCE_BODY: false,
+      });
+
+      // Imagen con transformación Cloudinary
+      const imgHtml = a.featured_image
+        ? `<img class="article-featured-img" src="${esc(transformImg(a.featured_image))}" alt="${esc(a.title)}" loading="eager">`
+        : '';
+
+      // Tags
+      const tagsHtml = a.tags?.length
+        ? `<div class="article-tags">
+             <span class="tags-label">Etiquetas:</span>
+             ${a.tags.map(t => `<span class="tag-pill">${esc(t)}</span>`).join('')}
+           </div>`
+        : '';
+
+      document.getElementById('appRoot').innerHTML = `
+        <div class="article-wrap">
+          <a class="back-link" href="noticias.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Volver a Noticias
+          </a>
+
+          <span class="article-category">${esc(cat)}</span>
+          <h1 class="article-title">${esc(a.title)}</h1>
+          <p class="article-excerpt">${esc(a.excerpt)}</p>
+
+          <div class="article-meta">
+            <span>${esc(a.author_name || '—')}</span>
+            <span class="article-meta-sep">·</span>
+            <span>${date}</span>
+            <span class="article-meta-sep">·</span>
+            <span>${esc(cat)}</span>
+          </div>
+
+          ${imgHtml}
+
+          <div class="article-body">${safeBody}</div>
+
+          ${tagsHtml}
+        </div>`;
+    }
+
+    function renderNotFound() {
+      document.getElementById('pageTitle').textContent = 'Artículo no encontrado — Cronos Sport Media';
+      document.getElementById('appRoot').innerHTML = `
+        <div class="state-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <h2>Artículo no encontrado</h2>
+          <p>El artículo que buscas no existe o fue eliminado.</p>
+          <a class="btn-back" href="noticias.html">← Ver todas las noticias</a>
+        </div>`;
+    }
+
+    function renderError() {
+      document.getElementById('appRoot').innerHTML = `
+        <div class="state-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <h2>Error al cargar el artículo</h2>
+          <p>Ocurrió un problema. Intenta recargar la página.</p>
+          <a class="btn-back" href="noticias.html">← Volver a Noticias</a>
+        </div>`;
+    }
+
+    // Imagen Cloudinary optimizada para artículo completo
+    function transformImg(url) {
+      if (!url || !url.includes('cloudinary.com')) return url;
+      return url.replace('/upload/', '/upload/w_800,q_auto,f_auto/');
+    }
+
+    function formatDate(ts) {
+      if (!ts) return '';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleDateString('es-VE', { day:'2-digit', month:'long', year:'numeric' });
+    }
+    function formatCat(c) { return {deportes:'Deportes',noticias:'Noticias',entretenimiento:'Entretenimiento',opinion:'Opinión'}[c]||c||''; }
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  </script>
+</body>
+</html>
