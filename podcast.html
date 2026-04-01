@@ -455,13 +455,25 @@
   })();
   
     // ── Mobile nav ──────────────────────────────────────────
-    document.getElementById('navToggle').addEventListener('click', function() {
-      document.getElementById('mobileNav').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    });
-    document.getElementById('navClose').addEventListener('click', function() {
-      document.getElementById('mobileNav').classList.remove('open');
-      document.body.style.overflow = '';
+    document.addEventListener('DOMContentLoaded', function() {
+      var navToggle = document.getElementById('navToggle');
+      var mobileNav = document.getElementById('mobileNav');
+      var navClose  = document.getElementById('navClose');
+      if (navToggle) {
+        navToggle.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileNav.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        });
+      }
+      if (navClose) {
+        navClose.addEventListener('click', function(e) {
+          e.preventDefault();
+          mobileNav.classList.remove('open');
+          document.body.style.overflow = '';
+        });
+      }
     });
   </script>
 
