@@ -314,7 +314,61 @@
     .radio__player-icon { width: 56px; height: 56px; margin: 0 auto 1rem; border-radius: 50%; background: rgba(255,107,53,.15); display: flex; align-items: center; justify-content: center; }
     .radio__player-icon svg { width: 26px; height: 26px; fill: var(--color-accent); }
     .radio__player-title { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin-bottom: .5rem; }
-    .radio__player p { color: var(--color-text-muted); font-size: .875rem; }
+    .radio__player-sub { color: var(--color-text-muted); font-size: .875rem; margin-bottom: 1.5rem; }
+
+    /* Controles del player */
+    .radio-controls {
+      display: flex; align-items: center; gap: 1rem;
+      background: rgba(255,255,255,.04); border-radius: 50px;
+      padding: .75rem 1.25rem; margin-bottom: 1rem;
+    }
+    .radio-btn {
+      width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+      background: var(--color-accent); color: #fff; display: flex; align-items: center;
+      justify-content: center; flex-shrink: 0; transition: background .2s, transform .15s, box-shadow .2s;
+    }
+    .radio-btn:hover { background: #e55a28; transform: scale(1.07); box-shadow: 0 6px 20px rgba(255,107,53,.4); }
+    .radio-btn:active { transform: scale(1); }
+    .radio-btn svg { width: 20px; height: 20px; }
+    .radio-info { flex: 1; min-width: 0; text-align: left; }
+    .radio-info__label {
+      display: block; font-size: .8rem; color: var(--color-text-muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .radio-wave {
+      display: flex; align-items: flex-end; gap: 3px; height: 18px;
+      margin-top: 4px; opacity: 0; transition: opacity .3s;
+    }
+    .radio-wave.is-playing { opacity: 1; }
+    .radio-wave span {
+      display: block; width: 3px; border-radius: 2px;
+      background: var(--color-accent);
+    }
+    @keyframes wave {
+      0%, 100% { transform: scaleY(1); }
+      50%       { transform: scaleY(.3); }
+    }
+    .radio-wave span:nth-child(1) { height: 8px;  animation: wave 1.2s ease-in-out infinite; }
+    .radio-wave span:nth-child(2) { height: 14px; animation: wave 1.2s ease-in-out infinite .15s; }
+    .radio-wave span:nth-child(3) { height: 18px; animation: wave 1.2s ease-in-out infinite .3s; }
+    .radio-wave span:nth-child(4) { height: 12px; animation: wave 1.2s ease-in-out infinite .45s; }
+    .radio-wave span:nth-child(5) { height: 6px;  animation: wave 1.2s ease-in-out infinite .6s; }
+    .radio-volume {
+      display: flex; align-items: center; gap: .5rem;
+      color: var(--color-text-muted); flex-shrink: 0;
+    }
+    .radio-volume input[type="range"] {
+      width: 72px; accent-color: var(--color-accent); cursor: pointer;
+    }
+    .radio-fallback {
+      margin-top: .75rem; font-size: .8rem; color: var(--color-text-muted);
+    }
+    .radio-fallback summary {
+      cursor: pointer; opacity: .7; list-style: none;
+      display: inline-block; text-decoration: underline;
+    }
+    .radio-fallback summary:hover { opacity: 1; }
+    .radio-fallback summary::-webkit-details-marker { display: none; }
 
     /* ================================================
        PODCASTS
@@ -524,12 +578,42 @@
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
           </div>
-          <p class="radio__player-title">Reproductor de radio — próximamente</p>
-          <p>[PENDIENTE CONFIRMAR: horarios de programación]</p>
-          <!--
-            TODO DEC-P01: reemplazar este bloque cuando se confirme el proveedor.
-            <iframe src="[URL_PROVEEDOR]" width="100%" height="120" loading="lazy" allow="autoplay"></iframe>
-          -->
+          <p class="radio__player-title">Radio Cronos Sport Media</p>
+          <p class="radio__player-sub">Señal en vivo las 24 horas — música y contenido deportivo</p>
+
+          <!-- Stream Zeno.fm: https://stream.zeno.fm/twjyzsaviyivv -->
+          <div class="radio-controls">
+            <button class="radio-btn" id="radio-play-btn" aria-label="Reproducir radio">
+              <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            </button>
+            <div class="radio-info">
+              <span class="radio-info__label" id="radio-status">Presiona play para escuchar</span>
+              <div class="radio-wave" id="radio-wave" aria-hidden="true">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+            <div class="radio-volume">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              <input type="range" id="radio-volume" min="0" max="1" step="0.05" value="0.8" aria-label="Volumen">
+            </div>
+          </div>
+
+          <audio id="radio-audio" preload="none">
+            <source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg">
+          </audio>
+
+          <details class="radio-fallback">
+            <summary>¿No escuchas la radio? Prueba el reproductor alternativo</summary>
+            <iframe
+              src="https://player.zeno.fm/twjyzsaviyivv"
+              width="100%"
+              height="112"
+              loading="lazy"
+              allow="autoplay"
+              style="border:none;border-radius:6px;margin-top:.75rem;">
+            </iframe>
+          </details>
         </div>
       </div>
     </section>
@@ -641,6 +725,69 @@
 
   })();
   
+    /* Radio player nativo */
+    var audio     = document.getElementById('radio-audio');
+    var playBtn   = document.getElementById('radio-play-btn');
+    var iconPlay  = document.getElementById('icon-play');
+    var iconPause = document.getElementById('icon-pause');
+    var statusLbl = document.getElementById('radio-status');
+    var wave      = document.getElementById('radio-wave');
+    var volCtrl   = document.getElementById('radio-volume');
+
+    if (audio && playBtn) {
+      var isPlaying = false;
+
+      function startPlay() {
+        audio.src = 'https://stream.zeno.fm/twjyzsaviyivv';
+        audio.load();
+        audio.play().then(function() {
+          isPlaying = true;
+          iconPlay.style.display  = 'none';
+          iconPause.style.display = '';
+          statusLbl.textContent   = 'Escuchando Radio Cronos Sport Media...';
+          wave.classList.add('is-playing');
+          playBtn.setAttribute('aria-label', 'Pausar radio');
+        }).catch(function() {
+          statusLbl.textContent = 'Error al cargar. Prueba el reproductor alternativo.';
+        });
+      }
+
+      function stopPlay() {
+        audio.pause();
+        audio.src = '';
+        isPlaying = false;
+        iconPlay.style.display  = '';
+        iconPause.style.display = 'none';
+        statusLbl.textContent   = 'Presiona play para escuchar';
+        wave.classList.remove('is-playing');
+        playBtn.setAttribute('aria-label', 'Reproducir radio');
+      }
+
+      playBtn.addEventListener('click', function() {
+        isPlaying ? stopPlay() : startPlay();
+      });
+
+      if (volCtrl) {
+        audio.volume = parseFloat(volCtrl.value);
+        volCtrl.addEventListener('input', function() {
+          audio.volume = parseFloat(this.value);
+        });
+      }
+
+      audio.addEventListener('error', function() {
+        statusLbl.textContent = 'Error de conexión. Prueba el reproductor alternativo.';
+        stopPlay();
+      });
+
+      audio.addEventListener('waiting', function() {
+        statusLbl.textContent = 'Cargando señal...';
+      });
+
+      audio.addEventListener('playing', function() {
+        statusLbl.textContent = 'Escuchando Radio Cronos Sport Media...';
+      });
+    }
+
     // ── Mobile nav ──────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
       var navToggle = document.getElementById('navToggle');
