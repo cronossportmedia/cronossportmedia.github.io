@@ -38,7 +38,8 @@
     /* ─── Header ─────────────────────────────────────────────── */
     header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s, backdrop-filter 0.3s; }
     header.scrolled { background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
-    .logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.04em; text-transform: uppercase; }
+    .logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; color: var(--color-text); }
+    .logo img { height: 36px; width: auto; display: block; }
     .logo span { color: var(--color-accent); }
     nav { display: flex; align-items: center; gap: 1.5rem; }
     nav a { font-size: 0.875rem; font-weight: 500; color: var(--color-muted); transition: color 0.2s; }
@@ -154,7 +155,10 @@
 <body>
 
   <header id="siteHeader">
-    <a href="index.html" class="logo">Cronos <span>Sport</span> Media</a>
+    <a href="index.html" class="logo">
+        <img src="assets/img/logo-icon.svg" alt="" aria-hidden="true" height="36" width="36">
+        Cronos <span>Sport</span> Media
+      </a>
     <nav>
       <a href="index.html">Inicio</a>
       <a href="en-vivo.html">En Vivo</a>

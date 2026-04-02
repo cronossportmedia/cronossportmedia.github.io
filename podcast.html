@@ -67,7 +67,8 @@
     /* HEADER */
     .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: rgba(13,27,42,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
     .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
-    .header__logo { font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; }
+    .header__logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; text-decoration: none; }
+    .header__logo img { height: 36px; width: auto; display: block; }
     .header__logo span { color: var(--color-accent); }
     .nav { display: none; }
     .nav__list { display: flex; align-items: center; gap: 2rem; }
@@ -198,6 +199,7 @@
   <header class="header" role="banner">
     <div class="header__inner">
       <a href="index.html" class="header__logo" aria-label="Cronos Sport Media — Inicio">
+        <img src="assets/img/logo-icon.svg" alt="" aria-hidden="true" height="36" width="36">
         Cronos <span>Sport</span> Media
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="main-nav">
