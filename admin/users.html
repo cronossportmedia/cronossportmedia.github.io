@@ -37,7 +37,6 @@
 
     .app { display: flex; min-height: 100vh; }
 
-    /* Sidebar */
     .sidebar { width: var(--sidebar-w); background: var(--color-surface-2); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; transition: transform var(--transition); }
     .sidebar-brand { padding: 1.25rem 1.25rem 1rem; border-bottom: 1px solid var(--color-border); }
     .sidebar-brand-name { font-family: var(--font-heading); font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
@@ -58,13 +57,11 @@
     .btn-logout:hover { background: rgba(239,68,68,0.2); }
     .btn-logout svg { width: 14px; height: 14px; }
 
-    /* Main */
     .main { flex: 1; margin-left: var(--sidebar-w); display: flex; flex-direction: column; min-height: 100vh; }
     .topbar { background: var(--color-surface-2); border-bottom: 1px solid var(--color-border); padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: sticky; top: 0; z-index: 50; }
     .topbar-title { font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem; }
     .page-body { padding: 1.5rem; flex: 1; }
 
-    /* Buttons */
     .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; border-radius: var(--radius); font-family: var(--font-heading); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.03em; text-transform: uppercase; border: none; transition: all var(--transition); min-height: 36px; cursor: pointer; }
     .btn-primary { background: var(--color-accent); color: white; }
     .btn-primary:hover { background: #e85d2a; transform: translateY(-1px); }
@@ -76,7 +73,6 @@
     .btn.loading .btn-label { display: none; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Users table */
     .table-wrap { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
     .table-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; }
     .table-header-title { font-weight: 600; font-size: 0.9rem; }
@@ -86,7 +82,7 @@
     .user-row:hover { background: rgba(255,255,255,0.02); }
 
     .user-row-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--color-accent); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-weight: 800; font-size: 0.8rem; color: white; flex-shrink: 0; }
-    .user-row-name { font-weight: 600; font-size: 0.875rem; }
+    .user-row-name  { font-weight: 600; font-size: 0.875rem; }
     .user-row-email { font-size: 0.75rem; color: var(--color-muted); }
 
     .role-badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 99px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
@@ -102,14 +98,13 @@
     .row-actions { display: flex; align-items: center; gap: 0.35rem; }
     .action-btn { width: 30px; height: 30px; border-radius: var(--radius); border: 1px solid var(--color-border); background: transparent; color: var(--color-muted); display: flex; align-items: center; justify-content: center; transition: all var(--transition); }
     .action-btn svg { width: 13px; height: 13px; }
-    .action-btn:hover { color: var(--color-text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+    .action-btn:hover       { color: var(--color-text); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
     .action-btn.danger:hover { color: #fca5a5; border-color: rgba(239,68,68,0.4); }
     .action-btn.warn:hover   { color: #fde68a; border-color: rgba(245,158,11,0.4); }
 
     .loading-state { padding: 3rem; text-align: center; color: var(--color-muted); }
     .loading-spinner { width: 28px; height: 28px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--color-accent); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 1rem; }
 
-    /* Modal */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
     .modal-overlay.open { display: flex; }
     .modal { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.5rem; width: 100%; max-width: 420px; box-shadow: 0 25px 60px rgba(0,0,0,0.5); }
@@ -124,14 +119,12 @@
     .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem; }
     .btn-full-modal { padding: 0.55rem 1.25rem; }
 
-    /* Toast */
     .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.75rem 1.25rem; border-radius: var(--radius); font-size: 0.875rem; font-weight: 500; display: none; align-items: center; gap: 0.5rem; z-index: 300; max-width: 320px; }
     .toast.show { display: flex; animation: slideUp 0.2s ease; }
     .toast.success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
     .toast.error   { background: rgba(239,68,68,0.15);  border: 1px solid rgba(239,68,68,0.3);  color: #fca5a5; }
     @keyframes slideUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 
-    /* Mobile */
     .mobile-header { display: none; background: var(--color-surface-2); border-bottom: 1px solid var(--color-border); padding: 0.85rem 1rem; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 60; }
     .mobile-brand { font-family: var(--font-heading); font-weight: 800; font-size: 0.85rem; letter-spacing: 0.05em; }
     .mobile-brand span { color: var(--color-accent); }
@@ -183,7 +176,10 @@
     <div class="sidebar-footer">
       <div class="user-info">
         <div class="user-avatar" id="userInitial">?</div>
-        <div><div class="user-name" id="userName">—</div><div class="user-role" id="userRoleEl">—</div></div>
+        <div>
+          <div class="user-name" id="userName">—</div>
+          <div class="user-role" id="userRoleEl">—</div>
+        </div>
       </div>
       <button class="btn-logout" id="btnLogout">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -201,15 +197,13 @@
     </header>
     <div class="topbar">
       <div class="topbar-title">Gestión de usuarios</div>
-      <button class="btn btn-primary" id="btnNewUser">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        <span class="btn-label">Nuevo usuario</span>
-      </button>
+      <div id="topbarActions"></div>
     </div>
     <div class="page-body">
       <div class="table-wrap">
         <div class="table-header">
           <span class="table-header-title">Usuarios del sistema</span>
+          <div id="tableHeaderActions"></div>
         </div>
         <div id="usersList">
           <div class="loading-state"><div class="loading-spinner"></div><p>Cargando usuarios...</p></div>
@@ -219,7 +213,6 @@
   </div>
 </div>
 
-<!-- Modal crear/editar usuario -->
 <div class="modal-overlay" id="userModal">
   <div class="modal">
     <div class="modal-title" id="modalTitle">Nuevo usuario</div>
@@ -264,10 +257,11 @@
     collection, onSnapshot, doc, getDoc, updateDoc, setDoc, serverTimestamp, query, orderBy
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  let currentUser = null;
-  let editingUid  = null; // null = nuevo, string = editar
+  const ENABLE_CREATE_USER = false;
 
-  // ─── Guard: solo super_admin ────────────────────────────
+  let currentUser = null;
+  let editingUid  = null;
+
   onAuthStateChanged(auth, async (user) => {
     if (!user) { window.location.replace('index.html'); return; }
     const snap = await getDoc(doc(db, 'users', user.uid));
@@ -275,13 +269,26 @@
       window.location.replace('dashboard.html'); return;
     }
     currentUser = { uid: user.uid, ...snap.data() };
-    document.getElementById('userInitial').textContent = (currentUser.display_name||'U')[0].toUpperCase();
+    document.getElementById('userInitial').textContent = (currentUser.display_name || 'U')[0].toUpperCase();
     document.getElementById('userName').textContent    = currentUser.display_name || user.email;
     document.getElementById('userRoleEl').textContent  = 'Super Admin';
+
+    if (ENABLE_CREATE_USER) {
+      const btnHtml = `<button class="btn btn-primary" id="btnNewUser">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span class="btn-label">Nuevo usuario</span>
+      </button>`;
+      document.getElementById('topbarActions').innerHTML     = btnHtml;
+      document.getElementById('tableHeaderActions').innerHTML = btnHtml;
+      document.getElementById('topbarActions').querySelector('#btnNewUser')
+        .addEventListener('click', () => openModal(null));
+      document.getElementById('tableHeaderActions').querySelector('#btnNewUser')
+        .addEventListener('click', () => openModal(null));
+    }
+
     loadUsers();
   });
 
-  // ─── Cargar usuarios en tiempo real ─────────────────────
   function loadUsers() {
     const q = query(collection(db, 'users'), orderBy('created_at', 'asc'));
     onSnapshot(q, (snap) => {
@@ -297,10 +304,10 @@
     }
     document.getElementById('usersList').innerHTML = users.map(u => `
       <div class="user-row">
-        <div class="user-row-avatar">${(u.display_name||'?')[0].toUpperCase()}</div>
+        <div class="user-row-avatar">${(u.display_name || '?')[0].toUpperCase()}</div>
         <div>
-          <div class="user-row-name">${esc(u.display_name||'—')}</div>
-          <div class="user-row-email">${esc(u.email||'—')}</div>
+          <div class="user-row-name">${esc(u.display_name || '—')}</div>
+          <div class="user-row-email">${esc(u.email || '—')}</div>
         </div>
         <span class="role-badge role-${u.role}">${formatRole(u.role)}</span>
         <div class="row-actions">
@@ -324,7 +331,7 @@
   }
 
   async function handleAction(action, uid, activeStr) {
-    if (action === 'edit') openModal(uid);
+    if (action === 'edit') { openModal(uid); return; }
     if (action === 'toggle') {
       const isActive = activeStr === 'true';
       const msg = isActive ? '¿Desactivar este usuario? No podrá iniciar sesión.' : '¿Activar este usuario?';
@@ -336,18 +343,16 @@
     }
   }
 
-  // ─── Modal crear/editar ──────────────────────────────────
-  document.getElementById('btnNewUser').addEventListener('click', () => openModal(null));
   document.getElementById('btnCancelModal').addEventListener('click', closeModal);
 
   async function openModal(uid) {
     editingUid = uid;
     clearModalErrors();
     document.getElementById('modalTitle').textContent = uid ? 'Editar usuario' : 'Nuevo usuario';
-    document.getElementById('mEmail').value = '';
-    document.getElementById('mName').value  = '';
-    document.getElementById('mRole').value  = '';
-    document.getElementById('mEmail').disabled = !!uid; // email no editable en edición
+    document.getElementById('mEmail').value   = '';
+    document.getElementById('mName').value    = '';
+    document.getElementById('mRole').value    = '';
+    document.getElementById('mEmail').disabled = !!uid;
 
     if (uid) {
       const snap = await getDoc(doc(db, 'users', uid));
@@ -377,24 +382,17 @@
 
     try {
       if (editingUid) {
-        // Editar documento existente
-        await updateDoc(doc(db, 'users', editingUid), {
-          display_name: name,
-          role,
-        });
+        await updateDoc(doc(db, 'users', editingUid), { display_name: name, role });
         showToast('Usuario actualizado.', 'success');
       } else {
-        // Nuevo usuario — solo crea el documento en Firestore
-        // La cuenta en Firebase Auth debe crearse manualmente en la consola
-        // (no es posible crear usuarios desde client-side SDK sin Admin SDK)
-        const uid = 'pending_' + Date.now(); // placeholder hasta crear la cuenta en Auth
+        const uid = 'pending_' + Date.now();
         await setDoc(doc(db, 'users', uid), {
           email,
           display_name: name,
           role,
-          active: false, // inactivo hasta que se cree la cuenta en Auth y se actualice el UID
+          active:     false,
           created_at: serverTimestamp(),
-          _pending: true, // flag para identificar que necesita configuración manual en Auth
+          _pending:   true,
         });
         showToast('Perfil creado. Recuerda crear la cuenta en Firebase Auth Console y actualizar el UID.', 'success');
       }
@@ -410,9 +408,9 @@
     let ok = true;
     if (!document.getElementById('mEmail').value.trim()) { document.getElementById('errEmail').classList.add('visible'); ok = false; }
     else document.getElementById('errEmail').classList.remove('visible');
-    if (!document.getElementById('mName').value.trim()) { document.getElementById('errName').classList.add('visible'); ok = false; }
+    if (!document.getElementById('mName').value.trim())  { document.getElementById('errName').classList.add('visible'); ok = false; }
     else document.getElementById('errName').classList.remove('visible');
-    if (!document.getElementById('mRole').value) { document.getElementById('errRole').classList.add('visible'); ok = false; }
+    if (!document.getElementById('mRole').value)          { document.getElementById('errRole').classList.add('visible'); ok = false; }
     else document.getElementById('errRole').classList.remove('visible');
     return ok;
   }
@@ -421,19 +419,24 @@
     ['errEmail','errName','errRole'].forEach(id => document.getElementById(id).classList.remove('visible'));
   }
 
-  // ─── Logout + mobile ────────────────────────────────────
-  document.getElementById('btnLogout').addEventListener('click', async () => { await signOut(auth); window.location.replace('index.html'); });
+  document.getElementById('btnLogout').addEventListener('click', async () => {
+    await signOut(auth); window.location.replace('index.html');
+  });
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebarOverlay');
-  document.getElementById('hamburgerBtn').addEventListener('click', () => { sidebar.classList.toggle('open'); overlay.classList.toggle('open'); });
-  overlay.addEventListener('click', () => { sidebar.classList.remove('open'); overlay.classList.remove('open'); });
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    sidebar.classList.toggle('open'); overlay.classList.toggle('open');
+  });
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open'); overlay.classList.remove('open');
+  });
 
-  function showToast(msg, type='success') {
+  function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
     t.textContent = msg; t.className = `toast ${type} show`;
     setTimeout(() => t.classList.remove('show'), 4000);
   }
-  function formatRole(r) { return {super_admin:'Super Admin',editor_jefe:'Editor Jefe',reportero:'Reportero',colaborador:'Colaborador'}[r]||r; }
+  function formatRole(r) { return { super_admin:'Super Admin', editor_jefe:'Editor Jefe', reportero:'Reportero', colaborador:'Colaborador' }[r] || r; }
   function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
