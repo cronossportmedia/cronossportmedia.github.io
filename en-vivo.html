@@ -8,30 +8,22 @@
   <meta property="og:title" content="En Vivo — Cronos Sport Media">
   <meta property="og:description" content="Radio en vivo 24/7 y transmisiones deportivas en tiempo real.">
   <meta property="og:type" content="website">
-  <!-- [PENDIENTE CONFIRMAR: og:url y og:image] -->
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
   <style>
-    /* ================================================
-       RESET
-       ================================================ */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     ul, ol { list-style: none; }
     a { text-decoration: none; color: inherit; }
     img, iframe { max-width: 100%; display: block; }
     button { font: inherit; cursor: pointer; border: none; background: none; }
 
-    /* ================================================
-       VARIABLES — BRAND.md
-       ================================================ */
     :root {
       --color-primary:    #0D1B2A;
       --color-secondary:  #1B2D45;
@@ -48,9 +40,6 @@
       --radius-sm:        4px;
     }
 
-    /* ================================================
-       GLOBAL
-       ================================================ */
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     body { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; color: var(--color-text); background: var(--color-primary); overflow-x: hidden; }
     h1, h2, h3 { font-family: var(--font-heading); line-height: 1.2; }
@@ -84,17 +73,11 @@
     :focus-visible { outline: 2px solid var(--color-accent-alt); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
-    /* ================================================
-       SCROLL ANIMATIONS
-       ================================================ */
     .reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
     .reveal.is-visible { opacity: 1; transform: translateY(0); }
     .stagger-1 { transition-delay: .1s; }
     .stagger-2 { transition-delay: .2s; }
 
-    /* ================================================
-       HEADER
-       ================================================ */
     .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: rgba(13,27,42,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
     .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
     .header__logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; text-decoration: none; }
@@ -114,9 +97,6 @@
     .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     
 
-    /* ================================================
-       PAGE HERO — interior (no fullscreen, compacto)
-       ================================================ */
     .page-hero {
       padding: calc(var(--header-height) + 3rem) 1.25rem 3rem;
       text-align: center;
@@ -150,9 +130,6 @@
     }
     @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* ================================================
-       SECCIÓN RADIO
-       ================================================ */
     .radio-section { padding: 4rem 1.25rem; }
     .section-header { text-align: center; margin-bottom: 2.5rem; }
 
@@ -182,7 +159,6 @@
     .radio-player__title { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700; margin-bottom: .5rem; }
     .radio-player__sub { color: var(--color-text-muted); font-size: .9rem; margin-bottom: 1.5rem; }
 
-    /* Placeholder info mientras no hay embed */
     .radio-placeholder {
       background: rgba(255,107,53,.06);
       border: 1px dashed rgba(255,107,53,.25);
@@ -193,9 +169,6 @@
     }
     .radio-placeholder strong { color: var(--color-accent); display: block; margin-bottom: .25rem; font-family: var(--font-heading); font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; }
 
-    /* ================================================
-       SECCIÓN YOUTUBE / TRANSMISIÓN EN VIVO
-       ================================================ */
     .live-section {
       padding: 4rem 1.25rem;
       background: var(--color-secondary);
@@ -209,7 +182,6 @@
       pointer-events: none;
     }
 
-    /* Contenedor responsive 16:9 */
     .video-container {
       position: relative;
       padding-bottom: 56.25%; /* 16:9 */
@@ -226,7 +198,6 @@
       width: 100%; height: 100%; border: 0;
     }
 
-    /* Estado: sin transmisión activa */
     .no-live {
       position: absolute; inset: 0;
       display: flex; flex-direction: column;
@@ -252,9 +223,6 @@
     }
     .no-live__btn:hover { background: #cc0000; transform: translateY(-1px); }
 
-    /* ================================================
-       CÓMO SEGUIRNOS — sección info
-       ================================================ */
     .follow-section { padding: 4rem 1.25rem; }
     .follow-grid { display: grid; gap: 1.25rem; max-width: var(--max-width); margin: 0 auto; }
 
@@ -274,9 +242,6 @@
     .follow-card__title { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; margin-bottom: .25rem; }
     .follow-card__text { color: var(--color-text-muted); font-size: .875rem; }
 
-    /* ================================================
-       FOOTER
-       ================================================ */
     .footer { padding: 3rem 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,.06); text-align: center; }
     .footer__brand { font-family: var(--font-heading); font-weight: 800; font-size: 1rem; margin-bottom: 1.5rem; }
     .footer__brand span { color: var(--color-accent); }
@@ -289,9 +254,6 @@
     .footer__social svg { width: 18px; height: 18px; }
     .footer__copy { font-size: .8rem; color: var(--color-text-muted); opacity: .6; }
 
-    /* ================================================
-       RESPONSIVE
-       ================================================ */
     @media (min-width: 768px) {
       h1 { font-size: 2.5rem; }
       h2 { font-size: 2rem; }
@@ -301,9 +263,6 @@
       .radio-player { padding: 3rem 2.5rem; }
     }
 
-    /* ================================================
-       RADIO PLAYER NATIVO — controles custom
-       ================================================ */
     .radio-controls {
       display: flex;
       align-items: center;
@@ -338,7 +297,6 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* Animación de ondas de audio */
     .radio-wave {
       display: flex; align-items: flex-end; gap: 3px; height: 18px;
       opacity: 0; transition: opacity .3s;
@@ -358,7 +316,6 @@
       50%       { transform: scaleY(.4); }
     }
 
-    /* Control de volumen */
     .radio-volume {
       display: flex; align-items: center; gap: .5rem; flex-shrink: 0;
       color: var(--color-text-muted);
@@ -377,7 +334,6 @@
       border-radius: 50%; background: var(--color-accent); cursor: pointer;
     }
 
-    /* Fallback accordion */
     .radio-fallback {
       margin-top: .5rem;
       font-size: .8rem;
@@ -402,7 +358,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header" role="banner">
     <div class="header__inner">
       <a href="index.html" class="header__logo" aria-label="Cronos Sport Media — Inicio">
@@ -441,7 +396,6 @@
 
   <main id="main-content">
 
-    <!-- PAGE HERO -->
     <section class="page-hero" aria-labelledby="page-title">
       <div class="page-hero__eyebrow">Transmisiones en tiempo real</div>
       <h1 id="page-title" class="page-hero__title">En <em>Vivo</em></h1>
@@ -450,7 +404,6 @@
       </p>
     </section>
 
-    <!-- RADIO EN VIVO -->
     <section class="radio-section" aria-labelledby="radio-title">
       <div class="container">
         <div class="section-header reveal">
@@ -467,7 +420,6 @@
             <span class="live-badge">En vivo</span>
           </div>
 
-          <!-- INFO DE LA ESTACIÓN -->
           <div class="radio-player__icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -477,13 +429,9 @@
           <p class="radio-player__title">Radio Cronos Sport Media</p>
           <p class="radio-player__sub">Señal en vivo las 24 horas — música y contenido deportivo</p>
 
-          <!-- PLAYER NATIVO HTML5 -->
-          <!-- Stream Zeno.fm: https://stream.zeno.fm/twjyzsaviyivv -->
           <div class="radio-controls">
             <button class="radio-btn" id="radio-play-btn" aria-label="Reproducir radio">
-              <!-- Ícono play -->
               <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <!-- Ícono pause (oculto por defecto) -->
               <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
             </button>
 
@@ -500,12 +448,10 @@
             </div>
           </div>
 
-          <!-- Elemento audio oculto -->
           <audio id="radio-audio" preload="none">
             <source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg">
           </audio>
 
-          <!-- FALLBACK: iframe de Zeno.fm si el audio nativo falla -->
           <details class="radio-fallback">
             <summary>¿No escuchas la radio? Prueba el reproductor alternativo</summary>
             <iframe
@@ -521,7 +467,6 @@
       </div>
     </section>
 
-    <!-- TRANSMISIÓN EN VIVO (YOUTUBE) -->
     <section class="live-section" aria-labelledby="youtube-title">
       <div class="container">
         <div class="section-header reveal">
@@ -534,36 +479,8 @@
         </div>
 
         <div class="video-container reveal">
-          <!--
-            Canal YouTube confirmado: https://www.youtube.com/@CronosSportMedia
-            
-            CUANDO HAY TRANSMISIÓN EN VIVO — reemplazar el iframe de abajo con:
-            <iframe
-              src="https://www.youtube.com/embed/live_stream?channel=[CHANNEL_ID]&autoplay=1"
-              title="Cronos Sport Media — Transmisión en vivo"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-              loading="lazy">
-            </iframe>
-            
-            Para obtener el CHANNEL_ID: en YouTube Studio → Configuración → Canal → Configuración avanzada.
-            
-            CUANDO HAY UN VIDEO ESPECÍFICO — usar:
-            <iframe
-              src="https://www.youtube.com/embed/[VIDEO_ID]"
-              title="Cronos Sport Media"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-              loading="lazy">
-            </iframe>
-          -->
-          <!--
-            Estado dinámico del live de YouTube.
-            Se actualiza automáticamente via YouTube Data API v3.
-            Ver sección de JS al final del archivo para la lógica.
-          -->
+
           <div id="youtube-container" class="video-container">
-            <!-- Panel de carga inicial -->
             <div class="no-live" id="yt-loading">
               <div class="no-live__icon" style="background:rgba(0,212,255,.1);">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-alt)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="26" height="26"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
@@ -571,7 +488,6 @@
               <p class="no-live__title" style="color:var(--color-text-muted);font-size:.95rem;">Verificando transmisión...</p>
             </div>
 
-            <!-- Panel: SIN transmisión -->
             <div class="no-live" id="yt-offline" style="display:none;">
               <div class="no-live__icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
@@ -586,11 +502,9 @@
               </a>
             </div>
 
-            <!-- Panel: CON transmisión en vivo (se inyecta el iframe por JS) -->
             <div id="yt-live" style="display:none; position:absolute; inset:0;"></div>
           </div>
 
-        <!-- Enlace directo al canal -->
         <div style="text-align:center;margin-top:1.5rem;" class="reveal">
           <a
             href="https://www.youtube.com/@CronosSportMedia"
@@ -607,7 +521,6 @@
       </div>
     </section>
 
-    <!-- CÓMO SEGUIRNOS -->
     <section class="follow-section" aria-labelledby="follow-title">
       <div class="container">
         <div class="section-header reveal">
@@ -652,7 +565,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="container">
       <p class="footer__brand">Cronos <span>Sport</span> Media</p>
@@ -664,7 +576,6 @@
         <a href="contacto.html">Contacto</a>
       </nav>
       <div class="footer__social" aria-label="Redes sociales">
-        <!-- [PENDIENTE CONFIRMAR: URLs reales — DEC-P06] -->
         <a href="#" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
         </a>
@@ -686,29 +597,16 @@
       var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
       revealEls.forEach(function(el){ io.observe(el); });
     } else { revealEls.forEach(function(el){ el.classList.add('is-visible'); }); }
-    /* ── 3. YouTube Live Detection ────────────────────────────────
-       Consulta YouTube Data API v3 cada 2 minutos para detectar si
-       el canal @CronosSportMedia está transmitiendo en vivo.
-       Muestra el embed automáticamente si hay live activo,
-       o el panel "sin transmisión" si no lo hay.
-
-       API Key restringida a: cronossportmedia.github.io
-       Cuota: 10,000 unidades/día gratis. Esta consulta usa ~200 unidades
-       por chequeo. Con intervalo de 2 minutos = ~144,000 unidades/día
-       en uso continuo. Ajustar CHECK_INTERVAL_MS si fuera necesario.
-    ──────────────────────────────────────────────────────────────── */
     (function () {
-      var API_KEY    = 'AIzaSyDw_uZhewsS45yPejNyQj9wjvrvplcTAFQ';
-      var CHANNEL_ID = '';                 // ← se obtiene automáticamente desde el handle
-      var HANDLE     = 'CronosSportMedia';
-      var CHECK_INTERVAL_MS = 120000;      // chequear cada 2 minutos
+      var API_KEY = 'AIzaSyCUzTePMXb54AssjcrqbCTSdaW_t2qj2AM';
+      var HANDLE  = 'CronosSportMedia';
+      var CHECK_INTERVAL_MS = 600000;
 
       var elLoading = document.getElementById('yt-loading');
       var elOffline = document.getElementById('yt-offline');
       var elLive    = document.getElementById('yt-live');
 
-      // Si no hay API key configurada todavía, mostrar estado offline directamente
-      if (!API_KEY || API_KEY === 'TU_API_KEY_AQUI') {
+      if (!API_KEY) {
         if (elLoading) elLoading.style.display = 'none';
         if (elOffline) elOffline.style.display = 'flex';
         return;
@@ -725,7 +623,6 @@
         if (elOffline) elOffline.style.display = 'none';
         if (elLive) {
           elLive.style.display = 'block';
-          // Solo inyectar el iframe si no existe ya (evita recargar)
           if (!elLive.querySelector('iframe')) {
             elLive.innerHTML =
               '<iframe src="https://www.youtube.com/embed/' + videoId +
@@ -737,10 +634,9 @@
         }
       }
 
-      function checkLive() {
-        // Buscar transmisiones en vivo activas en el canal
+      function checkLive(channelId) {
         var url = 'https://www.googleapis.com/youtube/v3/search' +
-          '?part=snippet&channelId=' + CHANNEL_ID +
+          '?part=snippet&channelId=' + channelId +
           '&eventType=live&type=video' +
           '&key=' + API_KEY;
 
@@ -750,7 +646,6 @@
             if (data.items && data.items.length > 0) {
               showLive(data.items[0].id.videoId);
             } else {
-              // Si había live antes, limpiar el iframe
               if (elLive && elLive.querySelector('iframe')) {
                 elLive.innerHTML = '';
               }
@@ -761,7 +656,13 @@
       }
 
       function resolveChannelId() {
-        // Resolver el Channel ID desde el handle usando la API
+        var cached = sessionStorage.getItem('yt_channel_id');
+        if (cached) {
+          checkLive(cached);
+          setInterval(function () { checkLive(cached); }, CHECK_INTERVAL_MS);
+          return;
+        }
+
         var url = 'https://www.googleapis.com/youtube/v3/channels' +
           '?part=id&forHandle=' + HANDLE + '&key=' + API_KEY;
 
@@ -769,9 +670,10 @@
           .then(function (res) { return res.json(); })
           .then(function (data) {
             if (data.items && data.items.length > 0) {
-              CHANNEL_ID = data.items[0].id;
-              checkLive();
-              setInterval(checkLive, CHECK_INTERVAL_MS);
+              var channelId = data.items[0].id;
+              sessionStorage.setItem('yt_channel_id', channelId);
+              checkLive(channelId);
+              setInterval(function () { checkLive(channelId); }, CHECK_INTERVAL_MS);
             } else {
               showOffline();
             }
@@ -782,7 +684,6 @@
       resolveChannelId();
     })();
 
-    /* 3. Radio player nativo */
     var audio     = document.getElementById('radio-audio');
     var playBtn   = document.getElementById('radio-play-btn');
     var iconPlay  = document.getElementById('icon-play');
@@ -847,7 +748,6 @@
 
   })();
   
-    // ── Mobile nav ──────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
       var navToggle = document.getElementById('navToggle');
       var mobileNav = document.getElementById('mobileNav');
