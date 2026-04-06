@@ -12,22 +12,35 @@
 
   <style>
     :root {
-      --color-bg:         #0D1B2A;
-      --color-surface:    #1B2D45;
-      --color-surface-2:  #162338;
-      --color-border:     rgba(255,255,255,0.07);
-      --color-accent:     #FF6B35;
-      --color-accent-alt: #00D4FF;
-      --color-text:       #F0F0F0;
-      --color-muted:      #A0AEC0;
-      --color-success:    #10B981;
-      --color-error:      #EF4444;
-      --font-heading:     'Montserrat', sans-serif;
-      --font-body:        'Inter', sans-serif;
-      --radius:           8px;
-      --radius-lg:        12px;
-      --sidebar-w:        240px;
-      --transition:       0.18s ease;
+      --color-bg:           #F5F7FA;
+      --color-surface:      #FFFFFF;
+      --color-surface-2:    #EEF0F5;
+      --color-border:       rgba(0, 0, 0, 0.07);
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #0077CC;
+      --color-text:         #1A202C;
+      --color-muted:        #718096;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
+      --font-heading:       'Montserrat', sans-serif;
+      --font-body:          'Inter', sans-serif;
+      --radius:             8px;
+      --radius-lg:          12px;
+      --sidebar-w:          240px;
+      --transition:         0.18s ease;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:           #0D1B2A;
+      --color-surface:      #1B2D45;
+      --color-surface-2:    #162338;
+      --color-border:       rgba(255, 255, 255, 0.07);
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #00D4FF;
+      --color-text:         #F0F0F0;
+      --color-muted:        #A0AEC0;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,7 +73,7 @@
     .sidebar-nav { flex: 1; padding: 1rem 0.75rem; display: flex; flex-direction: column; gap: 0.25rem; }
     .nav-section-label { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-muted); padding: 0.5rem 0.5rem 0.25rem; margin-top: 0.5rem; }
     .nav-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.6rem 0.75rem; border-radius: var(--radius); font-size: 0.875rem; font-weight: 500; color: var(--color-muted); transition: background var(--transition), color var(--transition); border: none; background: none; width: 100%; text-align: left; }
-    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--color-text); }
+    .nav-item:hover { background: rgba(0,0,0,0.04); color: var(--color-text); }
     .nav-item.active { background: rgba(255,107,53,0.12); color: var(--color-accent); }
     .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
     .sidebar-footer { padding: 1rem 0.75rem; border-top: 1px solid var(--color-border); }
@@ -385,7 +398,18 @@
       .page-body { padding-bottom: calc(5rem + env(safe-area-inset-bottom)); }
       .toast { bottom: calc(5.5rem + env(safe-area-inset-bottom)); right: 1rem; left: 1rem; max-width: none; }
     }
+  
+  body, .header, header, .footer, footer, main, section, article,
+  .nav-mobile, .sidebar, .topbar, .card, .pilar, .podcast-card,
+  .episode-card, .platform-pill, .radio__player, .radio-controls,
+  .submarca-card, .valor-item, .article-card, .login-card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  input, textarea, select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
   </style>
+  <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
 
 <body>
@@ -449,7 +473,11 @@
         </button>
         <div class="topbar-title" id="pageTitle">Nuevo artículo</div>
       </div>
-      <div class="topbar-actions">
+      <div class="topbar-actions" style="display:flex;align-items:center;gap:.5rem;">
+        <button id="theme-toggle" aria-label="Cambiar a modo oscuro" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;flex-shrink:0;">
+          <span class="icon-sun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+          <span class="icon-moon" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        </button>
         <button class="btn btn-ghost" id="btnSaveDraft">
           <div class="btn-spinner"></div>
           <span class="btn-label">Guardar borrador</span>
@@ -1082,5 +1110,31 @@
     return { super_admin:'Super Admin', editor_jefe:'Editor Jefe', reportero:'Reportero', colaborador:'Colaborador' }[r] || r;
   }
 </script>
+  <script>
+  (function(){
+    var html=document.documentElement;
+    document.addEventListener("DOMContentLoaded",function(){
+      var toggles=document.querySelectorAll("#theme-toggle,#theme-toggle-mobile");
+      if(!toggles.length)return;
+      function updateIcons(){
+        var dark=html.getAttribute("data-theme")==="dark";
+        toggles.forEach(function(t){
+          t.querySelectorAll(".icon-sun").forEach(function(el){el.style.display=dark?"none":"block";});
+          t.querySelectorAll(".icon-moon").forEach(function(el){el.style.display=dark?"block":"none";});
+          t.setAttribute("aria-label",dark?"Cambiar a modo claro":"Cambiar a modo oscuro");
+        });
+      }
+      toggles.forEach(function(t){
+        t.addEventListener("click",function(){
+          var dark=html.getAttribute("data-theme")==="dark";
+          if(dark){html.removeAttribute("data-theme");localStorage.setItem("crono-theme","light");}
+          else{html.setAttribute("data-theme","dark");localStorage.setItem("crono-theme","dark");}
+          updateIcons();
+        });
+      });
+      updateIcons();
+    });
+  })();
+  </script>
 </body>
 </html>

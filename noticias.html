@@ -25,20 +25,61 @@
     button { font: inherit; cursor: pointer; border: none; background: none; }
 
     :root {
-      --color-primary:    #0D1B2A;
-      --color-secondary:  #1B2D45;
-      --color-accent:     #FF6B35;
-      --color-accent-alt: #00D4FF;
-      --color-text:       #F0F0F0;
-      --color-text-muted: #A0AEC0;
-      --color-success:    #10B981;
-      --color-error:      #EF4444;
-      --font-heading:     'Montserrat', sans-serif;
-      --font-body:        'Inter', sans-serif;
-      --header-height:    64px;
-      --max-width:        1120px;
-      --radius:           8px;
-      --radius-sm:        4px;
+      --color-primary:      #FFFFFF;
+      --color-secondary:    #F5F7FA;
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #0077CC;
+      --color-text:         #1A202C;
+      --color-text-muted:   #718096;
+      --color-live:         #FF0000;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
+      --header-bg:          rgba(255, 255, 255, 0.95);
+      --header-border:      rgba(0, 0, 0, 0.08);
+      --card-border:        rgba(0, 0, 0, 0.07);
+      --section-border:     rgba(0, 0, 0, 0.06);
+      --footer-border:      rgba(0, 0, 0, 0.08);
+      --btn-ghost-border:   rgba(0, 0, 0, 0.2);
+      --btn-ghost-hover:    rgba(0, 119, 204, 0.06);
+      --accent-bg-soft:     rgba(255, 107, 53, 0.10);
+      --accent-alt-bg-soft: rgba(0, 119, 204, 0.10);
+      --accent-alt-border:  rgba(0, 119, 204, 0.22);
+      --accent-alt-ghost:   rgba(0, 119, 204, 0.15);
+      --range-track:        rgba(0, 0, 0, 0.12);
+      --shadow-md:          0 4px 6px rgba(0, 0, 0, 0.07);
+      --shadow-lg:          0 10px 15px rgba(0, 0, 0, 0.10);
+      --font-heading:       'Montserrat', sans-serif;
+      --font-body:          'Inter', sans-serif;
+      --header-height:      64px;
+      --max-width:          1120px;
+      --radius:             8px;
+      --radius-sm:          4px;
+    }
+
+    [data-theme="dark"] {
+      --color-primary:      #0D1B2A;
+      --color-secondary:    #1B2D45;
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #00D4FF;
+      --color-text:         #F0F0F0;
+      --color-text-muted:   #A0AEC0;
+      --color-live:         #FF0000;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
+      --header-bg:          rgba(13, 27, 42, 0.95);
+      --header-border:      rgba(255, 255, 255, 0.08);
+      --card-border:        rgba(255, 255, 255, 0.07);
+      --section-border:     rgba(255, 255, 255, 0.06);
+      --footer-border:      rgba(255, 255, 255, 0.06);
+      --btn-ghost-border:   rgba(255, 255, 255, 0.2);
+      --btn-ghost-hover:    rgba(0, 212, 255, 0.06);
+      --accent-bg-soft:     rgba(255, 107, 53, 0.15);
+      --accent-alt-bg-soft: rgba(0, 212, 255, 0.10);
+      --accent-alt-border:  rgba(0, 212, 255, 0.22);
+      --accent-alt-ghost:   rgba(0, 212, 255, 0.20);
+      --range-track:        rgba(255, 255, 255, 0.15);
+      --shadow-md:          0 4px 6px rgba(0, 0, 0, 0.30);
+      --shadow-lg:          0 10px 15px rgba(0, 0, 0, 0.40);
     }
 
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
@@ -51,7 +92,7 @@
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 
-    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: rgba(13,27,42,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
+    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: var(--header-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--section-border); }
     .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
     .header__logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; text-decoration: none; }
     .header__logo img { height: 36px; width: auto; display: block; }
@@ -74,7 +115,7 @@
       padding: calc(var(--header-height) + 3rem) 1.25rem 3rem;
       text-align: center; position: relative; overflow: hidden;
       background: linear-gradient(180deg, rgba(255,107,53,.04) 0%, transparent 100%);
-      border-bottom: 1px solid rgba(255,255,255,.05);
+      border-bottom: 1px solid var(--footer-border);
     }
     .page-hero::before {
       content: ''; position: absolute; top: -60px; right: -80px;
@@ -109,7 +150,7 @@
 
     .article-card {
       background: var(--color-secondary);
-      border: 1px solid rgba(255,255,255,.06);
+      border: 1px solid var(--section-border);
       border-radius: 12px; overflow: hidden;
       transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
       display: flex; flex-direction: column;
@@ -127,7 +168,7 @@
     .category-pill { background: rgba(255,107,53,.12); color: var(--color-accent); border-radius: 99px; padding: .15rem .6rem; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
     .article-card-title { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; line-height: 1.35; margin-bottom: .5rem; color: var(--color-text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .article-card-excerpt { font-size: .85rem; color: var(--color-text-muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
-    .article-card-footer { margin-top: 1rem; padding-top: .85rem; border-top: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; justify-content: space-between; }
+    .article-card-footer { margin-top: 1rem; padding-top: .85rem; border-top: 1px solid var(--section-border); display: flex; align-items: center; justify-content: space-between; }
     .article-card-author { font-size: .75rem; color: var(--color-text-muted); }
     .article-card-link { font-size: .78rem; font-weight: 600; color: var(--color-accent); display: flex; align-items: center; gap: .3rem; transition: gap .15s; }
     .article-card:hover .article-card-link { gap: .5rem; }
@@ -145,7 +186,7 @@
     .page-btn:disabled { opacity: .35; cursor: not-allowed; }
     .page-info { font-size: .8rem; color: var(--color-text-muted); }
 
-    .footer { background: var(--color-secondary); border-top: 1px solid rgba(255,255,255,.06); padding: 3rem 1.25rem 2rem; }
+    .footer { background: var(--color-secondary); border-top: 1px solid var(--section-border); padding: 3rem 1.25rem 2rem; }
     .footer .container { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; text-align: center; }
     .footer__brand { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; }
     .footer__brand span { color: var(--color-accent); }
@@ -165,7 +206,18 @@
     @media (max-width: 767px) {
       .articles-grid { grid-template-columns: 1fr; }
     }
+  
+  body, .header, header, .footer, footer, main, section, article,
+  .nav-mobile, .sidebar, .topbar, .card, .pilar, .podcast-card,
+  .episode-card, .platform-pill, .radio__player, .radio-controls,
+  .submarca-card, .valor-item, .article-card, .login-card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  input, textarea, select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
   </style>
+  <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
 <body>
 
@@ -189,6 +241,10 @@
           <li><a href="nosotros.html" class="nav__link">Nosotros</a></li>
           <li><a href="contacto.html" class="nav__link">Contacto</a></li>
         </ul>
+        <button id="theme-toggle" aria-label="Cambiar a modo oscuro" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--header-border);background:var(--color-secondary);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;flex-shrink:0;margin-left:.5rem;">
+          <span class="icon-sun"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+          <span class="icon-moon" style="display:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        </button>
       </nav>
     </div>
   </header>
@@ -203,6 +259,10 @@
     <a href="noticias.html" class="nav-mobile__link nav-mobile__link--active">Noticias</a>
     <a href="nosotros.html" class="nav-mobile__link">Nosotros</a>
     <a href="contacto.html" class="nav-mobile__link">Contacto</a>
+    <button id="theme-toggle-mobile" aria-label="Cambiar a modo oscuro" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--header-border);background:var(--color-secondary);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;">
+      <span class="icon-sun"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+      <span class="icon-moon" style="display:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+    </button>
   </nav>
 
   <main id="main-content">
@@ -268,9 +328,7 @@
     var header = document.getElementById('site-header');
     if (header) {
       window.addEventListener('scroll', function() {
-        header.style.background = window.scrollY > 40
-          ? 'rgba(13,27,42,.97)'
-          : 'rgba(13,27,42,.95)';
+        header.style.background = 'var(--header-bg)';
       });
     }
     var y = document.getElementById('year');
@@ -441,5 +499,31 @@
     loadArticles(null);
   </script>
 
+  <script>
+  (function(){
+    var html=document.documentElement;
+    document.addEventListener("DOMContentLoaded",function(){
+      var toggles=document.querySelectorAll("#theme-toggle,#theme-toggle-mobile");
+      if(!toggles.length)return;
+      function updateIcons(){
+        var dark=html.getAttribute("data-theme")==="dark";
+        toggles.forEach(function(t){
+          t.querySelectorAll(".icon-sun").forEach(function(el){el.style.display=dark?"none":"block";});
+          t.querySelectorAll(".icon-moon").forEach(function(el){el.style.display=dark?"block":"none";});
+          t.setAttribute("aria-label",dark?"Cambiar a modo claro":"Cambiar a modo oscuro");
+        });
+      }
+      toggles.forEach(function(t){
+        t.addEventListener("click",function(){
+          var dark=html.getAttribute("data-theme")==="dark";
+          if(dark){html.removeAttribute("data-theme");localStorage.setItem("crono-theme","light");}
+          else{html.setAttribute("data-theme","dark");localStorage.setItem("crono-theme","dark");}
+          updateIcons();
+        });
+      });
+      updateIcons();
+    });
+  })();
+  </script>
 </body>
 </html>
