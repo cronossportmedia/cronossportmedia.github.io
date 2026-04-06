@@ -481,9 +481,30 @@
     }
 
     function transformImg(url) {
-      if (!url || !url.includes('cloudinary.com')) return url;
-      return url.replace('/upload/', '/upload/w_400,h_225,c_fill,g_center,q_auto,f_auto/');
+      if (!url) return '';
+
+      let safeUrl = String(url).trim();
+
+      if (!safeUrl) return '';
+
+      if (safeUrl.startsWith('http://')) {
+        safeUrl = safeUrl.replace('http://', 'https://');
+      }
+
+      if (!safeUrl.includes('cloudinary.com')) {
+        return safeUrl;
+      }
+
+      if (safeUrl.includes('/upload/')) {
+        return safeUrl.replace(
+          '/upload/',
+          '/upload/w_400,h_225,c_fill,g_center,q_auto,f_auto/'
+        );
+      }
+
+      return safeUrl;
     }
+    
     function formatDate(ts) {
       if (!ts) return '';
       const d = ts.toDate ? ts.toDate() : new Date(ts);
