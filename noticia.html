@@ -19,14 +19,47 @@
 
   <style>
     :root {
-      --color-primary:   #0D1B2A;
-      --color-secondary: #1B2D45;
-      --color-accent:    #FF6B35;
-      --color-accent-alt:#00D4FF;
-      --color-text:      #F0F0F0;
-      --color-muted:     #A0AEC0;
-      --font-heading:    'Montserrat', sans-serif;
-      --font-body:       'Inter', sans-serif;
+      --color-primary:      #FFFFFF;
+      --color-secondary:    #F5F7FA;
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #0077CC;
+      --color-text:         #1A202C;
+      --color-muted:        #718096;
+      --color-text-muted:   #718096;
+      --color-live:         #FF0000;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
+      --header-bg:          rgba(255, 255, 255, 0.95);
+      --header-border:      rgba(0, 0, 0, 0.08);
+      --card-border:        rgba(0, 0, 0, 0.07);
+      --section-border:     rgba(0, 0, 0, 0.06);
+      --footer-border:      rgba(0, 0, 0, 0.08);
+      --accent-bg-soft:     rgba(255, 107, 53, 0.10);
+      --accent-alt-bg-soft: rgba(0, 119, 204, 0.10);
+      --accent-alt-border:  rgba(0, 119, 204, 0.22);
+      --font-heading:       'Montserrat', sans-serif;
+      --font-body:          'Inter', sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --color-primary:      #0D1B2A;
+      --color-secondary:    #1B2D45;
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #00D4FF;
+      --color-text:         #F0F0F0;
+      --color-muted:        #A0AEC0;
+      --color-text-muted:   #A0AEC0;
+      --color-live:         #FF0000;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
+      --header-bg:          rgba(13, 27, 42, 0.95);
+      --header-border:      rgba(255, 255, 255, 0.08);
+      --card-border:        rgba(255, 255, 255, 0.07);
+      --section-border:     rgba(255, 255, 255, 0.05);
+      --footer-border:      rgba(255, 255, 255, 0.06);
+      --accent-bg-soft:     rgba(255, 107, 53, 0.15);
+      --accent-alt-bg-soft: rgba(0, 212, 255, 0.10);
+      --accent-alt-border:  rgba(0, 212, 255, 0.22);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
@@ -35,7 +68,7 @@
     a { color: inherit; text-decoration: none; }
 
     header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s, backdrop-filter 0.3s; }
-    header.scrolled { background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
+    header.scrolled { background: var(--header-bg); backdrop-filter: blur(12px); box-shadow: 0 1px 0 var(--footer-border); }
     .logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; color: var(--color-text); }
     .logo img { height: 36px; width: auto; display: block; }
     .logo span { color: var(--color-accent); }
@@ -131,7 +164,7 @@
     .btn-back { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; padding: 0.55rem 1.25rem; background: var(--color-accent); border-radius: 8px; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; transition: background 0.18s; }
     .btn-back:hover { background: #e85d2a; }
 
-    footer { background: var(--color-secondary); border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem 1.5rem; text-align: center; color: var(--color-muted); font-size: 0.8rem; }
+    footer { background: var(--color-secondary); border-top: 1px solid var(--footer-border); padding: 2rem 1.5rem; text-align: center; color: var(--color-muted); font-size: 0.8rem; }
     .footer-nav { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .footer-nav a { color: var(--color-muted); transition: color 0.2s; }
     .footer-nav a:hover { color: var(--color-accent); }
@@ -140,7 +173,18 @@
       nav { display: none; }
       .hamburger { display: block; }
     }
+  
+  body, .header, header, .footer, footer, main, section, article,
+  .nav-mobile, .sidebar, .topbar, .card, .pilar, .podcast-card,
+  .episode-card, .platform-pill, .radio__player, .radio-controls,
+  .submarca-card, .valor-item, .article-card, .login-card {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
+  input, textarea, select {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  }
   </style>
+  <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
 <body>
 
@@ -156,6 +200,10 @@
       <a href="noticias.html" class="active">Noticias</a>
       <a href="nosotros.html">Nosotros</a>
       <a href="contacto.html">Contacto</a>
+      <button id="theme-toggle" aria-label="Cambiar a modo oscuro" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--header-border);background:var(--color-secondary);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;flex-shrink:0;margin-left:.5rem;">
+          <span class="icon-sun"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+          <span class="icon-moon" style="display:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        </button>
     </nav>
     <button class="hamburger" id="hamburgerBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -336,6 +384,32 @@
     }
     function formatCat(c) { return {deportes:'Deportes',noticias:'Noticias',entretenimiento:'Entretenimiento',opinion:'Opinión'}[c]||c||''; }
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  </script>
+  <script>
+  (function(){
+    var html=document.documentElement;
+    document.addEventListener("DOMContentLoaded",function(){
+      var toggles=document.querySelectorAll("#theme-toggle,#theme-toggle-mobile");
+      if(!toggles.length)return;
+      function updateIcons(){
+        var dark=html.getAttribute("data-theme")==="dark";
+        toggles.forEach(function(t){
+          t.querySelectorAll(".icon-sun").forEach(function(el){el.style.display=dark?"none":"block";});
+          t.querySelectorAll(".icon-moon").forEach(function(el){el.style.display=dark?"block":"none";});
+          t.setAttribute("aria-label",dark?"Cambiar a modo claro":"Cambiar a modo oscuro");
+        });
+      }
+      toggles.forEach(function(t){
+        t.addEventListener("click",function(){
+          var dark=html.getAttribute("data-theme")==="dark";
+          if(dark){html.removeAttribute("data-theme");localStorage.setItem("crono-theme","light");}
+          else{html.setAttribute("data-theme","dark");localStorage.setItem("crono-theme","dark");}
+          updateIcons();
+        });
+      });
+      updateIcons();
+    });
+  })();
   </script>
 </body>
 </html>
