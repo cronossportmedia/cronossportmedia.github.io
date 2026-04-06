@@ -1,8 +1,8 @@
-# Cronos Sport Media — Sitio Web Oficial
+# Crono Sport Media — Sitio Web Oficial
 
-Sitio web oficial de **Cronos Sport Media**, agencia de noticias deportiva que forma periodistas y conecta a la audiencia venezolana con el deporte a través de radio en streaming, podcasts y transmisiones en vivo.
+Sitio web oficial de **Crono Sport Media**, agencia de noticias deportiva que forma periodistas y conecta a la audiencia venezolana con el deporte a través de radio en streaming, podcasts y transmisiones en vivo.
 
-🌐 **Sitio en vivo**: [cronossportmedia.github.io](https://cronossportmedia.github.io)
+🌐 **Sitio en vivo**: [cronoplay.com](https://cronoplay.com)
 
 ---
 
@@ -54,4 +54,4 @@ git push origin main
 
 ---
 
-© 2026 Cronos Sport Media. Todos los derechos reservados.
+© 2026 Crono Sport Media. Todos los derechos reservados.
