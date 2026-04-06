@@ -132,7 +132,7 @@
     .article-body {
       font-size: 1rem;
       line-height: 1.85;
-      color: rgba(240,240,240,0.92);
+      color: var(--color-text);
     }
     .article-body h2 { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700; margin: 2rem 0 0.75rem; color: var(--color-text); }
     .article-body h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 0.5rem; color: var(--color-text); }
@@ -373,8 +373,28 @@
     }
 
     function transformImg(url) {
-      if (!url || !url.includes('cloudinary.com')) return url;
-      return url.replace('/upload/', '/upload/w_800,q_auto,f_auto/');
+      if (!url) return '';
+
+      let safeUrl = String(url).trim();
+
+      if (!safeUrl) return '';
+
+      if (safeUrl.startsWith('http://')) {
+        safeUrl = safeUrl.replace('http://', 'https://');
+      }
+
+      if (!safeUrl.includes('cloudinary.com')) {
+        return safeUrl;
+      }
+
+      if (safeUrl.includes('/upload/')) {
+        return safeUrl.replace(
+          '/upload/',
+          '/upload/w_1200,q_auto,f_auto/'
+        );
+      }
+
+      return safeUrl;
     }
 
     function formatDate(ts) {
