@@ -6,13 +6,11 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Acceso al Panel — Crono Sport Media</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ─── Variables de marca ──────────────────────────────── */
     :root {
       --color-primary:    #0D1B2A;
       --color-secondary:  #1B2D45;
@@ -31,7 +29,6 @@
       --transition:  0.2s ease;
     }
 
-    /* ─── Reset y base ───────────────────────────────────── */
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
@@ -55,13 +52,11 @@
       justify-content: center;
       padding: 1.5rem;
 
-      /* Fondo con gradiente sutil */
       background-image:
         radial-gradient(ellipse at 20% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%),
         radial-gradient(ellipse at 80% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 50%);
     }
 
-    /* ─── Contenedor del login ───────────────────────────── */
     .login-wrapper {
       width: 100%;
       max-width: 420px;
@@ -70,7 +65,6 @@
       gap: 2rem;
     }
 
-    /* ─── Cabecera / branding ────────────────────────────── */
     .login-header {
       text-align: center;
     }
@@ -111,7 +105,6 @@
       margin-top: 0.35rem;
     }
 
-    /* ─── Card de formulario ─────────────────────────────── */
     .login-card {
       background: var(--color-secondary);
       border: 1px solid rgba(255, 255, 255, 0.07);
@@ -135,7 +128,6 @@
       margin-bottom: 1.75rem;
     }
 
-    /* ─── Campos del formulario ──────────────────────────── */
     .form-group {
       margin-bottom: 1.25rem;
     }
@@ -179,7 +171,6 @@
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
     }
 
-    /* ─── Botón submit ───────────────────────────────────── */
     .btn-submit {
       width: 100%;
       padding: 0.85rem 1.5rem;
@@ -216,7 +207,6 @@
       cursor: not-allowed;
     }
 
-    /* ─── Spinner de carga ───────────────────────────────── */
     .spinner {
       width: 18px;
       height: 18px;
@@ -239,7 +229,6 @@
       to { transform: rotate(360deg); }
     }
 
-    /* ─── Mensajes de error / estado ────────────────────── */
     .alert {
       display: none;
       align-items: flex-start;
@@ -273,7 +262,6 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ─── Footer del login ───────────────────────────────── */
     .login-footer {
       text-align: center;
       font-size: 0.8rem;
@@ -289,7 +277,6 @@
       text-decoration: underline;
     }
 
-    /* ─── Responsive mínimo ──────────────────────────────── */
     @media (max-width: 480px) {
       .login-card {
         padding: 1.5rem;
@@ -302,10 +289,8 @@
 
   <main class="login-wrapper" role="main">
 
-    <!-- Branding -->
     <header class="login-header">
       <div class="login-logo-mark" aria-hidden="true">
-        <!-- Ícono simplificado de cronómetro / play -->
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M12 2a9 9 0 1 0 0 18A9 9 0 0 0 12 2zm0 16a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm-1-10.5v5l4-2.5-4-2.5z"/>
         </svg>
@@ -314,12 +299,10 @@
       <p class="login-subtitle">Panel de Administración</p>
     </header>
 
-    <!-- Tarjeta de login -->
     <section class="login-card">
       <h1 class="login-card-title">Accede a tu cuenta</h1>
       <p class="login-card-desc">Ingresa tus credenciales para continuar.</p>
 
-      <!-- Alerta de error -->
       <div class="alert alert-error" id="alertError" role="alert" aria-live="polite">
         <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <circle cx="12" cy="12" r="10"/>
@@ -329,7 +312,6 @@
         <span id="alertErrorMsg">Credenciales incorrectas. Verifica tu email y contraseña.</span>
       </div>
 
-      <!-- Formulario -->
       <form id="loginForm" novalidate>
 
         <div class="form-group">
@@ -367,14 +349,12 @@
       </form>
     </section>
 
-    <!-- Pie de página -->
     <footer class="login-footer">
       <p>¿Olvidaste tu contraseña? <a href="mailto:cronossportmedia@gmail.com">Contacta al administrador</a></p>
     </footer>
 
   </main>
 
-  <!-- ─── Firebase SDK (modular) ───────────────────────────── -->
   <script type="module">
     import { initializeApp }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -383,13 +363,8 @@
     import { getFirestore, doc, getDoc }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // ── Importar configuración desde el módulo centralizado ──
-    // NOTA: Este import requiere que js/firebase-config.js esté completo
-    // con los datos reales del proyecto Firebase.
-    // Ruta relativa desde admin/ hacia js/
     import { auth, db } from "../js/firebase-config.js";
 
-    // ─── Elementos del DOM ────────────────────────────────────
     const form        = document.getElementById("loginForm");
     const emailInput  = document.getElementById("email");
     const passInput   = document.getElementById("password");
@@ -397,22 +372,17 @@
     const alertError  = document.getElementById("alertError");
     const alertErrMsg = document.getElementById("alertErrorMsg");
 
-    // ─── Si ya hay sesión activa, redirigir directamente ─────
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Hay sesión en Firebase Auth — verificar que el usuario
-        // existe en Firestore y está activo antes de redirigir
         const valid = await validateUserInFirestore(user.uid);
         if (valid) {
           redirectToDashboard();
         } else {
-          // Existe en Auth pero no en Firestore (o está inactivo) → cerrar sesión
           await auth.signOut();
         }
       }
     });
 
-    // ─── Submit del formulario ────────────────────────────────
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       clearError();
@@ -420,7 +390,6 @@
       const email    = emailInput.value.trim();
       const password = passInput.value;
 
-      // Validación básica antes de ir a Firebase
       if (!email || !password) {
         showError("Completa todos los campos antes de continuar.");
         return;
@@ -429,38 +398,31 @@
       setLoading(true);
 
       try {
-        // 1. Autenticar contra Firebase Auth
         const credential = await signInWithEmailAndPassword(auth, email, password);
         const uid = credential.user.uid;
 
-        // 2. Verificar que el usuario existe en Firestore y está activo
         const valid = await validateUserInFirestore(uid);
 
         if (!valid) {
-          // Cuenta desactivada o no existe en Firestore
           await auth.signOut();
           showError("Tu cuenta no tiene acceso al panel. Contacta al administrador.");
           return;
         }
 
-        // 3. Login exitoso → ir al dashboard
         redirectToDashboard();
 
       } catch (err) {
-        // Manejar errores de Firebase Auth
         showError(translateFirebaseError(err.code));
       } finally {
         setLoading(false);
       }
     });
 
-    // ─── Verificar usuario en Firestore ──────────────────────
     async function validateUserInFirestore(uid) {
       try {
         const userDoc = await getDoc(doc(db, "users", uid));
         if (!userDoc.exists()) return false;
         const data = userDoc.data();
-        // El usuario debe existir y tener active === true
         return data.active === true;
       } catch {
         // Si hay error al leer Firestore (ej. rules bloquean), denegar
@@ -468,12 +430,10 @@
       }
     }
 
-    // ─── Redirigir al dashboard ───────────────────────────────
     function redirectToDashboard() {
       window.location.replace("dashboard.html");
     }
 
-    // ─── Estado de carga ──────────────────────────────────────
     function setLoading(isLoading) {
       btnSubmit.disabled = isLoading;
       btnSubmit.classList.toggle("loading", isLoading);
@@ -481,7 +441,6 @@
       passInput.disabled  = isLoading;
     }
 
-    // ─── Mostrar y ocultar error ──────────────────────────────
     function showError(message) {
       alertErrMsg.textContent = message;
       alertError.classList.add("visible");
@@ -495,12 +454,10 @@
       passInput.classList.remove("input-error");
     }
 
-    // Limpiar error cuando el usuario empieza a escribir de nuevo
     [emailInput, passInput].forEach(input => {
       input.addEventListener("input", clearError);
     });
 
-    // ─── Traducir códigos de error de Firebase ────────────────
     function translateFirebaseError(code) {
       const errors = {
         "auth/invalid-email":         "El correo electrónico no tiene un formato válido.",

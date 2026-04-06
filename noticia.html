@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
@@ -35,7 +34,6 @@
     img { max-width: 100%; display: block; }
     a { color: inherit; text-decoration: none; }
 
-    /* ─── Header ─────────────────────────────────────────────── */
     header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.3s, backdrop-filter 0.3s; }
     header.scrolled { background: rgba(13,27,42,0.92); backdrop-filter: blur(12px); box-shadow: 0 1px 0 rgba(255,255,255,0.05); }
     .logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; color: var(--color-text); }
@@ -54,10 +52,8 @@
     .nav-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--color-text); cursor: pointer; }
     .nav-close svg { width: 28px; height: 28px; }
 
-    /* ─── Article layout ─────────────────────────────────────── */
     .article-wrap { max-width: 740px; margin: 0 auto; padding: 6rem 1.5rem 4rem; }
 
-    /* Back link */
     .back-link {
       display: inline-flex; align-items: center; gap: 0.4rem;
       font-size: 0.8rem; color: var(--color-muted);
@@ -67,7 +63,6 @@
     .back-link:hover { color: var(--color-accent); }
     .back-link svg { width: 14px; height: 14px; }
 
-    /* Header del artículo */
     .article-category {
       display: inline-flex; align-items: center;
       background: rgba(255,107,53,0.12); color: var(--color-accent);
@@ -96,13 +91,11 @@
     }
     .article-meta-sep { opacity: 0.3; }
 
-    /* Imagen destacada */
     .article-featured-img {
       width: 100%; border-radius: 10px; margin-bottom: 2rem;
       max-height: 460px; object-fit: cover;
     }
 
-    /* Cuerpo del artículo */
     .article-body {
       font-size: 1rem;
       line-height: 1.85;
@@ -125,12 +118,10 @@
     }
     .article-body img { border-radius: 8px; margin: 1.5rem 0; width: 100%; }
 
-    /* Tags */
     .article-tags { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.07); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
     .tags-label { font-size: 0.78rem; color: var(--color-muted); font-weight: 600; margin-right: 0.25rem; }
     .tag-pill { padding: 0.25rem 0.75rem; background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.15); border-radius: 99px; font-size: 0.75rem; color: var(--color-accent-alt); }
 
-    /* ─── Estados ────────────────────────────────────────────── */
     .state-center { padding: 6rem 1.5rem; text-align: center; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
     .state-center svg { width: 48px; height: 48px; margin: 0 auto 1.25rem; opacity: 0.25; }
     .state-center h2 { font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text); }
@@ -140,7 +131,6 @@
     .btn-back { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; padding: 0.55rem 1.25rem; background: var(--color-accent); border-radius: 8px; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; transition: background 0.18s; }
     .btn-back:hover { background: #e85d2a; }
 
-    /* ─── Footer ─────────────────────────────────────────────── */
     footer { background: var(--color-secondary); border-top: 1px solid rgba(255,255,255,0.05); padding: 2rem 1.5rem; text-align: center; color: var(--color-muted); font-size: 0.8rem; }
     .footer-nav { display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
     .footer-nav a { color: var(--color-muted); transition: color 0.2s; }
@@ -185,7 +175,6 @@
   </nav>
 
   <div id="appRoot">
-    <!-- Estado de carga inicial -->
     <div class="state-center">
       <div class="spinner"></div>
       <p>Cargando artículo...</p>
@@ -221,7 +210,6 @@
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
 
-    // ─── Header scroll ───────────────────────────────────────
     window.addEventListener('scroll', () => {
       document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 40);
     });
@@ -233,7 +221,6 @@
     });
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ─── Obtener slug de la URL ──────────────────────────────
     const params = new URLSearchParams(window.location.search);
     const slug   = params.get('slug');
 
@@ -265,7 +252,6 @@
     }
 
     function renderArticle(a) {
-      // Actualizar meta tags
       document.getElementById('pageTitle').textContent = `${a.title} — Crono Sport Media`;
       document.getElementById('metaDescription').setAttribute('content', a.excerpt || '');
 
@@ -279,12 +265,10 @@
         FORCE_BODY: false,
       });
 
-      // Imagen con transformación Cloudinary
       const imgHtml = a.featured_image
         ? `<img class="article-featured-img" src="${esc(transformImg(a.featured_image))}" alt="${esc(a.title)}" loading="eager">`
         : '';
 
-      // Tags
       const tagsHtml = a.tags?.length
         ? `<div class="article-tags">
              <span class="tags-label">Etiquetas:</span>
@@ -340,7 +324,6 @@
         </div>`;
     }
 
-    // Imagen Cloudinary optimizada para artículo completo
     function transformImg(url) {
       if (!url || !url.includes('cloudinary.com')) return url;
       return url.replace('/upload/', '/upload/w_800,q_auto,f_auto/');

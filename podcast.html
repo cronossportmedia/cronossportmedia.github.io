@@ -12,7 +12,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
@@ -64,7 +63,6 @@
     .stagger-5 { transition-delay: .40s; }
     .stagger-6 { transition-delay: .48s; }
 
-    /* HEADER */
     .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: rgba(13,27,42,.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid rgba(255,255,255,.06); }
     .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
     .header__logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; text-decoration: none; }
@@ -82,7 +80,6 @@
     .nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
     
 
-    /* PAGE HERO */
     .page-hero {
       padding: calc(var(--header-height) + 3rem) 1.25rem 3rem;
       text-align: center; position: relative; overflow: hidden;
@@ -106,7 +103,6 @@
     .page-hero__desc { color: var(--color-text-muted); font-size: 1rem; max-width: 560px; margin: 0 auto; opacity: 0; animation: fade-up .6s ease .3s forwards; }
     @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* EPISODIOS GRID */
     .episodes-section { padding: 4rem 1.25rem; }
     .section-header { text-align: center; margin-bottom: 3rem; }
 
@@ -146,7 +142,6 @@
     .episode-card__play:hover { opacity: .75; }
     .episode-card__play svg { width: 14px; height: 14px; }
 
-    /* PLATAFORMAS */
     .platforms-section { padding: 4rem 1.25rem; background: var(--color-secondary); }
     .platforms-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 2.5rem; max-width: 700px; margin-left: auto; margin-right: auto; }
 
@@ -161,7 +156,6 @@
     .platform-pill:hover { border-color: var(--color-accent); color: var(--color-text); transform: translateY(-2px); }
     .platform-pill svg { width: 18px; height: 18px; }
 
-    /* FOOTER */
     .footer { padding: 3rem 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,.06); text-align: center; }
     .footer__brand { font-family: var(--font-heading); font-weight: 800; font-size: 1rem; margin-bottom: 1.5rem; }
     .footer__brand span { color: var(--color-accent); }
@@ -195,7 +189,6 @@
 </head>
 <body>
 
-  <!-- HEADER -->
   <header class="header" role="banner">
     <div class="header__inner">
       <a href="index.html" class="header__logo" aria-label="Crono Sport Media — Inicio">
@@ -234,7 +227,6 @@
 
   <main id="main-content">
 
-    <!-- PAGE HERO -->
     <section class="page-hero" aria-labelledby="page-title">
       <div class="page-hero__eyebrow">Audio bajo demanda</div>
       <h1 id="page-title" class="page-hero__title"><em>Podcast</em></h1>
@@ -243,7 +235,6 @@
       </p>
     </section>
 
-    <!-- EPISODIOS -->
     <section class="episodes-section" aria-labelledby="episodes-title">
       <div class="container">
         <div class="section-header reveal">
@@ -255,11 +246,6 @@
           </p>
         </div>
 
-        <!--
-          TODO: Reemplazar estas cards placeholder con episodios reales.
-          [PENDIENTE CONFIRMAR: títulos, descripciones, duración, fecha y links de cada episodio]
-          Cada card tiene: número, badge de categoría, título, descripción, metadata y link al reproductor.
-        -->
         <div class="episodes-grid">
 
           <article class="episode-card reveal stagger-1">
@@ -362,7 +348,6 @@
       </div>
     </section>
 
-    <!-- PLATAFORMAS -->
     <section class="platforms-section" aria-labelledby="platforms-title">
       <div class="container">
         <div class="section-header reveal">
@@ -370,8 +355,7 @@
           <p class="section-label">Dónde escucharnos</p>
           <h2 id="platforms-title">Disponible en tus plataformas</h2>
           <p style="color:var(--color-text-muted);margin-top:.75rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.95rem;">
-            <!-- [PENDIENTE CONFIRMAR: plataformas activas donde está disponible el podcast] -->
-            Escúchanos en tu plataforma favorita. Próximamente disponible en:
+              Escúchanos en tu plataforma favorita. Próximamente disponible en:
           </p>
         </div>
 
@@ -382,25 +366,21 @@
         -->
         <div class="platforms-grid reveal">
 
-          <!-- Spotify -->
           <a href="#" class="platform-pill" aria-label="Escuchar en Spotify" rel="noopener noreferrer" target="_blank">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 11.8c2.5-1.2 5.5-1.3 7.5 0"/><path d="M6.5 14.8c3-1.5 6.5-1.5 9 0"/><path d="M9.5 8.8c2-.8 4.5-.9 6.5 0"/></svg>
             Spotify
           </a>
 
-          <!-- Apple Podcasts -->
           <a href="#" class="platform-pill" aria-label="Escuchar en Apple Podcasts" rel="noopener noreferrer" target="_blank">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             Apple Podcasts
           </a>
 
-          <!-- YouTube -->
           <a href="https://www.youtube.com/@CronoSportMedia" class="platform-pill" aria-label="Ver en YouTube" rel="noopener noreferrer" target="_blank">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
             YouTube
           </a>
 
-          <!-- iVoox -->
           <a href="#" class="platform-pill" aria-label="Escuchar en iVoox" rel="noopener noreferrer" target="_blank">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
             iVoox
@@ -412,7 +392,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="footer" role="contentinfo">
     <div class="container">
       <p class="footer__brand">Crono <span>Sport</span> Media</p>
@@ -447,7 +426,6 @@
     } else { revealEls.forEach(function(el){ el.classList.add('is-visible'); }); }
   })();
   
-    // ── Mobile nav ──────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
       var navToggle = document.getElementById('navToggle');
       var mobileNav = document.getElementById('mobileNav');
