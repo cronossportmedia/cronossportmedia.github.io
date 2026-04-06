@@ -612,6 +612,7 @@
                   <div class="upload-progress-bar" id="progressBar"></div>
                 </div>
               </div>
+              <span class="field-error" id="errFeaturedImage">La imagen destacada es obligatoria.</span>
             </div>
           </div>
 
@@ -899,7 +900,18 @@
       bodyWrap.classList.remove('error'); bodyErr.classList.remove('visible');
     }
 
+    if (!featuredImageUrl) {
+      toggleFeaturedImageError(true);
+      ok = false;
+    } else {
+      toggleFeaturedImageError(false);
+    }
+
     return ok;
+  }
+
+  function toggleFeaturedImageError(show) {
+    document.getElementById('errFeaturedImage').classList.toggle('visible', show);
   }
 
   document.getElementById('btnGenSlug').addEventListener('click', generateSlug);
@@ -1035,6 +1047,7 @@
       clearInterval(ticker);
       bar.style.width = '100%';
       featuredImageUrl = data.secure_url;
+      toggleFeaturedImageError(false);
 
       setTimeout(() => {
         progress.classList.remove('visible');
@@ -1063,6 +1076,7 @@
     document.getElementById('previewImg').src             = '';
     uploadZone.style.display = '';
     fileInput.value = '';
+    toggleFeaturedImageError(true);
   });
 
   ['fieldTitle','fieldSlug','fieldExcerpt','fieldCategory'].forEach(id => {
