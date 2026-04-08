@@ -391,7 +391,7 @@
   import { onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
-    collection, query, orderBy, onSnapshot,
+    collection, query, where, orderBy, onSnapshot,
     doc, getDoc, updateDoc, deleteDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -424,9 +424,19 @@
   });
 
   function loadArticles() {
-    const q = query(collection(db, 'articles'), orderBy('updated_at', 'desc'));
+    const isAdmin = ['super_admin', 'editor_jefe'].includes(currentRole);
+    const q = isAdmin
+      ? query(collection(db, 'articles'), orderBy('updated_at', 'desc'))
+      : query(collection(db, 'articles'), where('author_uid', '==', currentUser.uid));
+
     onSnapshot(q, (snap) => {
-      allArticles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allArticles = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => {
+          const ta = a.updated_at?.toMillis?.() ?? 0;
+          const tb = b.updated_at?.toMillis?.() ?? 0;
+          return tb - ta;
+        });
       updateStats();
       renderArticles();
     }, (err) => {
