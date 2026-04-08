@@ -478,6 +478,10 @@
           <span class="icon-sun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
           <span class="icon-moon" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
         </button>
+        <button class="btn btn-ghost" onclick="window.location.href='editor.html'" title="Crear nueva nota">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>Nueva nota</span>
+        </button>
         <button class="btn btn-ghost" id="btnSaveDraft">
           <div class="btn-spinner"></div>
           <span class="btn-label">Guardar borrador</span>
@@ -952,8 +956,14 @@
 
   document.getElementById('btnLink').addEventListener('mousedown', (e) => {
     e.preventDefault();
-    const url = prompt('URL del enlace:');
-    if (url) document.execCommand('createLink', false, url);
+    const raw = prompt('URL del enlace:');
+    if (raw && raw.trim()) {
+      let url = raw.trim();
+      if (!/^https?:\/\//i.test(url) && !/^mailto:/i.test(url)) {
+        url = 'https://' + url;
+      }
+      document.execCommand('createLink', false, url);
+    }
     document.getElementById('editorBody').focus();
   });
 
