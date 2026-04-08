@@ -481,6 +481,7 @@
     display: flex; align-items: center; gap: .75rem;
     flex-wrap: wrap; justify-content: center;
   }
+  .match-banner__content svg { display: none; }
   .match-banner__text {
     font-family: var(--font-heading); font-weight: 700; font-size: .95rem;
     color: var(--color-text);
@@ -498,6 +499,7 @@
   @media (min-width: 600px) {
     .match-banner__inner { flex-direction: row; justify-content: center; text-align: left; }
     .match-banner__cta { margin-left: auto; }
+    .match-banner__content svg { display: block; }
   }
   </style>
   <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
