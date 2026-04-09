@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Dashboard — Crono Sport Media Admin</title>
+  <title>Dashboard — Crono Play Admin</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -517,8 +517,13 @@
 
     const canEdit = isAdmin || a.author_uid === currentUser.uid;
     if (canEdit) {
-      actions     = `<a class="action-btn" href="editor.html?id=${a.id}" title="Editar">${editIcon()}</a>` + actions;
-      mobilePills = `<a class="mobile-action-pill pill-edit" href="editor.html?id=${a.id}">
+      actions     = `<a class="action-btn" href="preview.html?id=${a.id}" target="_blank" title="Vista previa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></a>` +
+                    `<a class="action-btn" href="editor.html?id=${a.id}" title="Editar">${editIcon()}</a>` + actions;
+      mobilePills = `<a class="mobile-action-pill pill-edit" href="preview.html?id=${a.id}" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Vista previa
+      </a>` +
+                    `<a class="mobile-action-pill pill-edit" href="editor.html?id=${a.id}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         Editar
       </a>` + mobilePills;
