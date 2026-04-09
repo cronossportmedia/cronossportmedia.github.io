@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">Cargando... — Crono Sport Media</title>
-  <meta name="description" id="metaDescription" content="Crono Sport Media — Donde el deporte se cuenta de verdad.">
+  <title id="pageTitle">Cargando... — Crono Play</title>
+  <meta name="description" id="metaDescription" content="Crono Play — Donde el deporte se cuenta de verdad.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -239,7 +239,7 @@
       <a href="nosotros.html">Nosotros</a>
       <a href="contacto.html">Contacto</a>
     </nav>
-    <p>© <span id="year"></span> Crono Sport Media. Todos los derechos reservados.</p>
+    <p>© <span id="year"></span> Crono Play. Todos los derechos reservados.</p>
   </footer>
 
   <script type="module">
@@ -301,7 +301,7 @@
     }
 
     function renderArticle(a) {
-      document.getElementById('pageTitle').textContent = `${a.title} — Crono Sport Media`;
+      document.getElementById('pageTitle').textContent = `${a.title} — Crono Play`;
       document.getElementById('metaDescription').setAttribute('content', a.excerpt || '');
 
       const date = formatDate(a.published_at);
@@ -353,7 +353,7 @@
     }
 
     function renderNotFound() {
-      document.getElementById('pageTitle').textContent = 'Artículo no encontrado — Crono Sport Media';
+      document.getElementById('pageTitle').textContent = 'Artículo no encontrado — Crono Play';
       document.getElementById('appRoot').innerHTML = `
         <div class="state-center">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
