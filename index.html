@@ -333,6 +333,7 @@
     .radio__player-icon { width: 56px; height: 56px; margin: 0 auto 1rem; border-radius: 50%; background: rgba(255,107,53,.15); display: flex; align-items: center; justify-content: center; }
     .radio__player-icon svg { width: 26px; height: 26px; fill: var(--color-accent); }
     .radio__player-title { font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin-bottom: .5rem; }
+    .radio__player-title span { color: var(--color-accent); }
     .radio__player-sub { color: var(--color-text-muted); font-size: .875rem; margin-bottom: 1.5rem; }
 
     .radio-controls {
@@ -512,7 +513,7 @@
     <div class="header__inner">
       <a href="index.html" class="header__logo" aria-label="Crono Play — Inicio">
         <img src="assets/img/logo-icon.svg" alt="" aria-hidden="true" height="36" width="36">
-        Crono Play
+        Crono <span>Play</span>
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="main-nav">
         <span class="nav-toggle__bar"></span>
@@ -679,7 +680,7 @@
               <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
             </svg>
           </div>
-          <p class="radio__player-title">Radio Crono Play</p>
+          <p class="radio__player-title">Radio <span>Crono</span> Play</p>
           <p class="radio__player-sub">Señal en vivo las 24 horas — música y contenido deportivo</p>
 
           <div class="radio-controls">
