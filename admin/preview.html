@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Vista previa — Crono Play</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary:      #FFFFFF;
+      --color-secondary:    #F5F7FA;
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #0077CC;
+      --color-text:         #1A202C;
+      --color-muted:        #718096;
+      --color-text-muted:   #718096;
+      --color-success:      #10B981;
+      --color-error:        #EF4444;
+      --color-warning:      #F59E0B;
+      --card-border:        rgba(0, 0, 0, 0.07);
+      --footer-border:      rgba(0, 0, 0, 0.08);
+      --font-heading:       'Montserrat', sans-serif;
+      --font-body:          'Inter', sans-serif;
+      --preview-bar-h:      48px;
+    }
+    [data-theme="dark"] {
+      --color-primary:      #0D1B2A;
+      --color-secondary:    #1B2D45;
+      --color-accent:       #FF6B35;
+      --color-accent-alt:   #00D4FF;
+      --color-text:         #F0F0F0;
+      --color-muted:        #A0AEC0;
+      --color-text-muted:   #A0AEC0;
+      --footer-border:      rgba(255, 255, 255, 0.06);
+      --card-border:        rgba(255, 255, 255, 0.07);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--color-primary); color: var(--color-text); line-height: 1.6; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Preview Bar ─────────────────────────────────── */
+    .preview-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--preview-bar-h);
+      background: #1A202C;
+      color: #F0F0F0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.25rem; gap: 1rem;
+      border-bottom: 2px solid var(--color-accent);
+      font-family: var(--font-body); font-size: 0.8rem;
+    }
+    .preview-bar-left  { display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+    .preview-bar-right { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+    .preview-label {
+      font-family: var(--font-heading); font-size: 0.65rem; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      background: var(--color-accent); color: white;
+      padding: 0.2rem 0.6rem; border-radius: 4px; flex-shrink: 0;
+    }
+    .preview-status {
+      font-size: 0.7rem; font-weight: 600; padding: 0.18rem 0.6rem;
+      border-radius: 99px; flex-shrink: 0;
+    }
+    .preview-status.draft       { background: rgba(160,174,192,0.2); color: #A0AEC0; }
+    .preview-status.review      { background: rgba(245,158,11,0.2);  color: #F59E0B; }
+    .preview-status.published   { background: rgba(16,185,129,0.2);  color: #10B981; }
+    .preview-status.rejected    { background: rgba(239,68,68,0.2);   color: #EF4444; }
+    .preview-status.unpublished { background: rgba(99,102,241,0.2);  color: #818CF8; }
+    .preview-article-title {
+      color: #A0AEC0; font-size: 0.8rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .preview-btn {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.35rem 0.85rem; border-radius: 6px;
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      cursor: pointer; border: none; transition: opacity 0.18s;
+    }
+    .preview-btn:hover { opacity: 0.85; }
+    .preview-btn-edit  { background: var(--color-accent); color: white; }
+    .preview-btn-close { background: rgba(255,255,255,0.1); color: #F0F0F0; }
+    .preview-btn svg   { width: 13px; height: 13px; }
+
+    /* ── Article layout (mismo que noticia.html) ─────── */
+    .article-wrap { max-width: 740px; margin: 0 auto; padding: 5rem 1.5rem 4rem; }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; color: var(--color-muted); margin-bottom: 2rem;
+      transition: color 0.18s;
+    }
+    .back-link:hover { color: var(--color-accent); }
+    .back-link svg { width: 14px; height: 14px; }
+
+    .article-category {
+      display: inline-flex; align-items: center;
+      background: rgba(255,107,53,0.12); color: var(--color-accent);
+      border-radius: 99px; padding: 0.2rem 0.75rem;
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .article-title {
+      font-family: var(--font-heading); font-weight: 800;
+      font-size: clamp(1.6rem, 4vw, 2.25rem); line-height: 1.2; margin-bottom: 1rem;
+    }
+    .article-excerpt {
+      font-size: 1.05rem; color: var(--color-muted); line-height: 1.65;
+      margin-bottom: 1.5rem; border-left: 3px solid var(--color-accent); padding-left: 1rem;
+    }
+    .article-meta {
+      display: flex; align-items: center; gap: 1rem;
+      font-size: 0.8rem; color: var(--color-muted);
+      padding-bottom: 1.5rem; border-bottom: 1px solid rgba(128,128,128,0.15);
+      margin-bottom: 1.75rem; flex-wrap: wrap;
+    }
+    .article-meta-sep { opacity: 0.3; }
+    .article-featured-img {
+      width: 100%; height: auto; border-radius: 10px; margin-bottom: 2rem;
+      display: block; max-height: 640px; object-fit: contain; background: #000;
+    }
+    .article-body { font-size: 1rem; line-height: 1.85; color: var(--color-text); }
+    .article-body h2 { font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700; margin: 2rem 0 0.75rem; }
+    .article-body h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
+    .article-body p  { margin-bottom: 1.25rem; }
+    .article-body ul, .article-body ol { margin: 0 0 1.25rem 1.5rem; }
+    .article-body li { margin-bottom: 0.4rem; }
+    .article-body strong { font-weight: 600; }
+    .article-body em { font-style: italic; }
+    .article-body a  { color: var(--color-accent-alt); text-decoration: underline; text-underline-offset: 3px; }
+    .article-body a:hover { color: var(--color-accent); }
+    .article-body blockquote {
+      border-left: 3px solid var(--color-accent); padding: 0.75rem 1.25rem;
+      margin: 1.5rem 0; background: rgba(255,107,53,0.05);
+      border-radius: 0 8px 8px 0; color: var(--color-muted); font-style: italic;
+    }
+    .article-body img { border-radius: 8px; margin: 1.5rem auto; max-width: 100%; height: auto; display: block; }
+    .article-tags { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(128,128,128,0.15); display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+    .tags-label { font-size: 0.78rem; color: var(--color-muted); font-weight: 600; margin-right: 0.25rem; }
+    .tag-pill { padding: 0.25rem 0.75rem; background: rgba(0,119,204,0.08); border: 1px solid rgba(0,119,204,0.15); border-radius: 99px; font-size: 0.75rem; color: var(--color-accent-alt); }
+
+    .state-center { padding: 8rem 1.5rem; text-align: center; color: var(--color-muted); max-width: 480px; margin: 0 auto; }
+    .state-center svg { width: 48px; height: 48px; margin: 0 auto 1.25rem; opacity: 0.25; }
+    .state-center h2 { font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 0.5rem; color: var(--color-text); }
+    .spinner { width: 36px; height: 36px; border: 3px solid rgba(128,128,128,0.15); border-top-color: var(--color-accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 1.25rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-back { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; padding: 0.55rem 1.25rem; background: var(--color-accent); border-radius: 8px; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; transition: background 0.18s; }
+    .btn-back:hover { background: #e85d2a; }
+  </style>
+  <script>(function(){ if(localStorage.getItem('crono-theme')==='dark') document.documentElement.setAttribute('data-theme','dark'); })();</script>
+</head>
+<body>
+
+  <!-- Preview Bar -->
+  <div class="preview-bar" id="previewBar">
+    <div class="preview-bar-left">
+      <span class="preview-label">Vista previa</span>
+      <span class="preview-status" id="previewStatusBadge"></span>
+      <span class="preview-article-title" id="previewBarTitle">Cargando...</span>
+    </div>
+    <div class="preview-bar-right">
+      <a class="preview-btn preview-btn-edit" id="btnEditFromPreview" href="#">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Editar
+      </a>
+      <button class="preview-btn preview-btn-close" onclick="window.close()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Cerrar
+      </button>
+    </div>
+  </div>
+
+  <div id="appRoot">
+    <div class="state-center">
+      <div class="spinner"></div>
+      <p>Cargando vista previa...</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { auth, db } from '../js/firebase-config.js';
+    import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+    import { doc, getDoc }        from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const params    = new URLSearchParams(window.location.search);
+    const articleId = params.get('id');
+
+    if (!articleId) { renderError('No se especificó un artículo.'); }
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) { window.location.replace('index.html'); return; }
+
+      try {
+        // Leer perfil del usuario para determinar rol
+        const userSnap = await getDoc(doc(db, 'users', user.uid));
+        if (!userSnap.exists() || !userSnap.data().active) {
+          window.location.replace('index.html'); return;
+        }
+        const currentUser = { uid: user.uid, ...userSnap.data() };
+        const isAdmin     = ['super_admin', 'editor_jefe'].includes(currentUser.role);
+
+        // Leer el artículo sin filtrar por status
+        const artSnap = await getDoc(doc(db, 'articles', articleId));
+        if (!artSnap.exists()) { renderNotFound(); return; }
+
+        const article = { id: artSnap.id, ...artSnap.data() };
+
+        // Control de acceso: debe ser el autor o un admin
+        if (!isAdmin && article.author_uid !== currentUser.uid) {
+          renderAccessDenied(); return;
+        }
+
+        renderArticle(article);
+
+      } catch (err) {
+        console.error(err);
+        renderError('Error al cargar la vista previa.');
+      }
+    });
+
+    function renderArticle(a) {
+      // Preview bar
+      document.getElementById('previewBarTitle').textContent = a.title || 'Sin título';
+      document.getElementById('btnEditFromPreview').href     = `editor.html?id=${a.id}`;
+      const badge = document.getElementById('previewStatusBadge');
+      badge.textContent  = formatStatus(a.status);
+      badge.className    = `preview-status ${a.status}`;
+
+      const safeBody = DOMPurify.sanitize(a.body || '', {
+        ALLOWED_TAGS: ['p','br','h2','h3','strong','em','u','ul','ol','li','a','blockquote','img'],
+        ALLOWED_ATTR: ['href','src','alt','title','target','rel'],
+      });
+
+      const imgHtml = a.featured_image
+        ? `<img class="article-featured-img" src="${esc(transformImg(a.featured_image))}" alt="${esc(a.title)}" loading="eager">`
+        : '';
+
+      const tagsHtml = a.tags?.length
+        ? `<div class="article-tags">
+             <span class="tags-label">Etiquetas:</span>
+             ${a.tags.map(t => `<span class="tag-pill">${esc(t)}</span>`).join('')}
+           </div>`
+        : '';
+
+      document.title = `[Vista previa] ${a.title || 'Sin título'} — Crono Play`;
+
+      document.getElementById('appRoot').innerHTML = `
+        <div class="article-wrap">
+          <span class="article-category">${esc(formatCat(a.category))}</span>
+          <h1 class="article-title">${esc(a.title)}</h1>
+          <p class="article-excerpt">${esc(a.excerpt || '')}</p>
+          <div class="article-meta">
+            <span>${esc(a.author_name || '—')}</span>
+            <span class="article-meta-sep">·</span>
+            <span>${formatDate(a.updated_at)}</span>
+            <span class="article-meta-sep">·</span>
+            <span>${esc(formatCat(a.category))}</span>
+          </div>
+          ${imgHtml}
+          <div class="article-body">${safeBody}</div>
+          ${tagsHtml}
+        </div>`;
+    }
+
+    function renderNotFound() {
+      document.getElementById('appRoot').innerHTML = `
+        <div class="state-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <h2>Artículo no encontrado</h2>
+          <p>El artículo no existe o fue eliminado.</p>
+          <button class="btn-back" onclick="window.close()">Cerrar</button>
+        </div>`;
+    }
+
+    function renderAccessDenied() {
+      document.getElementById('appRoot').innerHTML = `
+        <div class="state-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <h2>Acceso denegado</h2>
+          <p>No tienes permiso para ver esta vista previa.</p>
+          <button class="btn-back" onclick="window.close()">Cerrar</button>
+        </div>`;
+    }
+
+    function renderError(msg) {
+      document.getElementById('appRoot').innerHTML = `
+        <div class="state-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <h2>Error</h2>
+          <p>${esc(msg)}</p>
+          <button class="btn-back" onclick="window.close()">Cerrar</button>
+        </div>`;
+    }
+
+    function transformImg(url) {
+      if (!url) return '';
+      let u = String(url).trim();
+      if (u.startsWith('http://')) u = u.replace('http://', 'https://');
+      if (u.includes('cloudinary.com') && u.includes('/upload/'))
+        return u.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
+      return u;
+    }
+    function formatDate(ts) {
+      if (!ts) return '';
+      const d = ts.toDate ? ts.toDate() : new Date(ts);
+      return d.toLocaleDateString('es-VE', { day:'2-digit', month:'long', year:'numeric' });
+    }
+    function formatCat(c) {
+      return { deportes:'Deportes', noticias:'Noticias', entretenimiento:'Entretenimiento', opinion:'Opinión' }[c] || c || '';
+    }
+    function formatStatus(s) {
+      return { draft:'Borrador', review:'En revisión', published:'Publicado', rejected:'Rechazado', unpublished:'Despublicado' }[s] || s;
+    }
+    function esc(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
