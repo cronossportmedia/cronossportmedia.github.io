@@ -179,7 +179,9 @@
     /* ── Social Embeds en artículos ──────────────────────────── */
     .social-embed { margin: 1.5rem auto; max-width: 540px; text-align: center; }
     .social-embed a { color: var(--color-accent, #FF6B35); }
-    .instagram-media, .twitter-tweet, .tiktok-embed { margin: 1.5rem auto !important; }
+    .instagram-media, .tiktok-embed { margin: 1.5rem auto !important; }
+    .embed-tweet { background: transparent; }
+    .embed-tweet iframe { transition: height 0.3s ease; }
     .embed-responsive { border-radius: 8px; overflow: hidden; }
     .embed-video video { max-height: 70vh; display: block; }
 
@@ -321,7 +323,7 @@
         ALLOWED_ATTR: ['href','src','alt','title','target','rel'],
         FORCE_BODY: false,
         ADD_TAGS: ['div', 'span', 'iframe', 'video', 'source'],
-        ADD_ATTR: ['class', 'data-provider', 'data-url', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'controls', 'preload', 'playsinline', 'type'],
+        ADD_ATTR: ['class', 'data-provider', 'data-url', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'controls', 'preload', 'playsinline', 'type', 'scrolling', 'allowtransparency'],
       });
 
       const imgHtml = a.featured_image
@@ -364,7 +366,9 @@
       // Eliminar iframes que no sean de YouTube embed (seguridad)
       document.querySelectorAll('.article-body iframe').forEach(iframe => {
         const src = iframe.getAttribute('src') || '';
-        if (!src.startsWith('https://www.youtube.com/embed/')) iframe.remove();
+        const isYouTube = src.startsWith('https://www.youtube.com/embed/');
+        const isTwitter = src.startsWith('https://platform.twitter.com/embed/');
+        if (!isYouTube && !isTwitter) iframe.remove();
       });
 
       // Hidratar placeholders de embeds sociales
@@ -441,23 +445,31 @@
         onLoad() { if (window.instgrm) window.instgrm.Embeds.process(); }
       },
       twitter: {
-        scriptUrl: 'https://platform.twitter.com/widgets.js',
+        scriptUrl: null,
         createEmbed(url) {
-          const bq = document.createElement('blockquote');
-          bq.className = 'twitter-tweet';
-          const a = document.createElement('a');
-          a.href = url;
-          a.textContent = 'Ver en Twitter';
-          bq.appendChild(a);
-          return bq;
+          const match = url.match(/status\/(\d+)/);
+          if (!match) return null;
+          const tweetId = match[1];
+          const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+          const wrapper = document.createElement('div');
+          wrapper.className = 'embed-responsive embed-tweet';
+          wrapper.style.cssText = 'max-width:550px; margin:1.5rem auto;';
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://platform.twitter.com/embed/Tweet.html?id=${tweetId}&theme=${theme}`;
+          iframe.setAttribute('frameborder', '0');
+          iframe.setAttribute('scrolling', 'no');
+          iframe.setAttribute('allowtransparency', 'true');
+          iframe.setAttribute('allowfullscreen', 'true');
+          iframe.setAttribute('id', `tweet-${tweetId}`);
+          iframe.style.cssText = 'width:100%; min-height:250px; border:none; border-radius:12px;';
+          wrapper.appendChild(iframe);
+          const fallback = document.createElement('p');
+          fallback.style.cssText = 'text-align:center; margin-top:0.5rem; font-size:0.8rem;';
+          fallback.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:var(--color-accent, #FF6B35);">Ver post en X</a>`;
+          wrapper.appendChild(fallback);
+          return wrapper;
         },
-        onLoad() {
-          if (window.twttr && window.twttr.ready) {
-            window.twttr.ready(function(twttr) { twttr.widgets.load(); });
-          } else if (window.twttr && window.twttr.widgets) {
-            window.twttr.widgets.load();
-          }
-        }
+        onLoad() {}
       },
       youtube: {
         scriptUrl: null,
@@ -576,17 +588,24 @@
         }
       }
 
-      // Retry para Twitter: widgets.js a veces necesita un segundo load()
-      if (scriptsToLoad.has('twitter')) {
-        setTimeout(() => {
-          if (window.twttr && window.twttr.ready) {
-            window.twttr.ready(function(twttr) { twttr.widgets.load(); });
-          } else if (window.twttr && window.twttr.widgets) {
-            window.twttr.widgets.load();
-          }
-        }, 1500);
-      }
     }
+
+    // Auto-resize para iframes de Twitter embeds
+    window.addEventListener('message', function(event) {
+      if (event.origin !== 'https://platform.twitter.com') return;
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data['twttr.embed'] && data['twttr.embed'].method === 'twttr.private.resize') {
+          const params = data['twttr.embed'].params;
+          if (params && params.length > 0) {
+            const height = params[0].height;
+            document.querySelectorAll('.embed-tweet iframe').forEach(iframe => {
+              if (height && height > 0) iframe.style.height = height + 'px';
+            });
+          }
+        }
+      } catch (e) { /* ignorar mensajes que no son de Twitter */ }
+    });
   </script>
   <script>
   (function(){
