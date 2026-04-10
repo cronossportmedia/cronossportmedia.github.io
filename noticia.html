@@ -447,10 +447,17 @@
           bq.className = 'twitter-tweet';
           const a = document.createElement('a');
           a.href = url;
+          a.textContent = 'Ver en Twitter';
           bq.appendChild(a);
           return bq;
         },
-        onLoad() { if (window.twttr && window.twttr.widgets) window.twttr.widgets.load(); }
+        onLoad() {
+          if (window.twttr && window.twttr.ready) {
+            window.twttr.ready(function(twttr) { twttr.widgets.load(); });
+          } else if (window.twttr && window.twttr.widgets) {
+            window.twttr.widgets.load();
+          }
+        }
       },
       youtube: {
         scriptUrl: null,
@@ -560,13 +567,24 @@
         }
       });
 
-      for (const [, config] of scriptsToLoad) {
+      for (const [provider, config] of scriptsToLoad) {
         try {
           await loadScript(config.scriptUrl);
           config.onLoad();
         } catch (err) {
-          console.warn('Error cargando script de embed:', err);
+          console.warn(`Error cargando script de embed (${provider}):`, err);
         }
+      }
+
+      // Retry para Twitter: widgets.js a veces necesita un segundo load()
+      if (scriptsToLoad.has('twitter')) {
+        setTimeout(() => {
+          if (window.twttr && window.twttr.ready) {
+            window.twttr.ready(function(twttr) { twttr.widgets.load(); });
+          } else if (window.twttr && window.twttr.widgets) {
+            window.twttr.widgets.load();
+          }
+        }, 1500);
       }
     }
   </script>
