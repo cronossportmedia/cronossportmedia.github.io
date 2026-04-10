@@ -188,9 +188,9 @@
     
 
     .hero {
-      position: relative; min-height: 90vh;
+      position: relative; min-height: 50vh;
       display: flex; align-items: flex-start; justify-content: center; text-align: center;
-      padding: 3rem 1.25rem 7rem; overflow: hidden;
+      padding: 2.5rem 1.25rem 4rem; overflow: hidden;
     }
     .hero::before {
       content: ''; position: absolute; inset: 0;
@@ -259,13 +259,7 @@
       opacity: 0; animation: fade-up .7s ease .55s forwards;
     }
 
-    .hero__scroll {
-      position: absolute; bottom: 2rem; left: 0; right: 0; margin: 0 auto; width: max-content;
-      display: flex; flex-direction: column; align-items: center; gap: .5rem;
-      color: var(--color-text-muted); font-size: .7rem; font-family: var(--font-heading);
-      letter-spacing: .1em; text-transform: uppercase;
-      opacity: 0; animation: fade-up .7s ease .9s forwards;
-    }
+    .hero__scroll { display: none; }
     .hero__scroll-line {
       width: 1px; height: 36px;
       background: linear-gradient(to bottom, var(--color-text-muted), transparent);
@@ -435,7 +429,7 @@
       h3 { font-size: 1.5rem; }
       .nav-toggle { display: none; }
       .nav { display: flex; }
-      .hero { padding-top: 8rem; }
+      .hero { padding-top: 3rem; }
       .hero__description { font-size: 1.1rem; }
       .hero__tagline { font-size: 1.3rem; }
       .stats__grid { grid-template-columns: repeat(4,1fr); }
@@ -505,6 +499,95 @@
     .match-banner__cta { margin-left: auto; }
     .match-banner__content svg { display: block; }
   }
+
+  /* ── Banner Partido Hoy — TEMPORAL (eliminar después del evento) ── */
+  .event-banner-hoy {
+    padding: 1.5rem 1.25rem 2rem;
+    background: var(--color-secondary);
+    border-bottom: 1px solid var(--section-border);
+  }
+  .event-banner-hoy__card {
+    position: relative;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 220px;
+  }
+  .event-banner-hoy__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  .event-banner-hoy__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(10,20,35,.85) 0%, rgba(10,20,35,.60) 50%, rgba(10,20,35,.35) 100%);
+  }
+  .event-banner-hoy__content {
+    position: relative;
+    z-index: 1;
+    padding: 1.75rem 1.5rem;
+    color: #fff;
+    max-width: 580px;
+  }
+  .event-banner-hoy__eyebrow {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--color-accent);
+    margin-bottom: .65rem;
+  }
+  .event-banner-hoy__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.8vw, 1.85rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: .65rem;
+  }
+  .event-banner-hoy__text {
+    font-size: .9rem;
+    color: rgba(255,255,255,.78);
+    margin-bottom: 1.35rem;
+    max-width: 420px;
+    line-height: 1.55;
+  }
+  .event-banner-hoy__ctas {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .event-banner-hoy__btn-primary {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: var(--color-accent); color: #fff;
+    padding: .7rem 1.4rem; border-radius: 6px;
+    font-family: var(--font-heading); font-weight: 700; font-size: .9rem;
+    transition: background .2s, transform .15s; min-height: 44px;
+  }
+  .event-banner-hoy__btn-primary:hover { background: #e55a28; transform: translateY(-1px); }
+  .event-banner-hoy__btn-ghost {
+    display: inline-flex; align-items: center; gap: .45rem;
+    border: 2px solid rgba(255,255,255,.4); color: #fff;
+    background: rgba(255,255,255,.08);
+    padding: .6rem 1.25rem; border-radius: 6px;
+    font-family: var(--font-heading); font-weight: 700; font-size: .875rem;
+    transition: background .2s, border-color .2s; min-height: 44px;
+  }
+  .event-banner-hoy__btn-ghost:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.7); }
+  @media (min-width: 768px) {
+    .event-banner-hoy__card { min-height: 280px; }
+    .event-banner-hoy__content { padding: 2.5rem 2.5rem; }
+  }
+  /* ── /Banner Partido Hoy ── */
   </style>
   <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
@@ -579,6 +662,36 @@
       if (SHOW_MATCH_BANNER) document.getElementById('match-banner').style.display = '';
     })();
     </script>
+
+    <!-- ══════════════════════════════════════════════════════════
+         BANNER EVENTO HOY — TEMPORAL — eliminar después del partido
+         ═══════════════════════════════════════════════════════ -->
+    <section class="event-banner-hoy" aria-label="Cobertura especial — partido de hoy">
+      <div class="event-banner-hoy__card">
+        <img
+          src="assets/img/cronoplay_banner_1920x700_full_nocrop.png"
+          alt="Estadio — Deportivo Táchira vs Deportivo La Guaira"
+          class="event-banner-hoy__img"
+          loading="eager"
+        >
+        <div class="event-banner-hoy__overlay" aria-hidden="true"></div>
+        <div class="event-banner-hoy__content">
+          <span class="event-banner-hoy__eyebrow">Cobertura especial</span>
+          <h2 class="event-banner-hoy__title">Deportivo Táchira<br>vs Deportivo La Guaira</h2>
+          <p class="event-banner-hoy__text">Sigue la cobertura del partido de hoy y escucha la transmisión en vivo por Crono Play.</p>
+          <div class="event-banner-hoy__ctas">
+            <a href="en-vivo.html#match-section" class="event-banner-hoy__btn-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              Escuchar en vivo
+            </a>
+            <a href="en-vivo.html#match-section" class="event-banner-hoy__btn-ghost">
+              Ver programación
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /BANNER EVENTO HOY -->
 
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero__grid-bg" aria-hidden="true"></div>
