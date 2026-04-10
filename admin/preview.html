@@ -162,6 +162,7 @@
     .social-embed a { color: var(--color-accent, #FF6B35); }
     .instagram-media, .twitter-tweet, .tiktok-embed { margin: 1.5rem auto !important; }
     .embed-responsive { border-radius: 8px; overflow: hidden; }
+    .embed-video video { max-height: 70vh; display: block; }
   </style>
   <script>(function(){ if(localStorage.getItem('crono-theme')==='dark') document.documentElement.setAttribute('data-theme','dark'); })();</script>
 </head>
@@ -245,8 +246,8 @@
       const safeBody = DOMPurify.sanitize(a.body || '', {
         ALLOWED_TAGS: ['p','br','h2','h3','strong','em','u','ul','ol','li','a','blockquote','img'],
         ALLOWED_ATTR: ['href','src','alt','title','target','rel'],
-        ADD_TAGS: ['div', 'span', 'iframe'],
-        ADD_ATTR: ['class', 'data-provider', 'data-url', 'allow', 'allowfullscreen', 'frameborder', 'loading'],
+        ADD_TAGS: ['div', 'span', 'iframe', 'video', 'source'],
+        ADD_ATTR: ['class', 'data-provider', 'data-url', 'allow', 'allowfullscreen', 'frameborder', 'loading', 'controls', 'preload', 'playsinline', 'type'],
       });
 
       const imgHtml = a.featured_image
@@ -401,6 +402,33 @@
           bq.style.cssText = 'max-width:605px;min-width:325px;margin:1rem auto;';
           bq.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">Ver en TikTok</a>`;
           return bq;
+        },
+        onLoad() {}
+      },
+      video: {
+        scriptUrl: null,
+        createEmbed(url) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'embed-responsive embed-video';
+          wrapper.style.cssText = 'max-width:100%; margin:1.5rem auto;';
+          const video = document.createElement('video');
+          video.setAttribute('controls', '');
+          video.setAttribute('preload', 'metadata');
+          video.setAttribute('playsinline', '');
+          video.style.cssText = 'width:100%; border-radius:8px; background:#000;';
+          const source = document.createElement('source');
+          source.src = url;
+          if (url.match(/\.webm(\?|$)/i)) {
+            source.type = 'video/webm';
+          } else {
+            source.type = 'video/mp4';
+          }
+          video.appendChild(source);
+          const fallback = document.createElement('p');
+          fallback.innerHTML = `Tu navegador no soporta este video. <a href="${url}" target="_blank" rel="noopener noreferrer">Descárgalo aquí</a>.`;
+          video.appendChild(fallback);
+          wrapper.appendChild(video);
+          return wrapper;
         },
         onLoad() {}
       }
