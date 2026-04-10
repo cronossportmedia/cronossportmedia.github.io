@@ -175,7 +175,13 @@
       nav { display: none; }
       .hamburger { display: block; }
     }
-  
+
+    /* ── Social Embeds en artículos ──────────────────────────── */
+    .social-embed { margin: 1.5rem auto; max-width: 540px; text-align: center; }
+    .social-embed a { color: var(--color-accent, #FF6B35); }
+    .instagram-media, .twitter-tweet, .tiktok-embed { margin: 1.5rem auto !important; }
+    .embed-responsive { border-radius: 8px; overflow: hidden; }
+
   body, .header, header, .footer, footer, main, section, article,
   .nav-mobile, .sidebar, .topbar, .card, .pilar, .podcast-card,
   .episode-card, .platform-pill, .radio__player, .radio-controls,
@@ -313,6 +319,8 @@
         ALLOWED_TAGS: ['p','br','h2','h3','strong','em','u','ul','ol','li','a','blockquote','img'],
         ALLOWED_ATTR: ['href','src','alt','title','target','rel'],
         FORCE_BODY: false,
+        ADD_TAGS: ['div', 'span', 'iframe'],
+        ADD_ATTR: ['class', 'data-provider', 'data-url', 'allow', 'allowfullscreen', 'frameborder', 'loading'],
       });
 
       const imgHtml = a.featured_image
@@ -351,6 +359,15 @@
 
           ${tagsHtml}
         </div>`;
+
+      // Eliminar iframes que no sean de YouTube embed (seguridad)
+      document.querySelectorAll('.article-body iframe').forEach(iframe => {
+        const src = iframe.getAttribute('src') || '';
+        if (!src.startsWith('https://www.youtube.com/embed/')) iframe.remove();
+      });
+
+      // Hidratar placeholders de embeds sociales
+      hydrateEmbeds(document.querySelector('.article-body'));
     }
 
     function renderNotFound() {
@@ -406,6 +423,124 @@
     }
     function formatCat(c) { return {deportes:'Deportes',noticias:'Noticias',entretenimiento:'Entretenimiento',opinion:'Opinión'}[c]||c||''; }
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    // ── Social Embed Hydration ─────────────────────────────────
+    const EMBED_PROVIDERS = {
+      instagram: {
+        scriptUrl: 'https://www.instagram.com/embed.js',
+        createEmbed(url) {
+          const bq = document.createElement('blockquote');
+          bq.className = 'instagram-media';
+          bq.setAttribute('data-instgrm-permalink', url);
+          bq.setAttribute('data-instgrm-version', '14');
+          bq.style.cssText = 'max-width:540px;width:100%;margin:1rem auto;min-width:326px;';
+          bq.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">Ver en Instagram</a>`;
+          return bq;
+        },
+        onLoad() { if (window.instgrm) window.instgrm.Embeds.process(); }
+      },
+      twitter: {
+        scriptUrl: 'https://platform.twitter.com/widgets.js',
+        createEmbed(url) {
+          const bq = document.createElement('blockquote');
+          bq.className = 'twitter-tweet';
+          const a = document.createElement('a');
+          a.href = url;
+          bq.appendChild(a);
+          return bq;
+        },
+        onLoad() { if (window.twttr && window.twttr.widgets) window.twttr.widgets.load(); }
+      },
+      youtube: {
+        scriptUrl: null,
+        createEmbed(url) {
+          const videoId = extractYouTubeId(url);
+          if (!videoId || !/^[\w-]{11}$/.test(videoId)) return null;
+          const wrapper = document.createElement('div');
+          wrapper.className = 'embed-responsive';
+          wrapper.style.cssText = 'position:relative;padding-bottom:56.25%;height:0;overflow:hidden;max-width:100%;margin:1rem auto;';
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://www.youtube.com/embed/${videoId}`;
+          iframe.setAttribute('loading', 'lazy');
+          iframe.setAttribute('allow', 'accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture');
+          iframe.setAttribute('allowfullscreen', '');
+          iframe.setAttribute('frameborder', '0');
+          iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;';
+          wrapper.appendChild(iframe);
+          return wrapper;
+        },
+        onLoad() {}
+      },
+      tiktok: {
+        scriptUrl: 'https://www.tiktok.com/embed.js',
+        createEmbed(url) {
+          const match = url.match(/video\/(\d+)/);
+          const videoId = match ? match[1] : '';
+          const bq = document.createElement('blockquote');
+          bq.className = 'tiktok-embed';
+          bq.setAttribute('cite', url);
+          if (videoId) bq.setAttribute('data-video-id', videoId);
+          bq.style.cssText = 'max-width:605px;min-width:325px;margin:1rem auto;';
+          bq.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">Ver en TikTok</a>`;
+          return bq;
+        },
+        onLoad() {}
+      }
+    };
+
+    function extractYouTubeId(url) {
+      for (const p of [/youtube\.com\/watch\?v=([\w-]+)/, /youtu\.be\/([\w-]+)/, /youtube\.com\/shorts\/([\w-]+)/, /youtube\.com\/embed\/([\w-]+)/]) {
+        const m = url.match(p);
+        if (m) return m[1];
+      }
+      return null;
+    }
+
+    const _loadedScripts = new Set();
+    function loadScript(url) {
+      return new Promise((resolve, reject) => {
+        if (_loadedScripts.has(url)) { resolve(); return; }
+        const s = document.createElement('script');
+        s.src = url; s.async = true;
+        s.onload = () => { _loadedScripts.add(url); resolve(); };
+        s.onerror = reject;
+        document.body.appendChild(s);
+      });
+    }
+
+    async function hydrateEmbeds(container) {
+      if (!container) return;
+      const placeholders = container.querySelectorAll('.social-embed[data-provider][data-url]');
+      if (!placeholders.length) return;
+
+      const scriptsToLoad = new Map();
+
+      placeholders.forEach(placeholder => {
+        const provider = placeholder.getAttribute('data-provider');
+        const url = placeholder.getAttribute('data-url');
+        const config = EMBED_PROVIDERS[provider];
+
+        if (!config) {
+          placeholder.innerHTML = `<p style="text-align:center;padding:1rem;"><a href="${url}" target="_blank" rel="noopener noreferrer">Ver contenido en ${provider}</a></p>`;
+          return;
+        }
+
+        const embed = config.createEmbed(url);
+        if (embed) {
+          placeholder.replaceWith(embed);
+          if (config.scriptUrl) scriptsToLoad.set(provider, config);
+        }
+      });
+
+      for (const [, config] of scriptsToLoad) {
+        try {
+          await loadScript(config.scriptUrl);
+          config.onLoad();
+        } catch (err) {
+          console.warn('Error cargando script de embed:', err);
+        }
+      }
+    }
   </script>
   <script>
   (function(){
