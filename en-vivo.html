@@ -270,6 +270,18 @@
       max-width: 34rem;
       margin: 0 auto;
     }
+    .live-event-meta {
+      margin: .85rem 0 0;
+      color: var(--color-text-muted);
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      opacity: .82;
+    }
+    .live-event-section--youtube::before {
+      background: radial-gradient(circle, rgba(255,0,0,.1) 0%, transparent 70%);
+    }
 
     .live-event-player {
       --lpv-embed-top-crop: 56px;
@@ -302,6 +314,95 @@
       -ms-overflow-style: none;
     }
     .live-event-player iframe::-webkit-scrollbar { display: none; }
+    .live-event-player--youtube {
+      --lpv-embed-top-crop: 0px;
+      --lpv-embed-bottom-crop: 0px;
+    }
+    .live-event-player--youtube iframe {
+      transition: opacity .25s ease, filter .25s ease;
+    }
+    .live-event-section--youtube[data-embed-state="fallback"] .live-event-player {
+      border-color: rgba(255,0,0,.28);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 0 0 1px rgba(255,0,0,.12);
+    }
+    .live-event-section--youtube[data-embed-state="fallback"] .live-event-player--youtube iframe {
+      opacity: .14;
+      filter: blur(2px) saturate(.35);
+      pointer-events: none;
+    }
+    .futve-live-fallback {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: linear-gradient(180deg, rgba(4,8,13,.22) 0%, rgba(4,8,13,.62) 56%, rgba(4,8,13,.88) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .futve-live-fallback[hidden] { display: none; }
+    .futve-live-fallback__panel {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      background: rgba(11,17,26,.88);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 18px 40px rgba(0,0,0,.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .futve-live-fallback__icon {
+      width: 34px;
+      height: 34px;
+      color: #fff;
+    }
+    .futve-live-actions {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: .85rem;
+      justify-items: center;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .futve-live-actions__primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .55rem;
+      min-height: 46px;
+      padding: .8rem 1.5rem;
+      border-radius: 999px;
+      background: var(--color-live);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-size: .9rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 10px 24px rgba(255,0,0,.2);
+      transition: transform .15s, background .2s, box-shadow .2s;
+    }
+    .futve-live-actions__primary:hover {
+      background: #d10000;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(255,0,0,.26);
+    }
+    .futve-live-actions__primary svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .futve-live-actions__note {
+      margin: 0;
+      max-width: 34rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      font-size: .92rem;
+    }
 
     .video-container {
       position: relative;
@@ -651,6 +752,43 @@
             </div>
           </section>
 
+          <!-- Bloque temporal FUTVE: desactívalo luego con SHOW_FUTVE_SPECIAL_EMBED en el script inferior. -->
+          <section id="futve-live-embed" class="live-event-section live-event-section--youtube reveal" aria-labelledby="futve-live-title" data-temporary-event="futve" data-embed-state="loading" data-watch-url="https://www.youtube.com/watch?v=GHgxRh3JOqc" data-embed-timeout="7000">
+            <div class="live-event-header">
+              <span class="live-badge">EN VIVO</span>
+              <h3 id="futve-live-title" class="live-event-title">Portuguesa F.C. vs Academia Puerto Cabello</h3>
+              <p class="live-event-text">Sigue aquí la transmisión en vivo del partido por YouTube / FUTVE desde Crono Play.</p>
+              <p class="live-event-meta">Hoy · 5:00 P.M. hora Venezuela</p>
+            </div>
+
+            <div class="live-event-player live-event-player--youtube">
+              <div class="live-event-player__viewport">
+                <iframe
+                  id="futve-live-iframe"
+                  src="about:blank"
+                  data-video-id="GHgxRh3JOqc"
+                  title="Portuguesa F.C. vs Academia Puerto Cabello en vivo por YouTube / FUTVE"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                  referrerpolicy="strict-origin-when-cross-origin">
+                </iframe>
+                <div id="futve-live-fallback" class="futve-live-fallback" hidden aria-hidden="true">
+                  <div class="futve-live-fallback__panel">
+                    <svg class="futve-live-fallback__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="futve-live-actions">
+              <a href="https://www.youtube.com/watch?v=GHgxRh3JOqc" target="_blank" rel="noopener noreferrer" class="futve-live-actions__primary" aria-label="Ver Portuguesa F.C. vs Academia Puerto Cabello en YouTube / FUTVE">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+                Ver en YouTube / FUTVE
+              </a>
+              <p class="futve-live-actions__note">Si la transmisión no carga aquí, ábrela directamente en YouTube / FUTVE.</p>
+            </div>
+          </section>
+
           <div>
             <div id="youtube-container" class="video-container reveal">
               <div class="no-live" id="yt-loading">
@@ -766,7 +904,132 @@
 
   <script>
   (function () {
+    var SHOW_FUTVE_SPECIAL_EMBED = true;
+    var DEFAULT_FUTVE_EMBED_TIMEOUT_MS = 7000;
     var revealEls = document.querySelectorAll('.reveal');
+    var futveEmbed = document.getElementById('futve-live-embed');
+    if (futveEmbed && !SHOW_FUTVE_SPECIAL_EMBED) {
+      futveEmbed.hidden = true;
+    }
+
+    (function initFutveEmbed() {
+      if (!futveEmbed || futveEmbed.hidden) return;
+
+      var futveIframe = document.getElementById('futve-live-iframe');
+      var futveFallback = document.getElementById('futve-live-fallback');
+      var embedTimeout = parseInt(futveEmbed.getAttribute('data-embed-timeout'), 10);
+      var timeoutMs = !isNaN(embedTimeout) ? embedTimeout : DEFAULT_FUTVE_EMBED_TIMEOUT_MS;
+      var futveVideoId = futveIframe ? futveIframe.getAttribute('data-video-id') : '';
+      var hasHttpContext = /^https?:$/.test(window.location.protocol);
+
+      if (!futveIframe || !futveFallback) return;
+
+      var timedOut = false;
+
+      function activateFutveFallback() {
+        futveEmbed.setAttribute('data-embed-state', 'fallback');
+        futveFallback.hidden = false;
+      }
+
+      function buildFutveEmbedUrl(videoId) {
+        var params = [
+          'enablejsapi=1',
+          'playsinline=1',
+          'rel=0',
+          'modestbranding=1'
+        ];
+
+        if (hasHttpContext) {
+          params.push('origin=' + encodeURIComponent(window.location.origin));
+          params.push('widget_referrer=' + encodeURIComponent(window.location.href.split('#')[0]));
+        }
+
+        return 'https://www.youtube.com/embed/' + videoId + '?' + params.join('&');
+      }
+
+      if (!futveVideoId || !hasHttpContext) {
+        activateFutveFallback();
+        return;
+      }
+
+      function loadYouTubeIframeApi(callback) {
+        if (window.YT && window.YT.Player) {
+          callback();
+          return;
+        }
+
+        window.__cronoYouTubeIframeApiQueue = window.__cronoYouTubeIframeApiQueue || [];
+        window.__cronoYouTubeIframeApiQueue.push(callback);
+
+        if (!window.__cronoYouTubeIframeApiReadyHandler) {
+          var previousHandler = window.onYouTubeIframeAPIReady;
+          window.__cronoYouTubeIframeApiReadyHandler = true;
+          window.onYouTubeIframeAPIReady = function () {
+            if (typeof previousHandler === 'function') previousHandler();
+            var queue = window.__cronoYouTubeIframeApiQueue || [];
+            while (queue.length) {
+              var queuedCallback = queue.shift();
+              if (typeof queuedCallback === 'function') queuedCallback();
+            }
+          };
+        }
+
+        if (!document.getElementById('youtube-iframe-api-script')) {
+          var script = document.createElement('script');
+          script.id = 'youtube-iframe-api-script';
+          script.src = 'https://www.youtube.com/iframe_api';
+          script.async = true;
+          document.head.appendChild(script);
+        }
+      }
+
+      futveIframe.src = buildFutveEmbedUrl(futveVideoId);
+
+      var fallbackTimer = window.setTimeout(function () {
+        timedOut = true;
+        activateFutveFallback();
+      }, timeoutMs);
+
+      function showFallback() {
+        window.clearTimeout(fallbackTimer);
+        activateFutveFallback();
+      }
+
+      futveIframe.addEventListener('load', function () {
+        window.clearTimeout(fallbackTimer);
+
+        if (timedOut) {
+          activateFutveFallback();
+          return;
+        }
+
+        futveEmbed.setAttribute('data-embed-state', 'loaded');
+        futveFallback.hidden = true;
+      }, { once: true });
+
+      futveIframe.addEventListener('error', function () {
+        showFallback();
+      });
+
+      loadYouTubeIframeApi(function () {
+        if (!window.YT || !window.YT.Player || futveEmbed.getAttribute('data-embed-state') === 'fallback') return;
+
+        try {
+          new window.YT.Player('futve-live-iframe', {
+            events: {
+              onError: function (event) {
+                if (event && (event.data === 153 || event.data === 101 || event.data === 150 || event.data === 5)) {
+                  showFallback();
+                }
+              }
+            }
+          });
+        } catch (error) {
+          showFallback();
+        }
+      });
+    })();
+
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('is-visible'); io.unobserve(e.target); } }); }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
       revealEls.forEach(function(el){ io.observe(el); });
