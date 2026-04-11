@@ -188,9 +188,9 @@
     
 
     .hero {
-      position: relative; min-height: 90vh;
+      position: relative; min-height: 84vh;
       display: flex; align-items: flex-start; justify-content: center; text-align: center;
-      padding: 3rem 1.25rem 7rem; overflow: hidden;
+      padding: 2.2rem 1.25rem 5.75rem; overflow: hidden;
     }
     .hero::before {
       content: ''; position: absolute; inset: 0;
@@ -231,7 +231,7 @@
       display: inline-flex; align-items: center; gap: .5rem;
       font-family: var(--font-heading); font-size: .75rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: .14em; color: var(--color-accent-alt);
-      border: 1px solid var(--accent-alt-border); padding: .35rem 1rem; border-radius: 20px; margin-bottom: 1.5rem;
+      border: 1px solid var(--accent-alt-border); padding: .35rem 1rem; border-radius: 20px; margin-bottom: 1.2rem;
       opacity: 0; animation: fade-up .7s ease .1s forwards;
     }
     .hero__eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--color-accent-alt); border-radius: 50%; }
@@ -244,12 +244,12 @@
 
     .hero__tagline {
       font-family: var(--font-heading); font-weight: 700; font-size: 1.1rem;
-      color: var(--color-accent); margin-bottom: 1.25rem;
+      color: var(--color-accent); margin-bottom: 1rem;
       opacity: 0; animation: fade-up .7s ease .35s forwards;
     }
 
     .hero__description {
-      color: var(--color-text-muted); font-size: 1rem; margin-bottom: 2.25rem;
+      color: var(--color-text-muted); font-size: 1rem; margin-bottom: 1.9rem;
       max-width: 520px; margin-left: auto; margin-right: auto;
       opacity: 0; animation: fade-up .7s ease .45s forwards;
     }
@@ -417,17 +417,121 @@
     .podcast-card__meta  { margin-top: 1rem; font-size: .8rem; color: var(--color-text-muted); opacity: .7; }
     .podcasts__cta { text-align: center; }
 
-    /* Banner temporal del evento de hoy */
+    /* Eventos especiales del home */
     .event-banner-hoy {
-      padding: 1.5rem 1.25rem 2rem;
+      padding: 1rem 1.25rem 1.35rem;
       background: var(--color-secondary);
       border-bottom: 1px solid var(--section-border);
+    }
+    .special-events-slider {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      position: relative;
+    }
+    .special-events-slider__viewport {
+      position: relative;
+    }
+    .special-events-slider__track {
+      display: grid;
+      gap: 1rem;
+    }
+    .special-events-slider__slide {
+      min-width: 0;
+    }
+    .special-events-slider__controls {
+      display: none;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .special-events-slider__arrow {
+      position: absolute;
+      top: 50%;
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(255,255,255,.7);
+      background: rgba(7,13,20,.14);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 24px rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transform: translateY(-50%);
+      transition: border-color .2s, transform .15s, background .2s, color .2s, opacity .2s;
+      pointer-events: auto;
+      opacity: .82;
+    }
+    .special-events-slider__arrow:hover {
+      border-color: #fff;
+      background: rgba(7,13,20,.3);
+      transform: translateY(-50%) scale(1.03);
+    }
+    .special-events-slider__arrow[data-direction="prev"] { left: -22px; }
+    .special-events-slider__arrow[data-direction="next"] { right: -22px; }
+    .special-events-slider__arrow svg {
+      width: 17px;
+      height: 17px;
+    }
+    .special-events-slider__dots {
+      position: absolute;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      justify-content: center;
+      padding: .4rem .7rem;
+      border-radius: 999px;
+      background: rgba(6,10,16,.18);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      pointer-events: auto;
+    }
+    .special-events-slider__dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,.88);
+      background: transparent;
+      box-shadow: 0 2px 8px rgba(0,0,0,.22);
+      transition: background .2s, border-color .2s, transform .15s, opacity .2s;
+      opacity: .88;
+    }
+    .special-events-slider__dot:hover {
+      transform: scale(1.08);
+      opacity: 1;
+    }
+    .special-events-slider__dot[aria-pressed="true"] {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      opacity: 1;
+    }
+    .special-events-slider[data-slider-ready="true"] .special-events-slider__viewport {
+      overflow: hidden;
+    }
+    .special-events-slider[data-slider-ready="true"] .special-events-slider__track {
+      display: flex;
+      gap: 0;
+      transform: translateX(calc(var(--special-events-index, 0) * -100%));
+      transition: transform .45s ease;
+      will-change: transform;
+    }
+    .special-events-slider[data-slider-ready="true"] .special-events-slider__slide {
+      flex: 0 0 100%;
+    }
+    .special-events-slider[data-slider-ready="true"] .special-events-slider__controls {
+      display: block;
     }
     .event-banner-hoy__card {
       position: relative;
       max-width: var(--max-width);
       margin: 0 auto;
-      min-height: 240px;
+      min-height: 228px;
       border-radius: 12px;
       overflow: hidden;
       background: #0b1420;
@@ -441,18 +545,29 @@
       object-fit: cover;
       object-position: center 44%;
       display: block;
+      transform: scale(1.015);
+      filter: saturate(1.02) contrast(1.02);
+    }
+    .event-banner-hoy__card--lpv .event-banner-hoy__img {
+      object-position: center 44%;
+    }
+    .event-banner-hoy__card--futve .event-banner-hoy__img {
+      object-position: center 50%;
     }
     .event-banner-hoy__overlay {
       position: absolute;
       inset: 0;
       background: linear-gradient(100deg, rgba(8,18,31,.94) 0%, rgba(8,18,31,.86) 38%, rgba(8,18,31,.58) 68%, rgba(8,18,31,.28) 100%);
     }
+    .event-banner-hoy__card--futve .event-banner-hoy__overlay {
+      background: linear-gradient(100deg, rgba(8,18,31,.95) 0%, rgba(8,18,31,.90) 40%, rgba(8,18,31,.66) 72%, rgba(8,18,31,.32) 100%);
+    }
     .event-banner-hoy__content {
       position: relative;
       z-index: 1;
-      padding: 1.75rem 1.5rem;
+      padding: 1.4rem 1.35rem;
       color: #fff;
-      max-width: 540px;
+      max-width: 510px;
     }
     .event-banner-hoy__eyebrow {
       display: inline-block;
@@ -466,16 +581,16 @@
     }
     .event-banner-hoy__title {
       font-family: var(--font-heading);
-      font-size: clamp(1.25rem, 2.8vw, 1.85rem);
+      font-size: clamp(1.18rem, 2.55vw, 1.72rem);
       font-weight: 800;
       color: #fff;
       line-height: 1.2;
       margin-bottom: .65rem;
     }
     .event-banner-hoy__text {
-      font-size: .9rem;
+      font-size: .88rem;
       color: rgba(255,255,255,.78);
-      margin-bottom: 1.35rem;
+      margin-bottom: 1.05rem;
       max-width: 460px;
       line-height: 1.55;
     }
@@ -491,13 +606,13 @@
       gap: .45rem;
       background: var(--color-accent);
       color: #fff;
-      padding: .7rem 1.4rem;
+      padding: .62rem 1.2rem;
       border-radius: 6px;
       font-family: var(--font-heading);
       font-weight: 700;
-      font-size: .9rem;
+      font-size: .86rem;
       transition: background .2s, transform .15s;
-      min-height: 44px;
+      min-height: 42px;
     }
     .event-banner-hoy__btn-primary:hover { background: #e55a28; transform: translateY(-1px); }
     .event-banner-hoy__btn-ghost {
@@ -507,21 +622,39 @@
       border: 2px solid rgba(255,255,255,.4);
       color: #fff;
       background: rgba(255,255,255,.08);
-      padding: .6rem 1.25rem;
+      padding: .55rem 1.05rem;
       border-radius: 6px;
       font-family: var(--font-heading);
       font-weight: 700;
-      font-size: .875rem;
+      font-size: .84rem;
       transition: background .2s, border-color .2s;
-      min-height: 44px;
+      min-height: 42px;
     }
     .event-banner-hoy__btn-ghost:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.7); }
     @media (min-width: 768px) {
-      .event-banner-hoy__card { min-height: 310px; }
-      .event-banner-hoy__content { padding: 2.5rem 2.5rem; }
+      .event-banner-hoy__card { min-height: 296px; }
+      .event-banner-hoy__content { padding: 2rem 2.1rem; }
     }
     @media (max-width: 767px) {
-      .event-banner-hoy__img { object-position: center 40%; }
+      .event-banner-hoy__card--lpv .event-banner-hoy__img { object-position: center 40%; }
+      .event-banner-hoy__card--futve .event-banner-hoy__img { object-position: center 48%; }
+      .special-events-slider__arrow {
+        width: 40px;
+        height: 40px;
+        background: rgba(7,13,20,.22);
+        opacity: .88;
+      }
+      .special-events-slider__arrow[data-direction="prev"] { left: 8px; }
+      .special-events-slider__arrow[data-direction="next"] { right: 8px; }
+      .special-events-slider__dots {
+        bottom: 12px;
+        gap: .55rem;
+        padding: .35rem .55rem;
+      }
+      .special-events-slider__dot {
+        width: 10px;
+        height: 10px;
+      }
     }
 
     .footer { padding: 3rem 1.25rem 2rem; border-top: 1px solid var(--section-border); text-align: center; }
@@ -542,7 +675,7 @@
       h3 { font-size: 1.5rem; }
       .nav-toggle { display: none; }
       .nav { display: flex; }
-      .hero { padding-top: 8rem; }
+      .hero { padding-top: 6.1rem; }
       .hero__description { font-size: 1.1rem; }
       .hero__tagline { font-size: 1.3rem; }
       .stats__grid { grid-template-columns: repeat(4,1fr); }
@@ -623,37 +756,199 @@
 
   <main id="main-content">
 
-    <!-- Banner temporal del evento de hoy -->
-    <section id="today-event-banner" class="event-banner-hoy" style="display:none;" aria-label="Cobertura especial — partido de hoy">
-      <div class="event-banner-hoy__card">
-        <img
-          src="assets/img/11_Abril_LPV_partido.jpg"
-          alt="Afiche del partido Sport Caracas vs Universitarias"
-          class="event-banner-hoy__img"
-          loading="eager"
-        >
-        <div class="event-banner-hoy__overlay" aria-hidden="true"></div>
-        <div class="event-banner-hoy__content">
-          <span class="event-banner-hoy__eyebrow">Cobertura especial</span>
-          <h2 class="event-banner-hoy__title">Sport Caracas vs Universitarias</h2>
-          <p class="event-banner-hoy__text">Sigue la transmisión especial de hoy por LPV TV en Crono Play. En vivo el 11 de abril a las 3:00 P.M.</p>
-          <div class="event-banner-hoy__ctas">
-            <a href="en-vivo.html#lpv-live-embed" class="event-banner-hoy__btn-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-              Ver transmisión en vivo
-            </a>
-            <a href="en-vivo.html" class="event-banner-hoy__btn-ghost">
-              Ir a En Vivo
-            </a>
+    <!-- Eventos especiales activos -->
+    <section id="today-event-banner" class="event-banner-hoy" aria-labelledby="special-events-title">
+      <div class="special-events-slider" id="specialEventsSlider" aria-roledescription="carousel" aria-label="Eventos especiales activos">
+        <h2 id="special-events-title" class="sr-only">Eventos especiales activos</h2>
+
+        <div class="special-events-slider__viewport" id="specialEventsViewport" tabindex="0">
+          <div class="special-events-slider__track">
+            <article class="special-events-slider__slide" data-special-event-title="Sport Caracas vs Universitarias">
+              <div class="event-banner-hoy__card event-banner-hoy__card--lpv">
+                <img
+                  src="assets/img/11_Abril_LPV_partido.jpg"
+                  alt="Afiche del partido Sport Caracas vs Universitarias"
+                  class="event-banner-hoy__img"
+                  loading="eager"
+                >
+                <div class="event-banner-hoy__overlay" aria-hidden="true"></div>
+                <div class="event-banner-hoy__content">
+                  <span class="event-banner-hoy__eyebrow">Cobertura especial</span>
+                  <h3 class="event-banner-hoy__title">Sport Caracas vs Universitarias</h3>
+                  <p class="event-banner-hoy__text">Sigue la transmisión especial en video por LPV TV desde Crono Play. En vivo el 11 de abril a las 3:00 P.M.</p>
+                  <div class="event-banner-hoy__ctas">
+                    <a href="en-vivo.html#lpv-live-embed" class="event-banner-hoy__btn-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                      Ver transmisión en vivo
+                    </a>
+                    <a href="en-vivo.html" class="event-banner-hoy__btn-ghost">
+                      Ir a En Vivo
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="special-events-slider__slide" data-special-event-title="Portuguesa F.C. vs Academia Puerto Cabello">
+              <div class="event-banner-hoy__card event-banner-hoy__card--futve">
+                <img
+                  src="assets/img/portuguesa_vs_academia_11_04_2025.png"
+                  alt="Afiche del partido Portuguesa F.C. vs Academia Puerto Cabello por YouTube y FUTVE"
+                  class="event-banner-hoy__img"
+                  loading="lazy"
+                >
+                <div class="event-banner-hoy__overlay" aria-hidden="true"></div>
+                <div class="event-banner-hoy__content">
+                  <span class="event-banner-hoy__eyebrow">Cobertura especial por YouTube</span>
+                  <h3 class="event-banner-hoy__title">Portuguesa F.C. vs Academia Puerto Cabello</h3>
+                  <p class="event-banner-hoy__text">Sigue el partido en vivo desde cronoplay.com a través de la señal de FUTVE por YouTube. Hoy a las 5:00 P.M. hora Venezuela.</p>
+                  <div class="event-banner-hoy__ctas">
+                    <a href="en-vivo.html#futve-live-embed" class="event-banner-hoy__btn-primary" aria-label="Ver Portuguesa F.C. vs Academia Puerto Cabello en En Vivo">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                      Ver transmisión en vivo
+                    </a>
+                    <a href="en-vivo.html" class="event-banner-hoy__btn-ghost">
+                      Ir a En Vivo
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
           </div>
         </div>
+        <div class="special-events-slider__controls" aria-label="Controles de eventos especiales">
+          <button type="button" class="special-events-slider__arrow" data-direction="prev" aria-label="Ver evento anterior" aria-controls="specialEventsViewport">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="special-events-slider__dots" id="specialEventsDots" aria-label="Seleccionar evento especial"></div>
+          <button type="button" class="special-events-slider__arrow" data-direction="next" aria-label="Ver evento siguiente" aria-controls="specialEventsViewport">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+
+        <p id="specialEventsStatus" class="sr-only" aria-live="polite"></p>
       </div>
     </section>
     <script>
     const SHOW_TODAY_EVENT_BANNER = true;
+    const SPECIAL_EVENTS_AUTOPLAY = true;
+    const SPECIAL_EVENTS_AUTOPLAY_MS = 5000;
     (function () {
       var todayEventBanner = document.getElementById('today-event-banner');
-      if (todayEventBanner) todayEventBanner.style.display = SHOW_TODAY_EVENT_BANNER ? '' : 'none';
+      if (!todayEventBanner) return;
+      if (!SHOW_TODAY_EVENT_BANNER) {
+        todayEventBanner.style.display = 'none';
+        return;
+      }
+
+      var slider = document.getElementById('specialEventsSlider');
+      var viewport = document.getElementById('specialEventsViewport');
+      var track = slider ? slider.querySelector('.special-events-slider__track') : null;
+      var slides = slider ? Array.prototype.slice.call(slider.querySelectorAll('.special-events-slider__slide')) : [];
+      var dotsWrap = document.getElementById('specialEventsDots');
+      var status = document.getElementById('specialEventsStatus');
+      var prevButton = slider ? slider.querySelector('[data-direction="prev"]') : null;
+      var nextButton = slider ? slider.querySelector('[data-direction="next"]') : null;
+
+      if (!slider || !track || slides.length <= 1 || !dotsWrap || !prevButton || !nextButton) return;
+
+      var currentIndex = 0;
+      var autoplayId = null;
+      var reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+      slider.dataset.sliderReady = 'true';
+      var dots = [];
+
+      function getEventTitle(index) {
+        return slides[index].getAttribute('data-special-event-title') || ('Evento ' + (index + 1));
+      }
+
+      function stopAutoplay() {
+        if (autoplayId) {
+          window.clearInterval(autoplayId);
+          autoplayId = null;
+        }
+      }
+
+      function startAutoplay() {
+        if (!SPECIAL_EVENTS_AUTOPLAY) return;
+        if (reducedMotionQuery && reducedMotionQuery.matches) return;
+        stopAutoplay();
+        autoplayId = window.setInterval(function () {
+          goTo(currentIndex + 1);
+        }, SPECIAL_EVENTS_AUTOPLAY_MS);
+      }
+
+      function goTo(index) {
+        currentIndex = (index + slides.length) % slides.length;
+        slider.style.setProperty('--special-events-index', currentIndex);
+
+        slides.forEach(function (slide, slideIndex) {
+          slide.setAttribute('aria-hidden', slideIndex === currentIndex ? 'false' : 'true');
+        });
+
+        dots.forEach(function (dot, dotIndex) {
+          var isActive = dotIndex === currentIndex;
+          dot.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+
+        if (status) {
+          status.textContent = 'Evento ' + (currentIndex + 1) + ' de ' + slides.length + ': ' + getEventTitle(currentIndex);
+        }
+      }
+
+      slides.forEach(function (_, index) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'special-events-slider__dot';
+        dot.setAttribute('aria-label', 'Ir al evento ' + (index + 1) + ' de ' + slides.length + ': ' + getEventTitle(index));
+        dot.setAttribute('aria-pressed', 'false');
+        dot.setAttribute('aria-controls', 'specialEventsViewport');
+        dot.addEventListener('click', function () {
+          goTo(index);
+          startAutoplay();
+        });
+        dotsWrap.appendChild(dot);
+        dots.push(dot);
+      });
+
+      prevButton.addEventListener('click', function () {
+        goTo(currentIndex - 1);
+        startAutoplay();
+      });
+      nextButton.addEventListener('click', function () {
+        goTo(currentIndex + 1);
+        startAutoplay();
+      });
+
+      if (viewport) {
+        viewport.addEventListener('keydown', function (event) {
+          if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            goTo(currentIndex - 1);
+            startAutoplay();
+          }
+          if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            goTo(currentIndex + 1);
+            startAutoplay();
+          }
+        });
+      }
+
+      slider.addEventListener('mouseenter', stopAutoplay);
+      slider.addEventListener('mouseleave', startAutoplay);
+      slider.addEventListener('focusin', stopAutoplay);
+      slider.addEventListener('focusout', function () {
+        if (!slider.contains(document.activeElement)) startAutoplay();
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.hidden) stopAutoplay();
+        else startAutoplay();
+      });
+
+      goTo(0);
+      startAutoplay();
     })();
     </script>
 
