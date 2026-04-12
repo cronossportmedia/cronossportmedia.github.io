@@ -409,7 +409,7 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
-  /* ── Social Embeds en el editor ──────────────────────────── */
+  
   .social-embed {
     margin: 1rem 0;
     border-radius: 8px;
@@ -809,7 +809,7 @@
     const saveDraftMob  = document.getElementById('btnSaveDraftMobile');
     const sendReviewMob = document.getElementById('btnSendReviewMobile');
 
-    // Botón de vista previa: visible solo cuando el artículo ya tiene ID guardado
+    
     const btnPreview = document.getElementById('btnPreview');
     if (articleId) {
       btnPreview.href          = `preview.html?id=${articleId}`;
@@ -1188,7 +1188,7 @@
     return { super_admin:'Super Admin', editor_jefe:'Editor Jefe', reportero:'Reportero', colaborador:'Colaborador' }[r] || r;
   }
 
-  // ── Social Embed System ────────────────────────────────────
+  
   const EMBED_PROVIDERS = {
     instagram: {
       name: 'Instagram',

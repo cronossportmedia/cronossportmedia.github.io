@@ -15,7 +15,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
 
-  <!-- DOMPurify para sanitizar HTML del artículo -->
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
 
   <style>
@@ -176,7 +176,7 @@
       .hamburger { display: block; }
     }
 
-    /* ── Social Embeds en artículos ──────────────────────────── */
+    
     .social-embed { margin: 1.5rem auto; max-width: 540px; text-align: center; }
     .social-embed a { color: var(--color-accent, #FF6B35); }
     .instagram-media, .tiktok-embed { margin: 1.5rem auto !important; }
@@ -317,7 +317,7 @@
       const date = formatDate(a.published_at);
       const cat  = formatCat(a.category);
 
-      // Sanitizar HTML del cuerpo con DOMPurify
+      
       const safeBody = DOMPurify.sanitize(a.body || '', {
         ALLOWED_TAGS: ['p','br','h2','h3','strong','em','u','ul','ol','li','a','blockquote','img'],
         ALLOWED_ATTR: ['href','src','alt','title','target','rel'],
@@ -363,7 +363,6 @@
           ${tagsHtml}
         </div>`;
 
-      // Eliminar iframes que no sean de YouTube embed (seguridad)
       document.querySelectorAll('.article-body iframe').forEach(iframe => {
         const src = iframe.getAttribute('src') || '';
         const isYouTube = src.startsWith('https://www.youtube.com/embed/');
@@ -371,7 +370,7 @@
         if (!isYouTube && !isTwitter) iframe.remove();
       });
 
-      // Hidratar placeholders de embeds sociales
+      
       hydrateEmbeds(document.querySelector('.article-body'));
     }
 
@@ -429,7 +428,7 @@
     function formatCat(c) { return {deportes:'Deportes',noticias:'Noticias',entretenimiento:'Entretenimiento',opinion:'Opinión'}[c]||c||''; }
     function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-    // ── Social Embed Hydration ─────────────────────────────────
+    
     const EMBED_PROVIDERS = {
       instagram: {
         scriptUrl: 'https://www.instagram.com/embed.js',
@@ -590,7 +589,7 @@
 
     }
 
-    // Auto-resize para iframes de Twitter embeds
+    
     window.addEventListener('message', function(event) {
       if (event.origin !== 'https://platform.twitter.com') return;
       try {
@@ -604,7 +603,7 @@
             });
           }
         }
-      } catch (e) { /* ignorar mensajes que no son de Twitter */ }
+      } catch (e) {  }
     });
   </script>
   <script>

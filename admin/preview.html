@@ -48,7 +48,7 @@
     img { max-width: 100%; display: block; }
     a { color: inherit; text-decoration: none; }
 
-    /* ── Preview Bar ─────────────────────────────────── */
+    
     .preview-bar {
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       height: var(--preview-bar-h);
@@ -92,7 +92,7 @@
     .preview-btn-close { background: rgba(255,255,255,0.1); color: #F0F0F0; }
     .preview-btn svg   { width: 13px; height: 13px; }
 
-    /* ── Article layout (mismo que noticia.html) ─────── */
+    
     .article-wrap { max-width: 740px; margin: 0 auto; padding: 5rem 1.5rem 4rem; }
 
     .back-link {
@@ -157,7 +157,7 @@
     .btn-back { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.25rem; padding: 0.55rem 1.25rem; background: var(--color-accent); border-radius: 8px; color: white; font-family: var(--font-heading); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; transition: background 0.18s; }
     .btn-back:hover { background: #e85d2a; }
 
-    /* ── Social Embeds en artículos ──────────────────────────── */
+    
     .social-embed { margin: 1.5rem auto; max-width: 540px; text-align: center; }
     .social-embed a { color: var(--color-accent, #FF6B35); }
     .instagram-media, .tiktok-embed { margin: 1.5rem auto !important; }
@@ -170,7 +170,7 @@
 </head>
 <body>
 
-  <!-- Preview Bar -->
+  
   <div class="preview-bar" id="previewBar">
     <div class="preview-bar-left">
       <span class="preview-label">Vista previa</span>
@@ -210,7 +210,7 @@
       if (!user) { window.location.replace('index.html'); return; }
 
       try {
-        // Leer perfil del usuario para determinar rol
+        
         const userSnap = await getDoc(doc(db, 'users', user.uid));
         if (!userSnap.exists() || !userSnap.data().active) {
           window.location.replace('index.html'); return;
@@ -218,13 +218,13 @@
         const currentUser = { uid: user.uid, ...userSnap.data() };
         const isAdmin     = ['super_admin', 'editor_jefe'].includes(currentUser.role);
 
-        // Leer el artículo sin filtrar por status
+        
         const artSnap = await getDoc(doc(db, 'articles', articleId));
         if (!artSnap.exists()) { renderNotFound(); return; }
 
         const article = { id: artSnap.id, ...artSnap.data() };
 
-        // Control de acceso: debe ser el autor o un admin
+        
         if (!isAdmin && article.author_uid !== currentUser.uid) {
           renderAccessDenied(); return;
         }
@@ -238,7 +238,7 @@
     });
 
     function renderArticle(a) {
-      // Preview bar
+      
       document.getElementById('previewBarTitle').textContent = a.title || 'Sin título';
       document.getElementById('btnEditFromPreview').href     = `editor.html?id=${a.id}`;
       const badge = document.getElementById('previewStatusBadge');
@@ -282,7 +282,6 @@
           ${tagsHtml}
         </div>`;
 
-      // Eliminar iframes que no sean de YouTube embed (seguridad)
       document.querySelectorAll('.article-body iframe').forEach(iframe => {
         const src = iframe.getAttribute('src') || '';
         const isYouTube = src.startsWith('https://www.youtube.com/embed/');
@@ -290,7 +289,7 @@
         if (!isYouTube && !isTwitter) iframe.remove();
       });
 
-      // Hidratar placeholders de embeds sociales
+      
       hydrateEmbeds(document.querySelector('.article-body'));
     }
 
@@ -347,7 +346,7 @@
       return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
-    // ── Social Embed Hydration ─────────────────────────────────
+    
     const EMBED_PROVIDERS = {
       instagram: {
         scriptUrl: 'https://www.instagram.com/embed.js',
@@ -508,7 +507,7 @@
 
     }
 
-    // Auto-resize para iframes de Twitter embeds
+    
     window.addEventListener('message', function(event) {
       if (event.origin !== 'https://platform.twitter.com') return;
       try {
@@ -522,7 +521,7 @@
             });
           }
         }
-      } catch (e) { /* ignorar mensajes que no son de Twitter */ }
+      } catch (e) {  }
     });
   </script>
 </body>

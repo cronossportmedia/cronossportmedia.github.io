@@ -417,7 +417,7 @@
     .podcast-card__meta  { margin-top: 1rem; font-size: .8rem; color: var(--color-text-muted); opacity: .7; }
     .podcasts__cta { text-align: center; }
 
-    /* Eventos especiales del home */
+    
     .event-banner-hoy {
       padding: 1rem 1.25rem 1.35rem;
       background: var(--color-secondary);
@@ -756,14 +756,14 @@
 
   <main id="main-content">
 
-    <!-- Eventos especiales activos -->
+    
     <section id="today-event-banner" class="event-banner-hoy" aria-labelledby="special-events-title">
       <div class="special-events-slider" id="specialEventsSlider" aria-roledescription="carousel" aria-label="Eventos especiales activos">
         <h2 id="special-events-title" class="sr-only">Eventos especiales activos</h2>
 
         <div class="special-events-slider__viewport" id="specialEventsViewport" tabindex="0">
           <div class="special-events-slider__track">
-            <article class="special-events-slider__slide" data-special-event-title="Sport Caracas vs Universitarias">
+            <article class="special-events-slider__slide" data-event-key="lpv" data-special-event-title="Sport Caracas vs Universitarias">
               <div class="event-banner-hoy__card event-banner-hoy__card--lpv">
                 <img
                   src="assets/img/11_Abril_LPV_partido.jpg"
@@ -789,7 +789,7 @@
               </div>
             </article>
 
-            <article class="special-events-slider__slide" data-special-event-title="Portuguesa F.C. vs Academia Puerto Cabello">
+            <article class="special-events-slider__slide" data-event-key="futve" data-special-event-title="Portuguesa F.C. vs Academia Puerto Cabello">
               <div class="event-banner-hoy__card event-banner-hoy__card--futve">
                 <img
                   src="assets/img/portuguesa_vs_academia_11_04_2025.png"
@@ -830,27 +830,59 @@
       </div>
     </section>
     <script>
-    const SHOW_TODAY_EVENT_BANNER = true;
+    const SPECIAL_EVENT_FLAGS = {
+      
+      lpv: false,
+      futve: false
+    };
+    const SHOW_TODAY_EVENT_BANNER = Object.keys(SPECIAL_EVENT_FLAGS).some(function (eventKey) {
+      return !!SPECIAL_EVENT_FLAGS[eventKey];
+    });
     const SPECIAL_EVENTS_AUTOPLAY = true;
     const SPECIAL_EVENTS_AUTOPLAY_MS = 5000;
     (function () {
       var todayEventBanner = document.getElementById('today-event-banner');
       if (!todayEventBanner) return;
       if (!SHOW_TODAY_EVENT_BANNER) {
-        todayEventBanner.style.display = 'none';
+        todayEventBanner.hidden = true;
         return;
       }
 
       var slider = document.getElementById('specialEventsSlider');
       var viewport = document.getElementById('specialEventsViewport');
       var track = slider ? slider.querySelector('.special-events-slider__track') : null;
-      var slides = slider ? Array.prototype.slice.call(slider.querySelectorAll('.special-events-slider__slide')) : [];
+      var allSlides = slider ? Array.prototype.slice.call(slider.querySelectorAll('.special-events-slider__slide')) : [];
       var dotsWrap = document.getElementById('specialEventsDots');
       var status = document.getElementById('specialEventsStatus');
       var prevButton = slider ? slider.querySelector('[data-direction="prev"]') : null;
       var nextButton = slider ? slider.querySelector('[data-direction="next"]') : null;
+      var controls = slider ? slider.querySelector('.special-events-slider__controls') : null;
 
-      if (!slider || !track || slides.length <= 1 || !dotsWrap || !prevButton || !nextButton) return;
+      allSlides.forEach(function (slide) {
+        var eventKey = slide.getAttribute('data-event-key');
+        if (!eventKey) return;
+        if (!SPECIAL_EVENT_FLAGS[eventKey]) {
+          slide.hidden = true;
+        }
+      });
+
+      var slides = slider ? Array.prototype.slice.call(slider.querySelectorAll('.special-events-slider__slide:not([hidden])')) : [];
+
+      if (!slides.length) {
+        todayEventBanner.hidden = true;
+        return;
+      }
+
+      if (slides.length === 1) {
+        slides[0].setAttribute('aria-hidden', 'false');
+        if (controls) controls.hidden = true;
+        if (status) {
+          status.textContent = 'Evento especial activo: ' + getEventTitle(0);
+        }
+        return;
+      }
+
+      if (!slider || !track || !dotsWrap || !prevButton || !nextButton) return;
 
       var currentIndex = 0;
       var autoplayId = null;
