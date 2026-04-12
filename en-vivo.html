@@ -406,7 +406,7 @@
 
     .video-container {
       position: relative;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: 56.25%; 
       height: 0;
       overflow: hidden;
       border-radius: var(--radius);
@@ -729,8 +729,8 @@
         </div>
 
         <div class="live-streams-stack">
-          <!-- LPV TV embed preparado para activarse/ocultarse de forma independiente. -->
-          <section id="lpv-live-embed" class="live-event-section reveal" aria-labelledby="lpv-live-title">
+          
+          <section id="lpv-live-embed" class="live-event-section reveal" aria-labelledby="lpv-live-title" data-event-key="lpv">
             <div class="live-event-header">
               <span class="live-badge">EN VIVO</span>
               <h3 id="lpv-live-title" class="live-event-title">Transmisión especial LPV TV</h3>
@@ -752,8 +752,8 @@
             </div>
           </section>
 
-          <!-- Bloque temporal FUTVE: desactívalo luego con SHOW_FUTVE_SPECIAL_EMBED en el script inferior. -->
-          <section id="futve-live-embed" class="live-event-section live-event-section--youtube reveal" aria-labelledby="futve-live-title" data-temporary-event="futve" data-embed-state="loading" data-watch-url="https://www.youtube.com/watch?v=GHgxRh3JOqc" data-embed-timeout="7000">
+          
+          <section id="futve-live-embed" class="live-event-section live-event-section--youtube reveal" aria-labelledby="futve-live-title" data-event-key="futve" data-temporary-event="futve" data-embed-state="loading" data-watch-url="https://www.youtube.com/watch?v=GHgxRh3JOqc" data-embed-timeout="7000">
             <div class="live-event-header">
               <span class="live-badge">EN VIVO</span>
               <h3 id="futve-live-title" class="live-event-title">Portuguesa F.C. vs Academia Puerto Cabello</h3>
@@ -904,13 +904,23 @@
 
   <script>
   (function () {
-    var SHOW_FUTVE_SPECIAL_EMBED = true;
+    var SPECIAL_LIVE_EVENT_FLAGS = {
+      
+      lpv: false,
+      futve: false
+    };
     var DEFAULT_FUTVE_EMBED_TIMEOUT_MS = 7000;
     var revealEls = document.querySelectorAll('.reveal');
+    var eventSections = Array.prototype.slice.call(document.querySelectorAll('[data-event-key]'));
     var futveEmbed = document.getElementById('futve-live-embed');
-    if (futveEmbed && !SHOW_FUTVE_SPECIAL_EMBED) {
-      futveEmbed.hidden = true;
-    }
+
+    eventSections.forEach(function (section) {
+      var eventKey = section.getAttribute('data-event-key');
+      if (!eventKey) return;
+      if (!SPECIAL_LIVE_EVENT_FLAGS[eventKey]) {
+        section.hidden = true;
+      }
+    });
 
     (function initFutveEmbed() {
       if (!futveEmbed || futveEmbed.hidden) return;

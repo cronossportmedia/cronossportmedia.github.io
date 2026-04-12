@@ -453,7 +453,7 @@
         const data = userDoc.data();
         return data.active === true;
       } catch {
-        // Si hay error al leer Firestore (ej. rules bloquean), denegar
+        
         return false;
       }
     }
