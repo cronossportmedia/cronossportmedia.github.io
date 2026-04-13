@@ -1306,6 +1306,91 @@
     });
   </script>
 
+  <!-- site-config: progressive enhancement desde Firestore -->
+  <style>
+    .site-banner { width: 100%; overflow: hidden; }
+    .site-banner a { display: block; line-height: 0; }
+    .site-banner img { width: 100%; height: auto; object-fit: cover; }
+  </style>
+  <script type="module">
+    import { db } from '/js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    try {
+      const [heroSnap, bannerSnap, secSnap] = await Promise.all([
+        getDoc(doc(db, 'site_config', 'hero')),
+        getDoc(doc(db, 'site_config', 'banner')),
+        getDoc(doc(db, 'site_config', 'sections_visibility')),
+      ]);
+
+      // 1. HERO
+      if (heroSnap.exists()) {
+        const h = heroSnap.data();
+        const titleEl = document.querySelector('.hero__title');
+        if (titleEl && h.titulo) titleEl.textContent = h.titulo;
+        const taglineEl = document.querySelector('.hero__tagline');
+        if (taglineEl && h.subtitulo) taglineEl.textContent = h.subtitulo;
+        const ctaEl = document.querySelector('.hero__cta .btn-primary');
+        if (ctaEl) {
+          if (h.cta_url) ctaEl.href = h.cta_url;
+          if (h.cta_texto) {
+            const svg = ctaEl.querySelector('svg');
+            ctaEl.textContent = h.cta_texto;
+            if (svg) ctaEl.insertBefore(svg, ctaEl.firstChild);
+          }
+        }
+      }
+
+      // 2. BANNER
+      if (bannerSnap.exists()) {
+        const b = bannerSnap.data();
+        const secVisible = !secSnap.exists() || secSnap.data().banner !== false;
+        if (b.activo === true && b.imagen_url && secVisible) {
+          const imgUrl = b.imagen_url.replace('/upload/', '/upload/w_1200,q_auto,f_auto/');
+          const banner = document.createElement('div');
+          banner.className = 'site-banner';
+          const link = document.createElement('a');
+          link.href = b.url_destino || '#';
+          if (b.nueva_tab) { link.target = '_blank'; link.rel = 'noopener noreferrer'; }
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.alt = b.alt_text || '';
+          img.loading = 'lazy';
+          link.appendChild(img);
+          banner.appendChild(link);
+          const hero = document.querySelector('section.hero');
+          if (hero) {
+            if (b.posicion === 'arriba_hero') {
+              hero.parentNode.insertBefore(banner, hero);
+            } else {
+              hero.parentNode.insertBefore(banner, hero.nextSibling);
+            }
+          }
+        }
+      }
+
+      // 3. SECTIONS VISIBILITY
+      if (secSnap.exists()) {
+        const s = secSnap.data();
+        const sectionMap = {
+          radio:    'section.radio',
+          podcast:  'section.podcasts',
+          noticias: 'section.noticias',
+          stats:    'section.stats',
+        };
+        Object.entries(sectionMap).forEach(function([key, sel]) {
+          if (s[key] === false) {
+            const el = document.querySelector(sel);
+            if (el) el.style.display = 'none';
+          }
+        });
+      }
+
+    } catch (err) {
+      console.warn('[site-config] No se pudo cargar configuración desde Firestore:', err);
+    }
+  </script>
+
   <script>
   (function(){
     var html=document.documentElement;
