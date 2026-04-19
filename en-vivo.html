@@ -1622,6 +1622,18 @@
         section.hidden = false;
         section.removeAttribute('hidden');
 
+        // Si la URL tiene un anchor #player-xxx, scrollear a esa card
+        // (el browser intentó scrollear antes de que la sección existiera)
+        var hash = window.location.hash;
+        if (hash && hash.indexOf('#player-') === 0) {
+          var target = document.getElementById(hash.slice(1));
+          if (target) {
+            setTimeout(function () {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 120);
+          }
+        }
+
         players.forEach(function (p) {
           if (p.type !== 'youtube') {
             wireAudioPlayer(p);
