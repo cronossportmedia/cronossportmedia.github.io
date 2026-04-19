@@ -1169,6 +1169,11 @@
 
       nameInput.addEventListener('input', () => {
         nameLabel.textContent = nameInput.value || '(sin nombre)';
+        const idInput = item.querySelector('.aliado-id');
+        // Auto-sync ID only while it still has the auto-generated timestamp format
+        if (/^aliado-\d+$/.test(idInput.value)) {
+          idInput.value = slugify(nameInput.value) || idInput.value;
+        }
       });
 
       item.querySelector('.aliado-delete-btn').addEventListener('click', () => {
