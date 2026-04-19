@@ -595,6 +595,158 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
+  /* ── Transmisiones aliadas (live_players) ─────────────────────────────── */
+  .aliados-section {
+    padding: 3.5rem 1.25rem;
+    background: var(--color-primary);
+    border-top: 1px solid var(--section-border);
+  }
+  .aliados-grid {
+    max-width: 860px;
+    margin: 0 auto;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .aliado-card {
+    background: var(--color-secondary);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
+  }
+  .aliado-card__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--card-border);
+  }
+  .aliado-card__logo {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 6px;
+    flex-shrink: 0;
+    background: var(--color-primary);
+    padding: 4px;
+  }
+  .aliado-card__meta { flex: 1; min-width: 0; }
+  .aliado-card__name {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--color-text);
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
+  }
+  .aliado-card__desc {
+    font-size: 0.825rem;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+  }
+  .aliado-card__badge { flex-shrink: 0; }
+  .aliado-card__body { padding: 1.25rem 1.5rem; }
+
+  /* Reproductor de audio para aliados */
+  .aliado-audio-player {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--color-primary);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 0.875rem 1.25rem;
+  }
+  .aliado-audio-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .aliado-audio-btn:hover { background: #e55a28; transform: scale(1.05); }
+  .aliado-audio-btn svg { width: 18px; height: 18px; }
+  .aliado-audio-info { flex: 1; min-width: 0; }
+  .aliado-audio-status {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    line-height: 1.3;
+  }
+  .aliado-audio-status strong {
+    display: block;
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+  .aliado-audio-error {
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.875rem;
+    background: rgba(239,68,68,.08);
+    border: 1px solid rgba(239,68,68,.2);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--color-error);
+    display: none;
+  }
+
+  /* YouTube embed para aliados */
+  .aliado-yt-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .aliado-yt-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .aliado-yt-channel {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #FF0000;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .aliado-yt-channel:hover { background: #cc0000; }
+
+  /* Estado de carga */
+  .aliados-loading {
+    text-align: center;
+    padding: 2rem 0;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+  .aliados-loading-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--card-border);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 0.75rem;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (min-width: 640px) {
+    .aliado-card__header { padding: 1.5rem 1.75rem 1.125rem; }
+    .aliado-card__body { padding: 1.5rem 1.75rem; }
+  }
+  /* ── Fin Transmisiones aliadas ──────────────────────────────────────── */
+
   </style>
   <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
 </head>
@@ -716,6 +868,32 @@
         </div>
       </div>
     </section>
+
+    <!-- SECCIÓN TRANSMISIONES ALIADAS — poblada dinámicamente desde site_config/live_players -->
+    <section id="aliados-live" class="aliados-section" aria-labelledby="aliados-title" hidden>
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="divider"></div>
+          <p class="section-label">Transmisiones aliadas</p>
+          <h2 id="aliados-title">Radio y canales aliados</h2>
+          <p style="color:var(--color-text-muted);margin-top:.75rem;max-width:480px;margin-left:auto;margin-right:auto;font-size:.95rem;">
+            Sigue partidos y programas especiales a través de nuestros aliados de transmisión.
+          </p>
+        </div>
+        <div class="aliados-grid" id="aliadosGrid">
+          <div class="aliados-loading" id="aliadosLoading">
+            <div class="aliados-loading-spinner" aria-hidden="true"></div>
+            Cargando transmisiones...
+          </div>
+        </div>
+        <noscript>
+          <p style="text-align:center;color:var(--color-text-muted);padding:1.5rem 0;font-size:.9rem;">
+            Para ver las transmisiones aliadas activa JavaScript en tu navegador.
+          </p>
+        </noscript>
+      </div>
+    </section>
+    <!-- FIN SECCIÓN TRANSMISIONES ALIADAS -->
 
     <section class="live-section" aria-labelledby="youtube-title">
       <div class="container">
@@ -1242,6 +1420,230 @@
       updateIcons();
     });
   })();
+  </script>
+
+  <!-- Renderer dinámico de transmisiones aliadas (site_config/live_players) -->
+  <script type="module">
+    import { db } from '/js/firebase-config.js';
+    import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+    const section   = document.getElementById('aliados-live');
+    const grid      = document.getElementById('aliadosGrid');
+    const loadingEl = document.getElementById('aliadosLoading');
+
+    function svgPlay() {
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+    }
+    function svgPause() {
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+    }
+    function svgYT() {
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="16" height="16"><path d="M23.5 6.5a3.01 3.01 0 00-2.12-2.13C19.54 4 12 4 12 4s-7.54 0-9.38.38A3.01 3.01 0 00.5 6.5 31.3 31.3 0 000 12a31.3 31.3 0 00.5 5.5 3.01 3.01 0 002.12 2.12C4.46 20 12 20 12 20s7.54 0 9.38-.38a3.01 3.01 0 002.12-2.12A31.3 31.3 0 0024 12a31.3 31.3 0 00-.5-5.5zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"/></svg>';
+    }
+
+    function buildBadge(text) {
+      return `<span class="live-badge aliado-card__badge">${text || 'AL AIRE'}</span>`;
+    }
+
+    function buildAudioCard(player) {
+      const cardId   = 'player-' + player.id;
+      const audioId  = 'audio-' + player.id;
+      const btnId    = 'btn-'   + player.id;
+      const statusId = 'status-'+ player.id;
+      const errorId  = 'error-' + player.id;
+
+      const logoHtml = player.logo_url
+        ? `<img src="${player.logo_url}" alt="Logo ${player.name}" class="aliado-card__logo" loading="lazy">`
+        : '';
+
+      return `
+        <section class="aliado-card reveal" id="${cardId}" aria-labelledby="name-${player.id}">
+          <div class="aliado-card__header">
+            ${logoHtml}
+            <div class="aliado-card__meta">
+              <div class="aliado-card__name" id="name-${player.id}">${player.name}</div>
+              ${player.description ? `<div class="aliado-card__desc">${player.description}</div>` : ''}
+            </div>
+            ${buildBadge(player.live_indicator)}
+          </div>
+          <div class="aliado-card__body">
+            <div class="aliado-audio-player">
+              <button class="aliado-audio-btn" id="${btnId}" aria-label="Reproducir ${player.name}">
+                ${svgPlay()}
+              </button>
+              <div class="aliado-audio-info">
+                <div class="aliado-audio-status" id="${statusId}">
+                  <strong>${player.name}</strong>
+                  Presiona play para escuchar
+                </div>
+              </div>
+            </div>
+            <div class="aliado-audio-error" id="${errorId}" role="alert">
+              Estamos teniendo problemas para cargar la transmisión. Intentá de nuevo en unos minutos.
+            </div>
+            <audio id="${audioId}" preload="none">
+              <source src="${player.stream_url}" type="audio/mpeg">
+            </audio>
+          </div>
+        </section>`;
+    }
+
+    function buildYouTubeCard(player) {
+      const cardId = 'player-' + player.id;
+      const logoHtml = player.logo_url
+        ? `<img src="${player.logo_url}" alt="Logo ${player.name}" class="aliado-card__logo" loading="lazy">`
+        : '';
+
+      let playerHtml;
+      if (player.youtube_video_id) {
+        const origin = encodeURIComponent(window.location.origin);
+        playerHtml = `
+          <div class="aliado-yt-wrap">
+            <iframe
+              src="https://www.youtube.com/embed/${player.youtube_video_id}?autoplay=0&rel=0&origin=${origin}"
+              title="Transmisión en vivo ${player.name}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>`;
+      } else if (player.youtube_channel_id) {
+        playerHtml = `
+          <a href="https://www.youtube.com/channel/${player.youtube_channel_id}" target="_blank" rel="noopener noreferrer" class="aliado-yt-channel">
+            ${svgYT()} Ver canal en YouTube
+          </a>`;
+      } else {
+        playerHtml = '';
+      }
+
+      return `
+        <section class="aliado-card reveal" id="${cardId}" aria-labelledby="name-${player.id}">
+          <div class="aliado-card__header">
+            ${logoHtml}
+            <div class="aliado-card__meta">
+              <div class="aliado-card__name" id="name-${player.id}">${player.name}</div>
+              ${player.description ? `<div class="aliado-card__desc">${player.description}</div>` : ''}
+            </div>
+            ${buildBadge(player.live_indicator)}
+          </div>
+          <div class="aliado-card__body">${playerHtml}</div>
+        </section>`;
+    }
+
+    function wireAudioPlayer(player) {
+      const audio   = document.getElementById('audio-'  + player.id);
+      const btn     = document.getElementById('btn-'    + player.id);
+      const statusEl= document.getElementById('status-' + player.id);
+      const errorEl = document.getElementById('error-'  + player.id);
+      if (!audio || !btn) return;
+
+      let playing = false;
+
+      function setStatus(text) {
+        if (!statusEl) return;
+        statusEl.innerHTML = `<strong>${player.name}</strong>${text}`;
+      }
+
+      btn.addEventListener('click', function () {
+        if (!playing) {
+          audio.play().then(function () {
+            playing = true;
+            btn.innerHTML = svgPause();
+            btn.setAttribute('aria-label', 'Pausar ' + player.name);
+            setStatus('En reproducción...');
+            errorEl.style.display = 'none';
+          }).catch(function (err) {
+            console.warn('[live_players] Error al reproducir ' + player.id + ':', err);
+            errorEl.style.display = 'block';
+          });
+        } else {
+          audio.pause();
+          playing = false;
+          btn.innerHTML = svgPlay();
+          btn.setAttribute('aria-label', 'Reproducir ' + player.name);
+          setStatus('Presiona play para escuchar');
+        }
+      });
+
+      audio.addEventListener('error', function () {
+        playing = false;
+        btn.innerHTML = svgPlay();
+        btn.setAttribute('aria-label', 'Reproducir ' + player.name);
+        setStatus('Presiona play para escuchar');
+        errorEl.style.display = 'block';
+        console.warn('[live_players] Stream error en ' + player.id + ' (src: ' + player.stream_url + ')');
+      });
+
+      audio.addEventListener('waiting', function () { setStatus('Cargando...'); });
+      audio.addEventListener('playing', function () { setStatus('En reproducción...'); });
+      audio.addEventListener('stalled', function () {
+        console.warn('[live_players] Stream estancado en ' + player.id);
+        setStatus('Señal inestable, reintentando...');
+      });
+    }
+
+    try {
+      const snap = await getDoc(doc(db, 'site_config', 'live_players'));
+
+      if (!snap.exists()) {
+        if (loadingEl) loadingEl.remove();
+        return;
+      }
+
+      const data = snap.data();
+
+      if (!data.active) {
+        if (loadingEl) loadingEl.remove();
+        return;
+      }
+
+      const players = (data.players || [])
+        .filter(function (p) { return !!p.active; })
+        .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+
+      if (!players.length) {
+        if (loadingEl) loadingEl.remove();
+        return;
+      }
+
+      if (loadingEl) loadingEl.remove();
+
+      let html = '';
+      players.forEach(function (p) {
+        if (p.type === 'youtube') {
+          html += buildYouTubeCard(p);
+        } else {
+          html += buildAudioCard(p);
+        }
+      });
+      grid.innerHTML = html;
+      section.hidden = false;
+      section.removeAttribute('hidden');
+
+      players.forEach(function (p) {
+        if (p.type !== 'youtube') {
+          wireAudioPlayer(p);
+        }
+      });
+
+      // Disparar reveal para las cards recién agregadas
+      const revealEls = section.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const obs = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.classList.add('is-visible'); obs.unobserve(e.target); }
+          });
+        }, { threshold: 0.12 });
+        revealEls.forEach(function (el) { obs.observe(el); });
+      } else {
+        revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+      }
+
+    } catch (err) {
+      console.warn('[live_players] No se pudo cargar la sección de aliados:', err);
+      if (loadingEl) loadingEl.remove();
+    }
   </script>
 </body>
 </html>

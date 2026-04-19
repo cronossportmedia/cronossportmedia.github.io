@@ -195,6 +195,81 @@
       .form-row { grid-template-columns: 1fr; }
       .tab-btn { padding: 0.6rem 0.9rem; font-size: 0.72rem; }
     }
+
+    /* ── Tab Reproductores ─────────────────────────────────────────────── */
+    .aliado-item {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface);
+      overflow: hidden;
+    }
+    .aliado-item__header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--color-surface-2);
+      border-bottom: 1px solid var(--color-border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .aliado-item__name-label {
+      flex: 1;
+      font-weight: 600;
+      font-size: 0.875rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .aliado-item__toggle { flex-shrink: 0; }
+    .aliado-item__expand {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: none;
+      color: var(--color-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+      padding: 0;
+    }
+    .aliado-item__expand.open { transform: rotate(180deg); }
+    .aliado-item__body {
+      padding: 1rem;
+      display: grid;
+      gap: 0.75rem;
+    }
+    .aliado-item__body.hidden { display: none; }
+    .aliado-item__row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    .aliado-item__actions {
+      display: flex;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--color-border);
+      margin-top: 0.25rem;
+    }
+    .btn-danger-ghost {
+      padding: 0.45rem 0.875rem;
+      background: transparent;
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: var(--radius);
+      color: var(--color-error);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-danger-ghost:hover { background: rgba(239,68,68,.08); }
+    .aliado-stream-url-row { display: none; }
+    .aliado-yt-row { display: none; }
+    /* ── Fin Tab Reproductores ─────────────────────────────────────────── */
   </style>
 </head>
 <body>
@@ -272,10 +347,11 @@
     <div class="page-body">
 
       <div class="tabs-bar" id="tabsBar" role="tablist">
-        <button class="tab-btn active" data-tab="hero"    role="tab">Hero</button>
-        <button class="tab-btn"        data-tab="banner"  role="tab">Banner</button>
-        <button class="tab-btn"        data-tab="redes"   role="tab">Redes sociales</button>
-        <button class="tab-btn"        data-tab="secciones" role="tab">Secciones</button>
+        <button class="tab-btn active" data-tab="hero"          role="tab">Hero</button>
+        <button class="tab-btn"        data-tab="banner"        role="tab">Banner</button>
+        <button class="tab-btn"        data-tab="redes"         role="tab">Redes sociales</button>
+        <button class="tab-btn"        data-tab="secciones"     role="tab">Secciones</button>
+        <button class="tab-btn"        data-tab="reproductores" role="tab">Reproductores</button>
       </div>
 
       <div class="tab-panel active" id="tab-hero">
@@ -377,6 +453,8 @@
               <option value="/nosotros.html">Nosotros</option>
               <option value="/contacto.html">Contacto</option>
               <option value="/noticias.html">Noticias</option>
+              <!-- Las opciones de reproductores aliados se insertan dinámicamente -->
+              <optgroup label="Reproductores aliados" id="bannerDestinoPlayersGroup" style="display:none;"></optgroup>
               <option value="__external__">URL externa</option>
             </select>
             <div id="bannerUrlWrapper" style="display:none;margin-top:0.6rem;">
@@ -547,6 +625,36 @@
         </div>
       </div>
 
+      <div class="tab-panel" id="tab-reproductores">
+        <div class="card-section">
+          <div class="card-section-title">Transmisiones aliadas</div>
+
+          <div class="toggle-row" style="padding-top:0; margin-bottom:1rem; border-bottom:1px solid var(--color-border); padding-bottom:1rem;">
+            <div class="toggle-info">
+              <div class="toggle-label">Activar sección de aliados</div>
+              <div class="toggle-desc">Muestra la sección "Transmisiones aliadas" en En Vivo</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="aliadosMasterActive">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div id="aliadosList" style="display:flex;flex-direction:column;gap:1rem;margin-bottom:1.25rem;"></div>
+
+          <div class="section-actions" style="flex-direction:column;gap:0.75rem;align-items:flex-start;">
+            <button class="btn" id="btnAddAliado" type="button" style="background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);color:var(--color-accent-alt);font-size:0.8rem;font-weight:600;padding:0.55rem 1rem;border-radius:var(--radius);display:flex;align-items:center;gap:0.45rem;cursor:pointer;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Agregar aliado
+            </button>
+            <button class="btn btn-primary" id="btnSaveAliados" type="button">
+              <div class="btn-spinner"></div>
+              <span class="btn-label">Guardar reproductores</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -615,6 +723,10 @@
       const bannerUrlWrapper = document.getElementById('bannerUrlWrapper');
       if (INTERNAL_PAGES.includes(savedUrl)) {
         destinoSel.value = savedUrl;
+        bannerUrlWrapper.style.display = 'none';
+      } else if (savedUrl && savedUrl.includes('#player-')) {
+        // URL de reproductor aliado — se restaura en loadPlayerOptionsForBanner()
+        destinoSel.dataset.savedPlayerUrl = savedUrl;
         bannerUrlWrapper.style.display = 'none';
       } else if (savedUrl) {
         destinoSel.value = '__external__';
@@ -935,6 +1047,282 @@
   function hidePageLoading() {
     document.getElementById('pageLoading').classList.add('hidden');
   }
+
+  // ── Reproductores (live_players) ────────────────────────────────────────
+
+  let livePlayersData = { active: false, players: [] };
+
+  function slugify(str) {
+    return str.toLowerCase()
+      .replace(/[áàäâ]/g, 'a').replace(/[éèëê]/g, 'e')
+      .replace(/[íìïî]/g, 'i').replace(/[óòöô]/g, 'o')
+      .replace(/[úùüû]/g, 'u').replace(/ñ/g, 'n')
+      .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  function buildPlayerItemHTML(p, idx) {
+    const isAudio   = (p.type || 'audio') === 'audio';
+    const isYT      = p.type === 'youtube';
+    const bodyClass = 'aliado-item__body hidden';
+    return `
+      <div class="aliado-item" data-idx="${idx}">
+        <div class="aliado-item__header" data-toggle-body>
+          <label class="toggle-switch aliado-item__toggle" title="Activar/desactivar este reproductor">
+            <input type="checkbox" class="aliado-active-chk" ${p.active ? 'checked' : ''}>
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="aliado-item__name-label">${p.name || '(sin nombre)'}</span>
+          <button type="button" class="aliado-item__expand" title="Ver campos" aria-label="Expandir reproductor">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <div class="${bodyClass}">
+          <div class="aliado-item__row">
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" style="font-size:0.75rem;">ID (slug único)</label>
+              <input class="field-input aliado-id" type="text" value="${p.id || ''}" placeholder="contacto-937" style="font-size:0.8rem;">
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" style="font-size:0.75rem;">Nombre</label>
+              <input class="field-input aliado-name" type="text" value="${p.name || ''}" placeholder="Contacto 93.7 FM" style="font-size:0.8rem;">
+            </div>
+          </div>
+          <div class="aliado-item__row">
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" style="font-size:0.75rem;">Tipo</label>
+              <select class="field-select aliado-type" style="font-size:0.8rem;">
+                <option value="audio"   ${isAudio ? 'selected' : ''}>Audio (radio/stream)</option>
+                <option value="youtube" ${isYT    ? 'selected' : ''}>YouTube</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" style="font-size:0.75rem;">Orden</label>
+              <input class="field-input aliado-order" type="number" min="1" value="${p.order || 1}" style="font-size:0.8rem;">
+            </div>
+          </div>
+          <div class="field-group aliado-stream-url-row" style="margin:0;${isAudio ? 'display:block;' : ''}">
+            <label class="field-label" style="font-size:0.75rem;">URL del stream (audio)</label>
+            <input class="field-input aliado-stream-url" type="url" value="${p.stream_url || ''}" placeholder="https://..." style="font-size:0.8rem;">
+          </div>
+          <div class="field-group aliado-yt-row" style="margin:0;${isYT ? 'display:block;' : ''}">
+            <label class="field-label" style="font-size:0.75rem;">YouTube Channel ID</label>
+            <input class="field-input aliado-yt-channel" type="text" value="${p.youtube_channel_id || ''}" placeholder="UCxxxxxx" style="font-size:0.8rem;">
+          </div>
+          <div class="field-group aliado-yt-row" style="margin:0;${isYT ? 'display:block;' : ''}">
+            <label class="field-label" style="font-size:0.75rem;">YouTube Video ID (override manual — opcional)</label>
+            <input class="field-input aliado-yt-video" type="text" value="${p.youtube_video_id || ''}" placeholder="dQw4w9WgXcQ" style="font-size:0.8rem;">
+          </div>
+          <div class="field-group" style="margin:0;">
+            <label class="field-label" style="font-size:0.75rem;">Descripción corta</label>
+            <input class="field-input aliado-desc" type="text" value="${p.description || ''}" placeholder="Radio aliada..." style="font-size:0.8rem;">
+          </div>
+          <div class="aliado-item__row">
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" style="font-size:0.75rem;">Texto del badge</label>
+              <input class="field-input aliado-badge" type="text" value="${p.live_indicator || 'AL AIRE'}" placeholder="AL AIRE" style="font-size:0.8rem;">
+            </div>
+            <div class="field-group" style="margin:0;">
+              <label class="field-label" style="font-size:0.75rem;">URL del logo (Cloudinary)</label>
+              <input class="field-input aliado-logo" type="url" value="${p.logo_url || ''}" placeholder="https://res.cloudinary.com/..." style="font-size:0.8rem;">
+            </div>
+          </div>
+          <div class="aliado-item__actions">
+            <button type="button" class="btn-danger-ghost aliado-delete-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:0.3rem;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderAliadosList() {
+    const list = document.getElementById('aliadosList');
+    if (!livePlayersData.players.length) {
+      list.innerHTML = '<p style="font-size:0.8rem;color:var(--color-muted);padding:0.5rem 0;">No hay reproductores configurados.</p>';
+      return;
+    }
+    list.innerHTML = livePlayersData.players.map((p, i) => buildPlayerItemHTML(p, i)).join('');
+
+    list.querySelectorAll('.aliado-item').forEach((item, idx) => {
+      const header = item.querySelector('[data-toggle-body]');
+      const body   = item.querySelector('.aliado-item__body');
+      const expandBtn = item.querySelector('.aliado-item__expand');
+      const typeEl = item.querySelector('.aliado-type');
+      const streamRow = item.querySelector('.aliado-stream-url-row');
+      const ytRows    = item.querySelectorAll('.aliado-yt-row');
+      const nameInput = item.querySelector('.aliado-name');
+      const nameLabel = item.querySelector('.aliado-item__name-label');
+
+      header.addEventListener('click', (e) => {
+        if (e.target.closest('.toggle-switch') || e.target.closest('input')) return;
+        const open = !body.classList.contains('hidden');
+        body.classList.toggle('hidden', open);
+        expandBtn.classList.toggle('open', !open);
+      });
+
+      typeEl.addEventListener('change', () => {
+        const isAudio = typeEl.value === 'audio';
+        streamRow.style.display = isAudio ? 'block' : 'none';
+        ytRows.forEach(r => r.style.display = isAudio ? 'none' : 'block');
+      });
+
+      nameInput.addEventListener('input', () => {
+        nameLabel.textContent = nameInput.value || '(sin nombre)';
+      });
+
+      item.querySelector('.aliado-delete-btn').addEventListener('click', () => {
+        if (!confirm('¿Eliminar este reproductor? Esta acción no se puede deshacer.')) return;
+        livePlayersData.players.splice(idx, 1);
+        renderAliadosList();
+      });
+    });
+  }
+
+  function collectAliadosFromDOM() {
+    const items = document.querySelectorAll('#aliadosList .aliado-item');
+    const players = [];
+    const ids = new Set();
+
+    for (const item of items) {
+      const id   = (item.querySelector('.aliado-id').value || '').trim();
+      const name = (item.querySelector('.aliado-name').value || '').trim();
+      const type = item.querySelector('.aliado-type').value;
+
+      if (!id || !name) {
+        showToast('Todos los reproductores deben tener ID y nombre.', 'error');
+        return null;
+      }
+      if (ids.has(id)) {
+        showToast(`El ID "${id}" está duplicado.`, 'error');
+        return null;
+      }
+      if (type === 'audio' && !(item.querySelector('.aliado-stream-url').value || '').trim()) {
+        showToast(`El reproductor "${name}" requiere URL de stream.`, 'error');
+        return null;
+      }
+      if (type === 'youtube' && !(item.querySelector('.aliado-yt-channel').value || '').trim()) {
+        showToast(`El reproductor "${name}" requiere YouTube Channel ID.`, 'error');
+        return null;
+      }
+      ids.add(id);
+
+      const p = {
+        id,
+        name,
+        type,
+        active:         item.querySelector('.aliado-active-chk').checked,
+        order:          parseInt(item.querySelector('.aliado-order').value, 10) || 1,
+        description:    (item.querySelector('.aliado-desc').value || '').trim(),
+        live_indicator: (item.querySelector('.aliado-badge').value || 'AL AIRE').trim(),
+        logo_url:       (item.querySelector('.aliado-logo').value || '').trim(),
+      };
+      if (type === 'audio') {
+        p.stream_url = (item.querySelector('.aliado-stream-url').value || '').trim();
+      } else {
+        const chId = (item.querySelector('.aliado-yt-channel').value || '').trim();
+        const vId  = (item.querySelector('.aliado-yt-video').value   || '').trim();
+        if (chId) p.youtube_channel_id = chId;
+        if (vId)  p.youtube_video_id   = vId;
+      }
+      players.push(p);
+    }
+    return players;
+  }
+
+  async function loadLivePlayers(currentUser) {
+    const snap = await getDoc(doc(db, 'site_config', 'live_players'));
+    if (snap.exists()) {
+      livePlayersData = snap.data();
+    } else {
+      livePlayersData = { active: false, players: [] };
+    }
+    document.getElementById('aliadosMasterActive').checked = !!livePlayersData.active;
+    renderAliadosList();
+    loadPlayerOptionsForBanner();
+  }
+
+  function loadPlayerOptionsForBanner() {
+    const group = document.getElementById('bannerDestinoPlayersGroup');
+    if (!group) return;
+    group.innerHTML = '';
+    const activePlayers = (livePlayersData.players || []).filter(p => p.active);
+    if (!activePlayers.length) {
+      group.style.display = 'none';
+      return;
+    }
+    activePlayers.forEach(p => {
+      const opt = document.createElement('option');
+      opt.value = `/en-vivo.html#player-${p.id}`;
+      opt.textContent = `En Vivo · ${p.name}`;
+      group.appendChild(opt);
+    });
+    group.style.display = '';
+
+    // Restaurar la selección si apuntaba a un player aliado
+    const bannerSel2 = document.getElementById('bannerDestino');
+    const savedPlayerUrl = bannerSel2.dataset.savedPlayerUrl || '';
+    if (savedPlayerUrl) {
+      bannerSel2.value = savedPlayerUrl;
+      delete bannerSel2.dataset.savedPlayerUrl;
+    }
+  }
+
+  document.getElementById('btnAddAliado').addEventListener('click', () => {
+    const newPlayer = {
+      id: 'aliado-' + Date.now(),
+      name: '',
+      type: 'audio',
+      active: false,
+      order: (livePlayersData.players.length || 0) + 1,
+      description: '',
+      live_indicator: 'AL AIRE',
+      logo_url: '',
+      stream_url: '',
+    };
+    livePlayersData.players.push(newPlayer);
+    renderAliadosList();
+    const lastItem = document.querySelector('#aliadosList .aliado-item:last-child');
+    if (lastItem) {
+      const body = lastItem.querySelector('.aliado-item__body');
+      const btn  = lastItem.querySelector('.aliado-item__expand');
+      if (body) body.classList.remove('hidden');
+      if (btn)  btn.classList.add('open');
+      lastItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  });
+
+  document.getElementById('btnSaveAliados').addEventListener('click', async () => {
+    const btn = document.getElementById('btnSaveAliados');
+    const players = collectAliadosFromDOM();
+    if (players === null) return;
+    setBtnLoading(btn, true);
+    try {
+      const payload = {
+        active:     document.getElementById('aliadosMasterActive').checked,
+        players,
+        updated_at: serverTimestamp(),
+      };
+      await setDoc(doc(db, 'site_config', 'live_players'), payload);
+      livePlayersData = { ...payload, players };
+      loadPlayerOptionsForBanner();
+      showToast('Reproductores guardados ✓', 'success');
+    } catch (e) {
+      showToast('Error al guardar. Intenta de nuevo.', 'error');
+      console.error(e);
+    } finally {
+      setBtnLoading(btn, false);
+    }
+  });
+
+  // Extender loadAllSettings para incluir live_players
+  const _origLoadAll = loadAllSettings;
+  loadAllSettings = async function () {
+    await _origLoadAll();
+    await loadLivePlayers();
+  };
+
+  // ── Fin Reproductores ────────────────────────────────────────────────────
 </script>
 </body>
 </html>
