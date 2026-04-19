@@ -869,7 +869,6 @@
       </div>
     </section>
 
-    <!-- SECCIÓN TRANSMISIONES ALIADAS — poblada dinámicamente desde site_config/live_players -->
     <section id="aliados-live" class="aliados-section" aria-labelledby="aliados-title" hidden>
       <div class="container">
         <div class="section-header reveal">
@@ -893,7 +892,6 @@
         </noscript>
       </div>
     </section>
-    <!-- FIN SECCIÓN TRANSMISIONES ALIADAS -->
 
     <section class="live-section" aria-labelledby="youtube-title">
       <div class="container">
@@ -1422,7 +1420,6 @@
   })();
   </script>
 
-  <!-- Renderer dinámico de transmisiones aliadas (site_config/live_players) -->
   <script type="module">
     import { db } from '/js/firebase-config.js';
     import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
@@ -1578,6 +1575,7 @@
       audio.addEventListener('waiting', function () { setStatus('Cargando...'); });
       audio.addEventListener('playing', function () { setStatus('En reproducción...'); });
       audio.addEventListener('stalled', function () {
+        if (!audio.paused) return;
         console.warn('[live_players] Stream estancado en ' + player.id);
         setStatus('Señal inestable, reintentando...');
       });
@@ -1622,8 +1620,6 @@
         section.hidden = false;
         section.removeAttribute('hidden');
 
-        // Si la URL tiene un anchor #player-xxx, scrollear a esa card
-        // (el browser intentó scrollear antes de que la sección existiera)
         var hash = window.location.hash;
         if (hash && hash.indexOf('#player-') === 0) {
           var target = document.getElementById(hash.slice(1));
@@ -1640,7 +1636,6 @@
           }
         });
 
-        // Disparar reveal para las cards recién agregadas
         const revealEls = section.querySelectorAll('.reveal');
         if ('IntersectionObserver' in window) {
           const obs = new IntersectionObserver(function (entries) {
