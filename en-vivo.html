@@ -1544,6 +1544,7 @@
 
       btn.addEventListener('click', function () {
         if (!playing) {
+          audio.load();
           audio.play().then(function () {
             playing = true;
             btn.innerHTML = svgPause();
