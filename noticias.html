@@ -1,551 +1,1355 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Noticias — Crono Play</title>
-  <meta name="description" content="Las últimas noticias deportivas y de entretenimiento de Crono Play. Donde el deporte se cuenta de verdad.">
-  <meta property="og:title" content="Noticias — Crono Play">
-  <meta property="og:description" content="Las últimas noticias deportivas. Donde el deporte se cuenta de verdad.">
-  <meta property="og:type" content="website">
-  <link rel="canonical" href="https://cronoplay.com/noticias.html">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noticias — Crono Play</title>
+<meta name="description" content="Las últimas noticias deportivas y de entretenimiento de Crono Play. Radio en vivo 24/7 y cobertura al instante.">
+<meta name="theme-color" content="#F5611A">
+<meta name="msapplication-TileColor" content="#070B12">
+<meta name="msapplication-config" content="/assets/browserconfig.xml">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+<!-- Favicons -->
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48x48.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
 
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    ul, ol { list-style: none; }
-    a { text-decoration: none; color: inherit; }
-    img, iframe { max-width: 100%; display: block; }
-    button { font: inherit; cursor: pointer; border: none; background: none; }
+<!-- Apple -->
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Crono Play">
 
-    :root {
-      --color-primary:      #FFFFFF;
-      --color-secondary:    #F5F7FA;
-      --color-accent:       #FF6B35;
-      --color-accent-alt:   #0077CC;
-      --color-text:         #1A202C;
-      --color-text-muted:   #718096;
-      --color-live:         #FF0000;
-      --color-success:      #10B981;
-      --color-error:        #EF4444;
-      --header-bg:          rgba(255, 255, 255, 0.95);
-      --header-border:      rgba(0, 0, 0, 0.08);
-      --card-border:        rgba(0, 0, 0, 0.07);
-      --section-border:     rgba(0, 0, 0, 0.06);
-      --footer-border:      rgba(0, 0, 0, 0.08);
-      --btn-ghost-border:   rgba(0, 0, 0, 0.2);
-      --btn-ghost-hover:    rgba(0, 119, 204, 0.06);
-      --accent-bg-soft:     rgba(255, 107, 53, 0.10);
-      --accent-alt-bg-soft: rgba(0, 119, 204, 0.10);
-      --accent-alt-border:  rgba(0, 119, 204, 0.22);
-      --accent-alt-ghost:   rgba(0, 119, 204, 0.15);
-      --range-track:        rgba(0, 0, 0, 0.12);
-      --shadow-md:          0 4px 6px rgba(0, 0, 0, 0.07);
-      --shadow-lg:          0 10px 15px rgba(0, 0, 0, 0.10);
-      --font-heading:       'Montserrat', sans-serif;
-      --font-body:          'Inter', sans-serif;
-      --header-height:      64px;
-      --max-width:          1120px;
-      --radius:             8px;
-      --radius-sm:          4px;
-    }
+<!-- Safari pinned tab -->
+<link rel="mask-icon" href="assets/img/safari-pinned-tab.svg" color="#F5611A">
 
-    [data-theme="dark"] {
-      --color-primary:      #0D1B2A;
-      --color-secondary:    #1B2D45;
-      --color-accent:       #FF6B35;
-      --color-accent-alt:   #00D4FF;
-      --color-text:         #F0F0F0;
-      --color-text-muted:   #A0AEC0;
-      --color-live:         #FF0000;
-      --color-success:      #10B981;
-      --color-error:        #EF4444;
-      --header-bg:          rgba(13, 27, 42, 0.95);
-      --header-border:      rgba(255, 255, 255, 0.08);
-      --card-border:        rgba(255, 255, 255, 0.07);
-      --section-border:     rgba(255, 255, 255, 0.06);
-      --footer-border:      rgba(255, 255, 255, 0.06);
-      --btn-ghost-border:   rgba(255, 255, 255, 0.2);
-      --btn-ghost-hover:    rgba(0, 212, 255, 0.06);
-      --accent-bg-soft:     rgba(255, 107, 53, 0.15);
-      --accent-alt-bg-soft: rgba(0, 212, 255, 0.10);
-      --accent-alt-border:  rgba(0, 212, 255, 0.22);
-      --accent-alt-ghost:   rgba(0, 212, 255, 0.20);
-      --range-track:        rgba(255, 255, 255, 0.15);
-      --shadow-md:          0 4px 6px rgba(0, 0, 0, 0.30);
-      --shadow-lg:          0 10px 15px rgba(0, 0, 0, 0.40);
-    }
+<!-- Android / PWA manifest -->
+<link rel="manifest" href="/site.webmanifest">
 
-    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    body { font-family: var(--font-body); font-size: 1rem; line-height: 1.6; color: var(--color-text); background: var(--color-primary); overflow-x: hidden; }
-    h1, h2, h3 { font-family: var(--font-heading); line-height: 1.2; }
-    h1 { font-weight: 800; font-size: 1.75rem; }
-    h2 { font-weight: 700; font-size: 1.5rem; }
-    h3 { font-weight: 700; font-size: 1.25rem; }
-    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Crono Play">
+<meta property="og:url" content="https://cronoplay.com/noticias.html">
+<meta property="og:title" content="Noticias — Crono Play">
+<meta property="og:description" content="Las últimas noticias deportivas y de entretenimiento. Tu conexión con lo que pasa.">
+<meta property="og:image" content="https://cronoplay.com/assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@CronoPlayVzla">
+<meta name="twitter:title" content="Noticias — Crono Play">
+<meta name="twitter:description" content="Las últimas noticias deportivas y de entretenimiento.">
+<meta name="twitter:image" content="https://cronoplay.com/assets/img/og-image.png">
 
-    .header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: var(--header-height); background: var(--header-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--section-border); }
-    .header__inner { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem; }
-    .header__logo { display: flex; align-items: center; gap: .6rem; font-family: var(--font-heading); font-weight: 800; font-size: 1.15rem; color: var(--color-text); white-space: nowrap; text-decoration: none; }
-    .header__logo img { height: 36px; width: auto; display: block; }
-    .header__logo span { color: var(--color-accent); }
-    .nav { display: none; }
-    .nav__list { display: flex; align-items: center; gap: 2rem; }
-    .nav__link { font-family: var(--font-body); font-weight: 500; font-size: .9rem; color: var(--color-text-muted); transition: color .2s; padding: .25rem 0; position: relative; }
-    .nav__link:hover, .nav__link--active { color: var(--color-text); }
-    .nav__link--active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background: var(--color-accent); border-radius: 1px; }
-    .nav-toggle { display: flex; flex-direction: column; justify-content: center; gap: 5px; width: 44px; height: 44px; padding: 10px; z-index: 110; }
-    .nav-toggle__bar { display: block; width: 24px; height: 2px; background: var(--color-text); border-radius: 2px; transition: transform .3s, opacity .3s; }
-    .nav-mobile { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--color-primary); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; -webkit-overflow-scrolling: touch; }
-    .nav-mobile.open { display: flex; }
-    .nav-mobile .nav-mobile__link { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--color-text); text-decoration: none; }
-    .nav-mobile .nav-mobile__link--active { color: var(--color-accent); }
-    .nav-close { position: absolute; top: 1.5rem; right: 1.5rem; background: none; border: none; color: var(--color-text); cursor: pointer; font: inherit; }
-    .nav-close svg { width: 28px; height: 28px; display: block; }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ────────────────────────────────────────────────── */
+:root {
+  --bg:        #070B12;
+  --surface:   #0D1420;
+  --card:      #111926;
+  --border:    #1A2535;
+  --border-hi: #243348;
+  --orange:    #F5611A;
+  --orange-hi: #FF7A38;
+  --orange-dk: #C44A0E;
+  --red:       #FF3232;
+  --blue:      #0077CC;
+  --blue-hi:   #0091E6;
+  --text:      #EEF2F7;
+  --muted:     #6B8099;
+  --muted-hi:  #8FA8C0;
+  --font-d:    'Space Grotesk', system-ui, sans-serif;
+  --font-b:    'Inter', system-ui, sans-serif;
+  --r:         10px;
+  --r-lg:      16px;
+}
 
-    .page-hero {
-      padding: calc(var(--header-height) + 3rem) 1.25rem 3rem;
-      text-align: center; position: relative; overflow: hidden;
-      background: linear-gradient(180deg, rgba(255,107,53,.04) 0%, transparent 100%);
-      border-bottom: 1px solid var(--footer-border);
-    }
-    .page-hero::before {
-      content: ''; position: absolute; top: -60px; right: -80px;
-      width: 300px; height: 300px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,107,53,.09) 0%, transparent 70%); pointer-events: none;
-    }
-    .page-hero__eyebrow {
-      display: inline-flex; align-items: center; gap: .5rem;
-      font-family: var(--font-heading); font-size: .7rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .14em; color: var(--color-accent-alt);
-      border: 1px solid rgba(0,212,255,.2); padding: .3rem .9rem; border-radius: 20px; margin-bottom: 1rem;
-      opacity: 0; animation: fade-up .6s ease .1s forwards;
-    }
-    .page-hero__title { font-family: var(--font-heading); font-size: clamp(1.75rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: .5rem; opacity: 0; animation: fade-up .6s ease .2s forwards; }
-    .page-hero__title em { font-style: normal; color: var(--color-accent); }
-    .page-hero__desc { color: var(--color-text-muted); font-size: 1rem; max-width: 520px; margin: 0 auto; opacity: 0; animation: fade-up .6s ease .3s forwards; }
-    @keyframes fade-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+/* ── LIGHT MODE ────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:        #F4F6F9;
+  --surface:   #FFFFFF;
+  --card:      #FFFFFF;
+  --border:    #E2E8F0;
+  --border-hi: #CBD5E1;
+  --text:      #0F172A;
+  --muted:     #64748B;
+  --muted-hi:  #475569;
+}
+[data-theme="light"] body { background: var(--bg); color: var(--text); }
+[data-theme="light"] .header { background: rgba(244,246,249,.92); border-bottom-color: var(--border); }
+[data-theme="light"] .header__logo { color: var(--text); }
+[data-theme="light"] .footer .header__logo .logo-name { color: #ffffff; }
+[data-theme="light"] .footer .header__logo { color: #ffffff; }
+[data-theme="light"] .header__nav a { color: var(--muted); }
+[data-theme="light"] .header__nav a:hover,
+[data-theme="light"] .header__nav a.active { color: var(--text); background: var(--border); }
+[data-theme="light"] .header__mini-player { background: var(--card); border-color: var(--border-hi); }
+[data-theme="light"] .theme-btn { border-color: var(--border); color: var(--muted); }
+[data-theme="light"] .ticker { background: var(--orange); }
+[data-theme="light"] .hero { background: linear-gradient(160deg, #EBF0FB 0%, #F4F6F9 60%); }
+[data-theme="light"] .hero-grid-bg {
+  background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
+}
+[data-theme="light"] .news-section { background: #EEF2F7; }
+[data-theme="light"] .news-card { background: var(--card); border-color: var(--border); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
+[data-theme="light"] .news-card__img-placeholder { background: linear-gradient(135deg, #E2E8F0 0%, #EEF2F7 100%); color: var(--muted); }
+[data-theme="light"] .footer { background: #0F172A; }
+[data-theme="light"] .sticky-player { background: rgba(255,255,255,.96); border-top-color: var(--border); }
+[data-theme="light"] .sticky-player__title { color: var(--text); }
+[data-theme="light"] .mobile-menu { background: var(--surface); border-left-color: var(--border); }
+[data-theme="light"] .mobile-menu__head { border-bottom-color: var(--border); }
+[data-theme="light"] .mobile-menu__foot { border-top-color: var(--border); }
+[data-theme="light"] .mobile-menu__nav a { color: var(--muted); }
+[data-theme="light"] .mobile-menu__nav a:hover { background: var(--bg); color: var(--text); }
+[data-theme="light"] .filter-bar { background: var(--surface); border-color: var(--border); }
+[data-theme="light"] .filter-btn { background: var(--bg); border-color: var(--border); color: var(--muted); }
+[data-theme="light"] .filter-btn:hover { border-color: var(--border-hi); color: var(--text); }
+[data-theme="light"] .sidebar-block { background: var(--card); border-color: var(--border); }
+[data-theme="light"] .trending-item { border-bottom-color: var(--border); }
+[data-theme="light"] .newsletter-form input { background: var(--bg); border-color: var(--border); color: var(--text); }
 
-    .filter-section { padding: 1.5rem 1.25rem; display: flex; align-items: center; justify-content: center; gap: .5rem; flex-wrap: wrap; }
-    .filter-btn {
-      padding: .4rem 1rem; border-radius: 99px;
-      border: 1px solid rgba(255,255,255,.1);
-      background: transparent; color: var(--color-text-muted);
-      font-family: var(--font-body); font-size: .8rem; font-weight: 500;
-      cursor: pointer; transition: all .18s ease;
-    }
-    .filter-btn:hover { border-color: var(--color-accent); color: var(--color-accent); }
-    .filter-btn.active { background: var(--color-accent); border-color: var(--color-accent); color: white; }
+/* ── RESET ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-b); min-height: 100vh; overflow-x: hidden; }
+a { text-decoration: none; color: inherit; }
+:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+img { display: block; max-width: 100%; }
+ul { list-style: none; }
 
-    .articles-section { max-width: var(--max-width); margin: 0 auto; padding: 0 1.25rem 4rem; }
-    .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+/* ── UTILITY ───────────────────────────────────────────────── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 80px 0; }
+.section-sm { padding: 56px 0; }
+.label {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-d); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em; color: var(--orange);
+}
+.label--blue { color: var(--blue); }
+.dot-live {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--red);
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
 
-    .article-card {
-      background: var(--color-secondary);
-      border: 1px solid var(--section-border);
-      border-radius: 12px; overflow: hidden;
-      transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-      display: flex; flex-direction: column;
-    }
-    .article-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.3); border-color: rgba(255,107,53,.2); }
-    .article-card-img { width: 100%; height: 180px; object-fit: cover; background: rgba(255,255,255,.04); }
-    .article-card-img-placeholder {
-      width: 100%; height: 180px;
-      background: linear-gradient(135deg, rgba(27,45,69,.8), rgba(13,27,42,.9));
-      display: flex; align-items: center; justify-content: center;
-    }
-    .article-card-img-placeholder svg { width: 40px; height: 40px; color: rgba(255,255,255,.1); }
-    .article-card-body { padding: 1.1rem 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
-    .article-card-meta { display: flex; align-items: center; gap: .5rem; font-size: .72rem; color: var(--color-text-muted); margin-bottom: .6rem; }
-    .category-pill { background: rgba(255,107,53,.12); color: var(--color-accent); border-radius: 99px; padding: .15rem .6rem; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-    .article-card-title { font-family: var(--font-heading); font-weight: 700; font-size: 1rem; line-height: 1.35; margin-bottom: .5rem; color: var(--color-text); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .article-card-excerpt { font-size: .85rem; color: var(--color-text-muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
-    .article-card-footer { margin-top: 1rem; padding-top: .85rem; border-top: 1px solid var(--section-border); display: flex; align-items: center; justify-content: space-between; }
-    .article-card-author { font-size: .75rem; color: var(--color-text-muted); }
-    .article-card-link { font-size: .78rem; font-weight: 600; color: var(--color-accent); display: flex; align-items: center; gap: .3rem; transition: gap .15s; }
-    .article-card:hover .article-card-link { gap: .5rem; }
-    .article-card-link svg { width: 13px; height: 13px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 13px 26px; border-radius: 50px;
+  background: var(--orange); color: #fff;
+  font-family: var(--font-d); font-weight: 700; font-size: 14px;
+  position: relative; overflow: visible;
+  transition: background .18s, transform .14s, box-shadow .18s;
+  box-shadow: 0 4px 20px rgba(245,97,26,.35);
+}
+.btn-primary::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50px;
+  border: 2px solid rgba(245,97,26,.5);
+  animation: btn-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: -10px; border-radius: 50px;
+  border: 1.5px solid rgba(245,97,26,.2);
+  animation: btn-pulse 2s ease-in-out infinite .4s;
+  pointer-events: none;
+}
+.btn-primary:hover { background: var(--orange-hi); transform: translateY(-2px) scale(1.03); box-shadow: 0 12px 32px rgba(245,97,26,.5); }
+.btn-primary:active { transform: scale(.97); }
+@keyframes btn-pulse {
+  0%   { transform: scale(1); opacity: 1; }
+  70%  { transform: scale(1.18); opacity: 0; }
+  100% { transform: scale(1.18); opacity: 0; }
+}
 
-    .state-center { padding: 4rem 1.25rem; text-align: center; color: var(--color-text-muted); }
-    .state-center svg { width: 48px; height: 48px; margin: 0 auto 1rem; opacity: .25; }
-    .state-center h3 { font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: .5rem; color: var(--color-text); }
-    .spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,.1); border-top-color: var(--color-accent); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 1rem; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 8px;
+  border: 1.5px solid var(--border-hi); color: var(--muted-hi);
+  font-family: var(--font-d); font-weight: 600; font-size: 14px;
+  transition: border-color .18s, color .18s;
+}
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
 
-    .pagination { display: flex; align-items: center; justify-content: center; gap: .75rem; margin-top: 2.5rem; }
-    .page-btn { padding: .45rem 1.1rem; border-radius: 99px; border: 1px solid rgba(255,255,255,.1); background: transparent; color: var(--color-text-muted); font-size: .85rem; font-weight: 500; cursor: pointer; font-family: var(--font-body); transition: all .18s ease; }
-    .page-btn:hover:not(:disabled) { border-color: var(--color-accent); color: var(--color-accent); }
-    .page-btn:disabled { opacity: .35; cursor: not-allowed; }
-    .page-info { font-size: .8rem; color: var(--color-text-muted); }
+/* ── TICKER ────────────────────────────────────────────────── */
+.ticker {
+  background: var(--orange); height: 36px;
+  display: flex; align-items: center; overflow: hidden;
+  position: relative; z-index: 200;
+}
+.ticker__tag {
+  flex-shrink: 0; padding: 0 20px;
+  font-family: var(--font-d); font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: #fff; background: var(--orange-dk); height: 100%;
+  display: flex; align-items: center; gap: 6px;
+  position: relative; z-index: 2;
+  box-shadow: 8px 0 16px 8px var(--orange-dk);
+}
+.ticker__track {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: ticker-scroll 40s linear infinite;
+}
+.ticker__track:hover { animation-play-state: paused; }
+.ticker__item {
+  padding: 0 32px; font-size: 12.5px; font-weight: 600; color: #fff;
+  font-family: var(--font-d);
+}
+.ticker__item span { opacity: .6; margin-right: 8px; }
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
-    .footer { background: var(--color-secondary); border-top: 1px solid var(--section-border); padding: 3rem 1.25rem 2rem; }
-    .footer .container { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; text-align: center; }
-    .footer__brand { font-family: var(--font-heading); font-weight: 800; font-size: 1.1rem; }
-    .footer__brand span { color: var(--color-accent); }
-    .footer__nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.5rem; }
-    .footer__nav a { font-size: .875rem; color: var(--color-text-muted); transition: color .2s; }
-    .footer__nav a:hover { color: var(--color-text); }
-    .footer__social { display: flex; gap: 1rem; }
-    .footer__social a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.1); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); transition: color .2s, border-color .2s; }
-    .footer__social a:hover { color: var(--color-accent); border-color: rgba(255,107,53,.4); }
-    .footer__social svg { width: 16px; height: 16px; }
-    .footer__copy { font-size: .8rem; color: var(--color-text-muted); opacity: .6; }
+/* ── HEADER ────────────────────────────────────────────────── */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(7,11,18,.88);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+.header__inner {
+  height: 64px; display: flex; align-items: center;
+  justify-content: space-between; gap: 32px;
+}
+.header__logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-d); font-weight: 800; font-size: 18px; color: var(--text);
+  flex-shrink: 0; white-space: nowrap;
+}
+.logo-icon {
+  width: 40px; height: 40px; border-radius: 0;
+  background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.logo-icon img { width: 40px; height: 40px; object-fit: contain; display: block; }
+.header__logo .logo-name { display: inline; letter-spacing: -.01em; }
+.header__logo .logo-name .play { color: var(--orange); }
 
-    @media (min-width: 768px) {
-      .nav { display: flex; }
-      .nav-toggle { display: none; }
-    }
-    @media (max-width: 767px) {
-      .articles-grid { grid-template-columns: 1fr; }
-    }
-  
-  body, .header, header, .footer, footer, main, section, article,
-  .nav-mobile, .sidebar, .topbar, .card, .pilar, .podcast-card,
-  .episode-card, .platform-pill, .radio__player, .radio-controls,
-  .submarca-card, .valor-item, .article-card, .login-card {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  }
-  input, textarea, select {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  }
-  </style>
-  <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
+.header__nav { display: flex; align-items: center; gap: 6px; flex: 1; justify-content: center; }
+.header__nav a {
+  padding: 6px 14px; border-radius: 7px;
+  font-family: var(--font-d); font-size: 13.5px; font-weight: 600;
+  color: var(--muted); transition: color .15s, background .15s;
+}
+.header__nav a:hover, .header__nav a.active { color: var(--text); }
+.header__nav a.active { background: var(--card); }
+.header__nav .nav-live {
+  display: flex; align-items: center; gap: 6px; color: var(--red);
+}
+.header__nav .nav-live:hover { color: var(--red); opacity: .8; }
+
+.header__actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.header__mini-player {
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 14px 6px 8px; border-radius: 50px;
+  border: 1.5px solid var(--border-hi);
+  background: var(--card); cursor: pointer;
+  transition: border-color .2s, box-shadow .2s;
+}
+.header__mini-player:hover { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(245,97,26,.12); }
+.mini-play-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--orange); display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background .15s, transform .15s, box-shadow .2s;
+  box-shadow: 0 2px 10px rgba(245,97,26,.4);
+}
+.mini-play-btn:hover { background: var(--orange-hi); transform: scale(1.1); }
+.header__mini-player.is-playing .mini-play-btn {
+  box-shadow: 0 0 0 3px rgba(245,97,26,.25), 0 2px 10px rgba(245,97,26,.4);
+  animation: mini-glow 2s ease-in-out infinite;
+}
+@keyframes mini-glow {
+  0%,100% { box-shadow: 0 0 0 3px rgba(245,97,26,.25), 0 2px 10px rgba(245,97,26,.4); }
+  50%      { box-shadow: 0 0 0 6px rgba(245,97,26,.12), 0 4px 16px rgba(245,97,26,.5); }
+}
+.mini-play-btn svg { width: 12px; height: 12px; fill: #fff; margin-left: 1px; }
+.header__mini-player .mini-info { display: flex; flex-direction: column; gap: 1px; }
+.header__mini-player .mini-info b {
+  font-family: var(--font-d); font-size: 12px; font-weight: 700; color: var(--text);
+  white-space: nowrap;
+}
+.header__mini-player .mini-info small {
+  font-size: 10.5px; color: var(--red); font-weight: 600; letter-spacing: .04em;
+}
+.mini-wave {
+  display: flex; align-items: flex-end; gap: 2px; height: 14px; margin-left: 4px;
+}
+.mini-wave span {
+  width: 2.5px; border-radius: 2px; background: var(--orange);
+  animation: mini-wave var(--d, .8s) ease-in-out infinite var(--delay, 0s);
+}
+.mini-wave span:nth-child(1) { --d:.75s; --delay:0s;   height: 6px; }
+.mini-wave span:nth-child(2) { --d:.9s;  --delay:.12s; height: 12px; }
+.mini-wave span:nth-child(3) { --d:.7s;  --delay:.24s; height: 9px; }
+.mini-wave span:nth-child(4) { --d:.85s; --delay:.06s; height: 14px; }
+@keyframes mini-wave { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.3)} }
+
+.theme-btn {
+  width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center;
+  justify-content: center; color: var(--muted); border: 1.5px solid var(--border);
+  transition: color .15s, border-color .15s;
+}
+.theme-btn:hover { color: var(--text); border-color: var(--border-hi); }
+.theme-btn svg { width: 16px; height: 16px; }
+
+.menu-btn {
+  display: none; width: 36px; height: 36px; border-radius: 8px;
+  align-items: center; justify-content: center;
+  color: var(--muted); border: 1.5px solid var(--border);
+  transition: color .15s;
+}
+.menu-btn:hover { color: var(--text); }
+.menu-btn svg { width: 18px; height: 18px; }
+
+/* ── MOBILE MENU ───────────────────────────────────────────── */
+.mobile-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
+  z-index: 150; backdrop-filter: blur(4px);
+}
+.mobile-overlay.open { display: block; }
+.mobile-menu {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 300px;
+  background: var(--surface); border-left: 1px solid var(--border);
+  z-index: 160; transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+}
+.mobile-menu.open { transform: translateX(0); }
+.mobile-menu__head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 20px 16px; border-bottom: 1px solid var(--border);
+}
+.mobile-menu__close { color: var(--muted); padding: 4px; }
+.mobile-menu__close svg { width: 22px; height: 22px; }
+.mobile-menu__nav { padding: 12px; flex: 1; }
+.mobile-menu__nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: 8px; margin-bottom: 4px;
+  font-family: var(--font-d); font-size: 15px; font-weight: 600;
+  color: var(--muted-hi); transition: background .15s, color .15s;
+}
+.mobile-menu__nav a:hover, .mobile-menu__nav a.active {
+  background: var(--card); color: var(--text);
+}
+.mobile-menu__foot { padding: 16px; border-top: 1px solid var(--border); }
+
+/* ── PAGE HERO (inner page) ───────────────────────────────── */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 48px 0 40px;
+  background: linear-gradient(160deg, #0B1320 0%, var(--bg) 60%);
+}
+.hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 80% 20%, rgba(245,97,26,.09) 0%, transparent 55%),
+              radial-gradient(ellipse at 10% 90%, rgba(0,119,204,.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+.hero-grid-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
+}
+.hero__page-title {
+  font-family: var(--font-d); font-weight: 800;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  line-height: 1.05; letter-spacing: -.02em;
+  color: var(--text); position: relative;
+}
+.hero__page-title em { font-style: normal; color: var(--orange); }
+.hero__page-desc {
+  font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 560px;
+  margin-top: 12px; position: relative;
+}
+
+/* ── FILTER BAR ───────────────────────────────────────────── */
+.filter-bar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 14px 0; position: sticky; top: 64px; z-index: 90;
+  backdrop-filter: blur(12px);
+}
+.filter-bar__inner {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 7px 18px; border-radius: 50px;
+  font-family: var(--font-d); font-size: 13px; font-weight: 600;
+  background: var(--card); border: 1.5px solid var(--border);
+  color: var(--muted); transition: all .18s; white-space: nowrap;
+}
+.filter-btn:hover { border-color: var(--border-hi); color: var(--text); }
+.filter-btn.active {
+  background: var(--orange); border-color: var(--orange);
+  color: #fff;
+}
+
+/* ── NEWS GRID ─────────────────────────────────────────────── */
+.news-section { background: var(--surface); }
+.news-layout {
+  display: grid; grid-template-columns: 1fr 320px; gap: 32px;
+  align-items: start;
+}
+.news-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.news-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  cursor: pointer; display: flex; flex-direction: column;
+}
+.news-card:hover {
+  border-color: var(--border-hi); transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.4);
+}
+.news-card__img {
+  aspect-ratio: 16/9; background: var(--border);
+  position: relative; overflow: hidden;
+}
+.news-card__img img { width: 100%; height: 100%; object-fit: cover; }
+.news-card__img-placeholder {
+  width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #111926 0%, #0D1420 100%);
+  color: var(--muted); font-size: 11px; font-family: monospace;
+  text-align: center; padding: 16px; line-height: 1.4;
+}
+.news-card__tag {
+  position: absolute; top: 12px; left: 12px;
+  background: var(--orange); color: #fff;
+  padding: 3px 8px; border-radius: 4px;
+  font-family: var(--font-d); font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .08em;
+}
+.news-card__tag.tag-blue { background: var(--blue); }
+.news-card__body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+.news-card__meta {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 10px;
+}
+.news-card__category {
+  font-family: var(--font-d); font-size: 10.5px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--orange);
+}
+.news-card__category.cat-blue { color: var(--blue); }
+.news-card__time { font-size: 11px; color: var(--muted); }
+.news-card__title {
+  font-family: var(--font-d); font-size: 16px; font-weight: 700;
+  color: var(--text); line-height: 1.35; margin-bottom: 10px;
+  text-wrap: pretty;
+}
+.news-card:hover .news-card__title { color: var(--orange-hi); }
+.news-card__excerpt {
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; flex: 1;
+}
+.news-card__author {
+  margin-top: 12px; font-size: 12px; color: var(--muted);
+  font-family: var(--font-d); font-weight: 500;
+}
+
+/* Featured (first) card — spans full width of the 3-col grid */
+.news-card.featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1.4fr 1fr; }
+.news-card.featured .news-card__img { aspect-ratio: auto; min-height: 280px; }
+.news-card.featured .news-card__body { justify-content: center; padding: 28px; }
+.news-card.featured .news-card__title { font-size: 22px; -webkit-line-clamp: 3; }
+.news-card.featured .news-card__excerpt { -webkit-line-clamp: 3; }
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.sidebar { display: flex; flex-direction: column; gap: 24px; }
+.sidebar-block {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 24px; overflow: hidden;
+}
+.sidebar-block__title {
+  font-family: var(--font-d); font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--blue);
+  margin-bottom: 20px;
+}
+.trending-item {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.trending-item:last-child { border-bottom: none; padding-bottom: 0; }
+.trending-item:first-child { padding-top: 0; }
+.trending-num {
+  font-family: var(--font-d); font-size: 24px; font-weight: 800;
+  color: var(--orange); line-height: 1; min-width: 28px;
+}
+.trending-info__title {
+  font-family: var(--font-d); font-size: 13px; font-weight: 600;
+  color: var(--text); line-height: 1.35;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.trending-info__time { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.cat-list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+  font-family: var(--font-d); font-size: 13px; font-weight: 600;
+  color: var(--text); cursor: pointer; transition: color .15s;
+}
+.cat-list-item:last-child { border-bottom: none; }
+.cat-list-item:hover { color: var(--orange); }
+.cat-list-item span {
+  font-size: 11px; color: var(--muted); font-weight: 500;
+  background: var(--surface); padding: 2px 8px; border-radius: 4px;
+}
+
+.newsletter-form { display: flex; flex-direction: column; gap: 10px; }
+.newsletter-form p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.newsletter-form input {
+  padding: 10px 14px; border-radius: 8px;
+  background: var(--surface); border: 1.5px solid var(--border);
+  color: var(--text); font-size: 13px; outline: none;
+  transition: border-color .18s;
+}
+.newsletter-form input:focus { border-color: var(--orange); }
+.newsletter-form .btn-primary { justify-content: center; width: 100%; padding: 11px; font-size: 13px; }
+
+/* ── LOAD MORE ────────────────────────────────────────────── */
+.load-more-wrap {
+  display: flex; justify-content: center; margin-top: 40px;
+}
+.load-more-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 36px; border-radius: 50px;
+  border: 1.5px solid var(--border-hi); color: var(--muted-hi);
+  font-family: var(--font-d); font-weight: 700; font-size: 14px;
+  transition: border-color .18s, color .18s, background .18s;
+}
+.load-more-btn:hover { border-color: var(--orange); color: var(--orange); }
+.load-more-btn.loading { pointer-events: none; opacity: .6; }
+.load-more-btn.loading::after {
+  content: ''; width: 16px; height: 16px; border: 2px solid var(--muted);
+  border-top-color: var(--orange); border-radius: 50%;
+  animation: spin .6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── SKELETON LOADING ─────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, var(--card) 25%, var(--border) 50%, var(--card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--r);
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.skeleton-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); overflow: hidden;
+}
+.skeleton-card__img { aspect-ratio: 16/9; }
+.skeleton-card__body { padding: 20px; }
+.skeleton-card__line { height: 14px; margin-bottom: 10px; border-radius: 4px; }
+.skeleton-card__line:last-child { width: 60%; margin-bottom: 0; }
+
+/* ── EMPTY STATE ──────────────────────────────────────────── */
+.empty-state {
+  grid-column: 1 / -1; text-align: center; padding: 80px 24px;
+}
+.empty-state__icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
+.empty-state__title {
+  font-family: var(--font-d); font-size: 20px; font-weight: 700;
+  color: var(--text); margin-bottom: 8px;
+}
+.empty-state__desc { font-size: 14px; color: var(--muted); }
+
+/* ── FOOTER ────────────────────────────────────────────────── */
+.footer { background: #040709; border-top: 1px solid var(--border); padding: 64px 0 32px; }
+.footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
+.footer__brand p { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 16px 0 24px; max-width: 260px; }
+.footer__socials { display: flex; gap: 10px; }
+.social-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: var(--card);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  color: var(--muted); transition: background .15s, color .15s, border-color .15s;
+}
+.social-icon:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+.social-icon svg { width: 16px; height: 16px; fill: currentColor; }
+.footer__col h4 {
+  font-family: var(--font-d); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--blue); margin-bottom: 20px;
+}
+.footer__col ul { display: flex; flex-direction: column; gap: 12px; }
+.footer__col ul a {
+  font-size: 14px; color: var(--muted);
+  transition: color .15s;
+}
+.footer__col ul a:hover { color: var(--text); }
+.footer__bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: 12.5px; color: var(--muted);
+}
+
+/* ── STICKY PLAYER (bottom) ────────────────────────────────── */
+.sticky-player {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 180;
+  background: rgba(10,15,24,.96); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border); padding: 0;
+  transform: translateY(0);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sticky-player.hidden { transform: translateY(100%); }
+.sticky-player__inner {
+  height: 68px; display: flex; align-items: center; gap: 20px;
+}
+.sticky-player__info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.sticky-player__thumb {
+  width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
+  background: var(--orange); display: flex; align-items: center; justify-content: center;
+}
+.sticky-player__thumb svg { width: 20px; height: 20px; fill: #fff; }
+.sticky-player__meta { min-width: 0; }
+.sticky-player__title {
+  font-family: var(--font-d); font-size: 14px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sticky-player__sub { font-size: 12px; color: var(--red); font-weight: 600; }
+.sticky-player__viz {
+  display: flex; align-items: flex-end; gap: 3px; height: 24px;
+}
+.sticky-player__viz span {
+  width: 3px; border-radius: 2px; background: var(--orange);
+  animation: mini-wave var(--d,.8s) ease-in-out infinite var(--delay,0s);
+}
+.sticky-player__viz span:nth-child(1) { --d:.7s;  --delay:0s;   height: 8px; }
+.sticky-player__viz span:nth-child(2) { --d:.9s;  --delay:.1s;  height: 16px; }
+.sticky-player__viz span:nth-child(3) { --d:.75s; --delay:.2s;  height: 22px; }
+.sticky-player__viz span:nth-child(4) { --d:.85s; --delay:.08s; height: 13px; }
+.sticky-player__viz span:nth-child(5) { --d:.65s; --delay:.15s; height: 18px; }
+.sp-play-btn {
+  width: 48px; height: 48px; border-radius: 50%; background: var(--orange);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  position: relative;
+  transition: background .15s, transform .1s, box-shadow .2s;
+  box-shadow: 0 3px 14px rgba(245,97,26,.4);
+}
+.sp-play-btn::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(245,97,26,.5);
+  animation: btn-pulse 2s ease-in-out infinite;
+}
+.sp-play-btn:hover { background: var(--orange-hi); transform: scale(1.08); box-shadow: 0 6px 22px rgba(245,97,26,.55); }
+.sp-play-btn svg { width: 18px; height: 18px; fill: #fff; }
+.sp-volume { display: flex; align-items: center; gap: 8px; }
+.sp-volume svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+.sp-volume input {
+  width: 80px; -webkit-appearance: none; appearance: none;
+  height: 3px; border-radius: 2px; background: var(--border-hi); cursor: pointer; outline: none;
+}
+.sp-volume input::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--orange); cursor: pointer;
+}
+.sp-close {
+  padding: 8px; color: var(--muted); transition: color .15s;
+  display: flex; align-items: center;
+}
+.sp-close:hover { color: var(--text); }
+.sp-close svg { width: 18px; height: 18px; }
+
+/* ── REVEALS ───────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+
+/* ── RESPONSIVE ────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .news-layout { grid-template-columns: 1fr; }
+  .sidebar { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+  .news-grid { grid-template-columns: repeat(2,1fr); }
+  .news-card.featured { grid-column: span 2; }
+  .footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 768px) {
+  .header__nav { display: none; }
+  .header__mini-player .mini-info { display: none; }
+  .mini-wave { display: none; }
+  .menu-btn { display: flex; }
+  .hero { padding: 36px 0 28px; }
+  .filter-bar { top: 64px; }
+  .filter-bar__inner { gap: 8px; }
+  .filter-btn { padding: 6px 14px; font-size: 12px; }
+  .news-grid { grid-template-columns: 1fr; }
+  .news-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+  .news-card.featured .news-card__img { aspect-ratio: 16/9; min-height: auto; }
+  .sidebar { grid-template-columns: 1fr; }
+  .footer__grid { grid-template-columns: 1fr; }
+  .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
+  .sticky-player__viz { display: none; }
+  .sp-volume { display: none; }
+  .section { padding: 56px 0; }
+  .section-sm { padding: 40px 0; }
+}
+@media (max-width: 480px) {
+  .filter-bar__inner { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .filter-bar__inner::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 375px) {
+  html { font-size: 14px; }
+  .container { padding-inline: 12px; }
+  .hero__title { font-size: 1.75rem; }
+  .section { padding: 40px 0; }
+}
+/* Ensure footer clears sticky player */
+.footer { padding-bottom: 100px; }
+</style>
 </head>
 <body>
 
-  <header class="header" id="site-header" role="banner">
+<!-- Breaking News Ticker -->
+<div class="ticker" aria-label="Noticias de último momento">
+  <div class="ticker__tag">
+    <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="currentColor" opacity=".9"/></svg>
+    Última Hora
+  </div>
+  <div class="ticker__track" aria-live="polite" id="tickerTrack">
+    <span class="ticker__item"><span>⚽</span>Venezuela vence 2-1 a Colombia en amistoso internacional</span>
+    <span class="ticker__item"><span>🏎️</span>GP de Miami: Verstappen lidera los libres con récord de vuelta</span>
+    <span class="ticker__item"><span>🏀</span>NBA Playoffs: Lakers clasifican a semifinales de conferencia</span>
+    <span class="ticker__item"><span>⚽</span>Liga BBVA: Jornada 32 – resultados y tabla de posiciones</span>
+    <span class="ticker__item"><span>🎙️</span>Crono Play en vivo: Análisis completo Copa Libertadores</span>
+    <span class="ticker__item"><span>⚽</span>Venezuela vence 2-1 a Colombia en amistoso internacional</span>
+    <span class="ticker__item"><span>🏎️</span>GP de Miami: Verstappen lidera los libres con récord de vuelta</span>
+    <span class="ticker__item"><span>🏀</span>NBA Playoffs: Lakers clasifican a semifinales de conferencia</span>
+    <span class="ticker__item"><span>⚽</span>Liga BBVA: Jornada 32 – resultados y tabla de posiciones</span>
+    <span class="ticker__item"><span>🎙️</span>Crono Play en vivo: Análisis completo Copa Libertadores</span>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="header">
+  <div class="container">
     <div class="header__inner">
-      <a href="index.html" class="header__logo" aria-label="Crono Play — Inicio">
-        <img src="assets/img/logo-icon.svg" alt="" aria-hidden="true" height="36" width="36">
-        Crono <span>Play</span>
-      </a>
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="main-nav">
-        <span class="nav-toggle__bar"></span>
-        <span class="nav-toggle__bar"></span>
-        <span class="nav-toggle__bar"></span>
-      </button>
-      <nav class="nav" id="main-nav" aria-label="Navegación principal">
-        <ul class="nav__list">
-          <li><a href="index.html"    class="nav__link">Home</a></li>
-          <li><a href="en-vivo.html"  class="nav__link">En Vivo</a></li>
-          <li><a href="podcast.html"  class="nav__link">Podcast</a></li>
-          <li><a href="noticias.html" class="nav__link nav__link--active" aria-current="page">Noticias</a></li>
-          <li><a href="nosotros.html" class="nav__link">Nosotros</a></li>
-          <li><a href="contacto.html" class="nav__link">Contacto</a></li>
-        </ul>
-        <button id="theme-toggle" aria-label="Cambiar a modo oscuro" style="width:40px;height:40px;border-radius:50%;border:1px solid var(--header-border);background:var(--color-secondary);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;flex-shrink:0;margin-left:.5rem;">
-          <span class="icon-sun"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
-          <span class="icon-moon" style="display:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <nav class="nav-mobile" id="mobileNav" aria-label="Menú móvil">
-    <button class="nav-close" id="navClose" aria-label="Cerrar menú">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <a href="index.html"    class="nav-mobile__link">Inicio</a>
-    <a href="en-vivo.html"  class="nav-mobile__link">En Vivo</a>
-    <a href="podcast.html"  class="nav-mobile__link">Podcast</a>
-    <a href="noticias.html" class="nav-mobile__link nav-mobile__link--active">Noticias</a>
-    <a href="nosotros.html" class="nav-mobile__link">Nosotros</a>
-    <a href="contacto.html" class="nav-mobile__link">Contacto</a>
-    <button id="theme-toggle-mobile" aria-label="Cambiar a modo oscuro" style="width:44px;height:44px;border-radius:50%;border:1px solid var(--header-border);background:var(--color-secondary);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;">
-      <span class="icon-sun"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
-      <span class="icon-moon" style="display:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
-    </button>
-  </nav>
-
-  <main id="main-content">
-
-    <section class="page-hero" aria-labelledby="page-title">
-      <div class="page-hero__eyebrow">Crono Play</div>
-      <h1 id="page-title" class="page-hero__title"><em>Noticias</em></h1>
-      <p class="page-hero__desc">Donde el deporte se cuenta de verdad</p>
-    </section>
-
-    <div class="filter-section">
-      <button class="filter-btn active" data-cat="all">Todas</button>
-      <button class="filter-btn" data-cat="deportes">Deportes</button>
-      <button class="filter-btn" data-cat="noticias">Noticias</button>
-      <button class="filter-btn" data-cat="entretenimiento">Entretenimiento</button>
-      <button class="filter-btn" data-cat="opinion">Opinión</button>
-    </div>
-
-    <section class="articles-section">
-      <div id="articlesContainer">
-        <div class="state-center">
-          <div class="spinner"></div>
-          <p>Cargando noticias...</p>
+      <a href="index.html" class="header__logo">
+        <div class="logo-icon">
+          <img src="assets/Crono_Logo_Sin_Fondo.png" alt="Crono Play">
         </div>
-      </div>
-      <div class="pagination" id="pagination" style="display:none">
-        <button class="page-btn" id="btnPrev">← Anteriores</button>
-        <span class="page-info" id="pageInfo"></span>
-        <button class="page-btn" id="btnNext">Siguientes →</button>
-      </div>
-    </section>
+        <span class="logo-name">Crono<span class="play">Play</span></span>
+      </a>
 
-  </main>
-
-  <footer class="footer" role="contentinfo">
-    <div class="container">
-      <p class="footer__brand">Crono <span>Play</span></p>
-      <nav class="footer__nav" aria-label="Navegación del footer">
-        <a href="index.html">Home</a>
-        <a href="en-vivo.html">En Vivo</a>
-        <a href="podcast.html">Podcast</a>
-        <a href="noticias.html">Noticias</a>
+      <nav class="header__nav" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="en-vivo.html" class="nav-live">
+          <span class="dot-live"></span> En Vivo
+        </a>
+        <a href="noticias.html" class="active">Noticias</a>
         <a href="nosotros.html">Nosotros</a>
         <a href="contacto.html">Contacto</a>
       </nav>
-      <div class="footer__social" aria-label="Redes sociales">
-        <a href="#" aria-label="Instagram" rel="noopener noreferrer" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-        </a>
-        <a href="https://www.youtube.com/@CronoPlayVzla" aria-label="YouTube" rel="noopener noreferrer" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.1c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
-        </a>
-        <a href="#" aria-label="Twitter" rel="noopener noreferrer" target="_blank">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
-        </a>
+
+      <div class="header__actions">
+        <button class="theme-btn" id="themeToggle" aria-label="Cambiar tema">
+          <svg id="iconSun" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <svg id="iconMoon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+        <button class="header__mini-player" id="headerPlayer" aria-label="Escuchar radio en vivo">
+          <div class="mini-play-btn" id="headerPlayBtn">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="mini-info">
+            <b>Radio Crono Play</b>
+            <small>● EN VIVO</small>
+          </div>
+          <div class="mini-wave" id="miniWave" style="display:none">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </button>
+        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
       </div>
-      <p class="footer__copy">&copy; <span id="year"></span> Crono Play. Todos los derechos reservados.</p>
     </div>
-  </footer>
+  </div>
+</header>
 
-  <script>
-  (function() {
-    var header = document.getElementById('site-header');
-    if (header) {
-      window.addEventListener('scroll', function() {
-        header.style.background = 'var(--header-bg)';
-      });
-    }
-    var y = document.getElementById('year');
-    if (y) y.textContent = new Date().getFullYear();
-  })();
+<!-- Mobile Menu -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true">
+  <div class="mobile-menu__head">
+    <div class="header__logo" style="font-size:16px">
+      <div class="logo-icon"><img src="assets/Crono_Logo_Sin_Fondo.png" alt="Crono Play"></div>
+      <span class="logo-name">Crono<span class="play">Play</span></span>
+    </div>
+    <button class="mobile-menu__close" id="menuClose" aria-label="Cerrar menú">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+  <nav class="mobile-menu__nav">
+    <a href="index.html">Inicio</a>
+    <a href="en-vivo.html" style="color:var(--red)"><span class="dot-live" style="width:6px;height:6px"></span> En Vivo</a>
+    <a href="noticias.html" class="active">Noticias</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="contacto.html">Contacto</a>
+  </nav>
+  <div class="mobile-menu__foot">
+    <button class="btn-primary" style="width:100%;justify-content:center" id="mobilePlayBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Escuchar en Vivo
+    </button>
+  </div>
+</div>
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var navToggle = document.getElementById('navToggle');
-    var mobileNav = document.getElementById('mobileNav');
-    var navClose  = document.getElementById('navClose');
-    if (navToggle) {
-      navToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        mobileNav.classList.add('open');
-        document.body.style.overflow = 'hidden';
-      });
-    }
-    if (navClose) {
-      navClose.addEventListener('click', function(e) {
-        e.preventDefault();
-        mobileNav.classList.remove('open');
-        document.body.style.overflow = '';
-      });
-    }
-  });
-  </script>
+<!-- Page Hero -->
+<section class="hero">
+  <div class="hero-grid-bg" aria-hidden="true"></div>
+  <div class="container" style="position:relative">
+    <div class="label label--blue" style="margin-bottom:12px">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l6 6v8a2 2 0 01-2 2z"/>
+      </svg>
+      Actualidad
+    </div>
+    <h1 class="hero__page-title">Últimas <em>Noticias</em></h1>
+    <p class="hero__page-desc">Toda la información deportiva, de entretenimiento y actualidad en un solo lugar. Cobertura en tiempo real las 24 horas.</p>
+  </div>
+</section>
 
-  <script type="module">
-    import { initializeApp }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, query, where, orderBy, limit, startAfter, getDocs }
-      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<!-- Category Filter Bar -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-bar__inner" id="filterBar">
+      <button class="filter-btn active" data-category="all">Todos</button>
+      <button class="filter-btn" data-category="deportes">Deportes</button>
+      <button class="filter-btn" data-category="noticias">Noticias</button>
+      <button class="filter-btn" data-category="entretenimiento">Entretenimiento</button>
+      <button class="filter-btn" data-category="opinion">Opinión</button>
+    </div>
+  </div>
+</div>
 
-    const firebaseConfig = {
-      apiKey:            "AIzaSyACGQlXKkdJsvsuIn77ZQ06SghlTvUTDLI",
-      authDomain:        "cronossportmedia-e07ef.firebaseapp.com",
-      projectId:         "cronossportmedia-e07ef",
-      storageBucket:     "cronossportmedia-e07ef.firebasestorage.app",
-      messagingSenderId: "898405181430",
-      appId:             "1:898405181430:web:12ad5dc59fa049c26609d7"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-
-    const PAGE_SIZE = 9;
-    let currentCat  = 'all';
-    let pageStack   = [null];
-    let currentPage = 0;
-    let lastDoc     = null;
-
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentCat  = btn.dataset.cat;
-        pageStack   = [null];
-        currentPage = 0;
-        loadArticles(null);
-      });
-    });
-
-    document.getElementById('btnPrev').addEventListener('click', () => {
-      if (currentPage <= 0) return;
-      currentPage--;
-      loadArticles(pageStack[currentPage]);
-    });
-    document.getElementById('btnNext').addEventListener('click', () => {
-      currentPage++;
-      if (!pageStack[currentPage]) pageStack[currentPage] = lastDoc;
-      loadArticles(pageStack[currentPage]);
-    });
-
-    async function loadArticles(cursor) {
-      showLoading();
-      try {
-        const constraints = [
-          where('status', '==', 'published'),
-          orderBy('published_at', 'desc'),
-          limit(PAGE_SIZE + 1)
-        ];
-        if (currentCat !== 'all') constraints.unshift(where('category', '==', currentCat));
-        if (cursor) constraints.push(startAfter(cursor));
-
-        const snap = await getDocs(query(collection(db, 'articles'), ...constraints));
-        const docs = snap.docs;
-        const hasMore = docs.length > PAGE_SIZE;
-        const items   = hasMore ? docs.slice(0, PAGE_SIZE) : docs;
-        lastDoc       = items[items.length - 1] || null;
-
-        renderArticles(items.map(d => ({ id: d.id, ...d.data() })));
-        updatePagination(hasMore);
-      } catch (err) {
-        console.error(err);
-        showError();
-      }
-    }
-
-    function showLoading() {
-      document.getElementById('articlesContainer').innerHTML =
-        '<div class="state-center"><div class="spinner"></div><p>Cargando noticias...</p></div>';
-    }
-    function showError() {
-      document.getElementById('articlesContainer').innerHTML =
-        '<div class="state-center"><h3>Error al cargar las noticias</h3><p>Verifica tu conexión e intenta de nuevo.</p></div>';
-    }
-
-    function renderArticles(articles) {
-      if (!articles.length) {
-        document.getElementById('articlesContainer').innerHTML =
-          '<div class="state-center"><h3>No hay noticias aquí todavía</h3><p>Vuelve pronto, estamos trabajando en el contenido.</p></div>';
-        return;
-      }
-      document.getElementById('articlesContainer').innerHTML =
-        `<div class="articles-grid">${articles.map(buildCard).join('')}</div>`;
-    }
-
-    function buildCard(a) {
-      const imgHtml = a.featured_image
-        ? `<img class="article-card-img" src="${esc(transformImg(a.featured_image))}" alt="${esc(a.title)}" loading="lazy">`
-        : `<div class="article-card-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`;
-      return `
-        <a class="article-card" href="noticia.html?slug=${esc(a.slug)}">
-          ${imgHtml}
-          <div class="article-card-body">
-            <div class="article-card-meta">
-              <span class="category-pill">${esc(formatCat(a.category))}</span>
-              <span>${formatDate(a.published_at)}</span>
-            </div>
-            <h2 class="article-card-title">${esc(a.title)}</h2>
-            <p class="article-card-excerpt">${esc(a.excerpt)}</p>
-            <div class="article-card-footer">
-              <span class="article-card-author">${esc(a.author_name||'—')}</span>
-              <span class="article-card-link">Leer
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </span>
+<!-- Main Content -->
+<section class="section news-section">
+  <div class="container">
+    <div class="news-layout">
+      <!-- News Grid -->
+      <div>
+        <div class="news-grid" id="newsGrid">
+          <!-- Skeleton loading cards -->
+          <div class="skeleton-card" style="grid-column:1/-1">
+            <div class="skeleton-card__img skeleton"></div>
+            <div class="skeleton-card__body">
+              <div class="skeleton-card__line skeleton" style="width:40%"></div>
+              <div class="skeleton-card__line skeleton" style="height:20px"></div>
+              <div class="skeleton-card__line skeleton"></div>
             </div>
           </div>
-        </a>`;
+          <div class="skeleton-card"><div class="skeleton-card__img skeleton"></div><div class="skeleton-card__body"><div class="skeleton-card__line skeleton" style="width:40%"></div><div class="skeleton-card__line skeleton"></div><div class="skeleton-card__line skeleton"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card__img skeleton"></div><div class="skeleton-card__body"><div class="skeleton-card__line skeleton" style="width:40%"></div><div class="skeleton-card__line skeleton"></div><div class="skeleton-card__line skeleton"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-card__img skeleton"></div><div class="skeleton-card__body"><div class="skeleton-card__line skeleton" style="width:40%"></div><div class="skeleton-card__line skeleton"></div><div class="skeleton-card__line skeleton"></div></div></div>
+        </div>
+
+        <!-- Load More -->
+        <div class="load-more-wrap" id="loadMoreWrap" style="display:none">
+          <button class="load-more-btn" id="loadMoreBtn">
+            Cargar más
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar reveal">
+        <!-- Trending -->
+        <div class="sidebar-block">
+          <h3 class="sidebar-block__title">Tendencias</h3>
+          <div id="trendingList">
+            <div class="trending-item"><div class="skeleton" style="width:28px;height:28px;border-radius:4px"></div><div style="flex:1"><div class="skeleton" style="height:13px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+            <div class="trending-item"><div class="skeleton" style="width:28px;height:28px;border-radius:4px"></div><div style="flex:1"><div class="skeleton" style="height:13px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+            <div class="trending-item"><div class="skeleton" style="width:28px;height:28px;border-radius:4px"></div><div style="flex:1"><div class="skeleton" style="height:13px;margin-bottom:6px"></div><div class="skeleton" style="height:10px;width:60%"></div></div></div>
+          </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="sidebar-block">
+          <h3 class="sidebar-block__title">Categorías</h3>
+          <div id="categoryList">
+            <div class="cat-list-item" data-cat="deportes">Deportes <span id="countDeportes">--</span></div>
+            <div class="cat-list-item" data-cat="noticias">Noticias <span id="countNoticias">--</span></div>
+            <div class="cat-list-item" data-cat="entretenimiento">Entretenimiento <span id="countEntretenimiento">--</span></div>
+            <div class="cat-list-item" data-cat="opinion">Opinión <span id="countOpinion">--</span></div>
+          </div>
+        </div>
+
+        <!-- Newsletter (commented out — not yet implemented)
+        <div class="sidebar-block">
+          <h3 class="sidebar-block__title">Newsletter</h3>
+          <form class="newsletter-form" onsubmit="event.preventDefault()">
+            <p>Recibe las noticias más importantes directo en tu correo.</p>
+            <input type="email" placeholder="tu@correo.com" required>
+            <button type="submit" class="btn-primary">Suscribirme</button>
+          </form>
+        </div>
+        -->
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <div class="header__logo" style="margin-bottom:0">
+          <div class="logo-icon"><img src="assets/Crono_Logo_Sin_Fondo.png" alt="Crono Play"></div>
+          <span class="logo-name">Crono<span class="play">Play</span></span>
+        </div>
+        <p>Tu conexión con el deporte. Radio en vivo 24/7, podcasts exclusivos y noticias del mundo deportivo.</p>
+        <div class="footer__socials">
+          <a href="https://www.youtube.com/@CronoPlayVzla" class="social-icon" aria-label="YouTube" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/></svg>
+          </a>
+          <a href="#" class="social-icon" aria-label="X / Twitter">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer__col">
+        <h4>Navegación</h4>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="en-vivo.html">En Vivo</a></li>
+          <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="nosotros.html">Nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Aviso Legal</a></li>
+          <li><a href="#">Privacidad</a></li>
+          <li><a href="#">Cookies</a></li>
+          <li><a href="#">Términos de Uso</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Crono Play · Todos los derechos reservados</span>
+      <span>Hecho con pasión por el deporte 🎙️</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Sticky Player -->
+<div class="sticky-player hidden" id="stickyPlayer">
+  <div class="container">
+    <div class="sticky-player__inner">
+      <div class="sticky-player__info">
+        <div class="sticky-player__thumb" style="background:transparent;border-radius:0">
+          <img src="assets/Crono_Logo_Sin_Fondo.png" alt="Crono Play" style="width:44px;height:44px;object-fit:contain">
+        </div>
+        <div class="sticky-player__meta">
+          <div class="sticky-player__title">Radio Crono Play</div>
+          <div class="sticky-player__sub">● EN VIVO</div>
+        </div>
+        <div class="sticky-player__viz">
+          <span style="--d:.7s;--delay:0s"></span>
+          <span style="--d:.9s;--delay:.1s"></span>
+          <span style="--d:.75s;--delay:.2s"></span>
+          <span style="--d:.85s;--delay:.08s"></span>
+          <span style="--d:.65s;--delay:.15s"></span>
+        </div>
+      </div>
+      <button class="sp-play-btn" id="spPlayBtn" aria-label="Pausar">
+        <svg viewBox="0 0 24 24" fill="currentColor" id="spPlayIcon"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+      </button>
+      <div class="sp-volume">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+        </svg>
+        <input type="range" id="spVolume" min="0" max="100" value="80" aria-label="Volumen">
+      </div>
+      <button class="sp-close" id="spClose" aria-label="Cerrar reproductor">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<audio id="radioAudio" preload="none"><source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg"></audio>
+
+<script>
+// ── THEME TOGGLE ───────────────────────────────────────────────
+const root = document.documentElement;
+const themeToggle = document.getElementById('themeToggle');
+const iconSun = document.getElementById('iconSun');
+const iconMoon = document.getElementById('iconMoon');
+
+const savedTheme = localStorage.getItem('crono-theme') || 'light';
+function applyTheme(theme) {
+  root.setAttribute('data-theme', theme);
+  if (theme === 'light') {
+    iconSun.style.display = 'none';
+    iconMoon.style.display = 'block';
+  } else {
+    iconSun.style.display = 'block';
+    iconMoon.style.display = 'none';
+  }
+  localStorage.setItem('crono-theme', theme);
+}
+applyTheme(savedTheme);
+themeToggle.addEventListener('click', () => {
+  applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+});
+
+// ── AUDIO PLAYER ───────────────────────────────────────────────
+const audio = document.getElementById('radioAudio');
+const stickyPlayer = document.getElementById('stickyPlayer');
+let playing = false;
+
+const savedVol = parseFloat(localStorage.getItem('crono-vol') || '0.8');
+audio.volume = savedVol;
+
+function setPlaying(val) {
+  playing = val;
+  const miniPlayer = document.getElementById('headerPlayer');
+  if (playing) {
+    audio.play().catch(() => {});
+    stickyPlayer.classList.remove('hidden');
+    document.getElementById('miniWave').style.display = 'flex';
+    miniPlayer && miniPlayer.classList.add('is-playing');
+    document.getElementById('spPlayBtn') && document.getElementById('spPlayBtn').classList.add('is-playing');
+  } else {
+    audio.pause();
+    document.getElementById('miniWave').style.display = 'none';
+    miniPlayer && miniPlayer.classList.remove('is-playing');
+    document.getElementById('spPlayBtn') && document.getElementById('spPlayBtn').classList.remove('is-playing');
+  }
+}
+
+['headerPlayer','mobilePlayBtn'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', () => setPlaying(!playing));
+});
+
+document.getElementById('spPlayBtn').addEventListener('click', () => setPlaying(!playing));
+document.getElementById('spClose').addEventListener('click', () => {
+  setPlaying(false);
+  stickyPlayer.classList.add('hidden');
+});
+
+// Volume sync
+const spVol = document.getElementById('spVolume');
+if (spVol) {
+  spVol.value = savedVol * 100;
+  spVol.addEventListener('input', () => {
+    audio.volume = spVol.value / 100;
+    localStorage.setItem('crono-vol', spVol.value / 100);
+  });
+}
+
+// ── MOBILE MENU ────────────────────────────────────────────────
+const overlay = document.getElementById('mobileOverlay');
+const menu = document.getElementById('mobileMenu');
+const menuBtn = document.getElementById('menuBtn');
+const menuClose = document.getElementById('menuClose');
+
+function openMenu() { menu.classList.add('open'); overlay.classList.add('open'); document.body.style.overflow = 'hidden'; }
+function closeMenu() { menu.classList.remove('open'); overlay.classList.remove('open'); document.body.style.overflow = ''; }
+
+menuBtn.addEventListener('click', openMenu);
+menuClose.addEventListener('click', closeMenu);
+overlay.addEventListener('click', closeMenu);
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
+
+// ── SCROLL REVEALS ─────────────────────────────────────────────
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+reveals.forEach(el => io.observe(el));
+</script>
+
+<!-- Firebase Integration -->
+<script type="module">
+import { db } from './js/firebase-config.js';
+import {
+  collection, query, where, orderBy, limit, startAfter, getDocs, getCountFromServer
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ── HELPERS ────────────────────────────────────────────────────
+function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
+
+function timeAgo(date) {
+  if (!date) return '';
+  const d = date.toDate ? date.toDate() : new Date(date);
+  const now = Date.now();
+  const diff = now - d.getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'hace un momento';
+  if (mins < 60) return `hace ${mins} min`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `hace ${days} día${days > 1 ? 's' : ''}`;
+  return d.toLocaleDateString('es-VE', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function cloudinaryUrl(url, w, h) {
+  if (!url || !url.includes('cloudinary')) return url || '';
+  return url.replace('/upload/', `/upload/w_${w},h_${h},c_fill,g_center,q_auto,f_auto/`);
+}
+
+function isBlueCategory(cat) {
+  return ['noticias', 'entretenimiento', 'internacional', 'tecnología'].includes((cat || '').toLowerCase());
+}
+
+function categoryTagClass(cat) {
+  return isBlueCategory(cat) ? 'news-card__tag tag-blue' : 'news-card__tag';
+}
+function categoryCatClass(cat) {
+  return isBlueCategory(cat) ? 'news-card__category cat-blue' : 'news-card__category';
+}
+
+// ── STATE ──────────────────────────────────────────────────────
+let currentCategory = 'all';
+let lastDoc = null;
+let hasMore = false;
+let isLoading = false;
+const PAGE_SIZE = 9;
+const grid = document.getElementById('newsGrid');
+const loadMoreWrap = document.getElementById('loadMoreWrap');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
+
+// ── RENDER ─────────────────────────────────────────────────────
+function renderCard(article, isFeatured) {
+  const imgW = isFeatured ? 800 : 400;
+  const imgH = isFeatured ? 450 : 225;
+  const imgUrl = cloudinaryUrl(article.featured_image, imgW, imgH);
+  const cat = article.category || 'General';
+  const time = timeAgo(article.published_at);
+
+  return `
+    <a href="noticia.html?slug=${encodeURIComponent(article.slug || '')}" class="news-card${isFeatured ? ' featured' : ''}">
+      <div class="news-card__img">
+        ${imgUrl
+          ? `<img src="${esc(imgUrl)}" alt="${esc(article.title)}" loading="${isFeatured ? 'eager' : 'lazy'}">`
+          : `<div class="news-card__img-placeholder"><span>${esc(cat)}</span></div>`
+        }
+        <span class="${categoryTagClass(cat)}">${esc(cat)}</span>
+      </div>
+      <div class="news-card__body">
+        <div class="news-card__meta">
+          <span class="${categoryCatClass(cat)}">${esc(cat)}</span>
+          <span class="news-card__time">${esc(time)}</span>
+        </div>
+        <h3 class="news-card__title">${esc(article.title)}</h3>
+        <p class="news-card__excerpt">${esc(article.excerpt || '')}</p>
+        ${article.author_name ? `<div class="news-card__author">Por ${esc(article.author_name)}</div>` : ''}
+      </div>
+    </a>`;
+}
+
+function renderEmpty() {
+  grid.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-state__icon">📰</div>
+      <h3 class="empty-state__title">Sin noticias por ahora</h3>
+      <p class="empty-state__desc">No hay artículos publicados en esta categoría. Vuelve pronto.</p>
+    </div>`;
+}
+
+// ── FETCH ──────────────────────────────────────────────────────
+async function fetchArticles(append) {
+  if (isLoading) return;
+  isLoading = true;
+  loadMoreBtn.classList.add('loading');
+
+  try {
+    const constraints = [
+      where('status', '==', 'published'),
+      orderBy('published_at', 'desc'),
+      limit(PAGE_SIZE + 1),
+    ];
+
+    if (currentCategory !== 'all') {
+      constraints.unshift(where('category', '==', currentCategory));
     }
 
-    function updatePagination(hasMore) {
-      const pg = document.getElementById('pagination');
-      const hasPrev = currentPage > 0;
-      if (!hasMore && !hasPrev) { pg.style.display = 'none'; return; }
-      pg.style.display = 'flex';
-      document.getElementById('btnPrev').disabled = !hasPrev;
-      document.getElementById('btnNext').disabled = !hasMore;
-      document.getElementById('pageInfo').textContent = `Página ${currentPage + 1}`;
+    if (append && lastDoc) {
+      constraints.push(startAfter(lastDoc));
     }
 
-    function transformImg(url) {
-      if (!url) return '';
+    const q = query(collection(db, 'articles'), ...constraints);
+    const snap = await getDocs(q);
+    const all = snap.docs;
+    hasMore = all.length > PAGE_SIZE;
+    const items = all.slice(0, PAGE_SIZE);
+    lastDoc = items.length ? items[items.length - 1] : null;
 
-      let safeUrl = String(url).trim();
+    if (!append) grid.innerHTML = '';
 
-      if (!safeUrl) return '';
-
-      if (safeUrl.startsWith('http://')) {
-        safeUrl = safeUrl.replace('http://', 'https://');
-      }
-
-      if (!safeUrl.includes('cloudinary.com')) {
-        return safeUrl;
-      }
-
-      if (safeUrl.includes('/upload/')) {
-        return safeUrl.replace(
-          '/upload/',
-          '/upload/w_400,h_225,c_fill,g_center,q_auto,f_auto/'
-        );
-      }
-
-      return safeUrl;
-    }
-    
-    function formatDate(ts) {
-      if (!ts) return '';
-      const d = ts.toDate ? ts.toDate() : new Date(ts);
-      return d.toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' });
-    }
-    function formatCat(c) {
-      return {deportes:'Deportes',noticias:'Noticias',entretenimiento:'Entretenimiento',opinion:'Opinión'}[c]||c||'';
-    }
-    function esc(s) {
-      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    if (!append && items.length === 0) {
+      renderEmpty();
+      loadMoreWrap.style.display = 'none';
+      return;
     }
 
-    loadArticles(null);
-  </script>
+    const isFirstBatch = !append;
+    const html = items.map((d, i) => {
+      const article = { id: d.id, ...d.data() };
+      const isFeatured = isFirstBatch && i === 0;
+      return renderCard(article, isFeatured);
+    }).join('');
 
-  <script>
-  (function(){
-    var html=document.documentElement;
-    document.addEventListener("DOMContentLoaded",function(){
-      var toggles=document.querySelectorAll("#theme-toggle,#theme-toggle-mobile");
-      if(!toggles.length)return;
-      function updateIcons(){
-        var dark=html.getAttribute("data-theme")==="dark";
-        toggles.forEach(function(t){
-          t.querySelectorAll(".icon-sun").forEach(function(el){el.style.display=dark?"none":"block";});
-          t.querySelectorAll(".icon-moon").forEach(function(el){el.style.display=dark?"block":"none";});
-          t.setAttribute("aria-label",dark?"Cambiar a modo claro":"Cambiar a modo oscuro");
-        });
-      }
-      toggles.forEach(function(t){
-        t.addEventListener("click",function(){
-          var dark=html.getAttribute("data-theme")==="dark";
-          if(dark){html.removeAttribute("data-theme");localStorage.setItem("crono-theme","light");}
-          else{html.setAttribute("data-theme","dark");localStorage.setItem("crono-theme","dark");}
-          updateIcons();
-        });
-      });
-      updateIcons();
+    grid.insertAdjacentHTML('beforeend', html);
+    loadMoreWrap.style.display = hasMore ? 'flex' : 'none';
+
+    // Re-observe new cards for reveal animation
+    const revealIO = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealIO.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    grid.querySelectorAll('.news-card:not(.visible)').forEach(el => {
+      el.classList.add('reveal');
+      revealIO.observe(el);
     });
-  })();
-  </script>
+  } catch (err) {
+    console.warn('[noticias] Error loading articles:', err);
+    if (!append) {
+      grid.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state__icon">⚠️</div>
+          <h3 class="empty-state__title">Error al cargar</h3>
+          <p class="empty-state__desc">No pudimos cargar las noticias. Intenta de nuevo más tarde.</p>
+        </div>`;
+    }
+  } finally {
+    isLoading = false;
+    loadMoreBtn.classList.remove('loading');
+  }
+}
+
+// ── FILTER BUTTONS ─────────────────────────────────────────────
+document.getElementById('filterBar').addEventListener('click', (e) => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn || btn.classList.contains('active')) return;
+
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  currentCategory = btn.dataset.category;
+  lastDoc = null;
+  fetchArticles(false);
+});
+
+// Sidebar category click → filter
+document.getElementById('categoryList').addEventListener('click', (e) => {
+  const item = e.target.closest('.cat-list-item');
+  if (!item) return;
+  const cat = item.dataset.cat;
+
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.category === cat);
+  });
+
+  currentCategory = cat;
+  lastDoc = null;
+  fetchArticles(false);
+  window.scrollTo({ top: grid.offsetTop - 140, behavior: 'smooth' });
+});
+
+// ── LOAD MORE ──────────────────────────────────────────────────
+loadMoreBtn.addEventListener('click', () => fetchArticles(true));
+
+// ── TRENDING SIDEBAR ───────────────────────────────────────────
+async function loadTrending() {
+  try {
+    const q = query(
+      collection(db, 'articles'),
+      where('status', '==', 'published'),
+      orderBy('published_at', 'desc'),
+      limit(5)
+    );
+    const snap = await getDocs(q);
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    const container = document.getElementById('trendingList');
+    if (!items.length) {
+      container.innerHTML = '<p style="font-size:13px;color:var(--muted)">Sin tendencias por ahora.</p>';
+      return;
+    }
+
+    container.innerHTML = items.map((a, i) => `
+      <a href="noticia.html?slug=${encodeURIComponent(a.slug || '')}" class="trending-item" style="text-decoration:none;color:inherit">
+        <div class="trending-num">${i + 1}</div>
+        <div>
+          <div class="trending-info__title">${esc(a.title)}</div>
+          <div class="trending-info__time">${esc(timeAgo(a.published_at))}</div>
+        </div>
+      </a>
+    `).join('');
+  } catch (err) {
+    console.warn('[noticias] Trending error:', err);
+  }
+}
+
+// ── CATEGORY COUNTS ────────────────────────────────────────────
+async function loadCategoryCounts() {
+  const cats = ['deportes', 'noticias', 'entretenimiento', 'opinion'];
+  for (const cat of cats) {
+    try {
+      const q = query(
+        collection(db, 'articles'),
+        where('status', '==', 'published'),
+        where('category', '==', cat)
+      );
+      const snap = await getCountFromServer(q);
+      const el = document.getElementById('count' + cat.charAt(0).toUpperCase() + cat.slice(1));
+      if (el) el.textContent = snap.data().count;
+    } catch {
+      // silent — counts are non-critical
+    }
+  }
+}
+
+// ── INIT ───────────────────────────────────────────────────────
+// Check URL params for category pre-filter
+const urlParams = new URLSearchParams(window.location.search);
+const urlCat = urlParams.get('categoria');
+if (urlCat && ['deportes', 'noticias', 'entretenimiento', 'opinion'].includes(urlCat)) {
+  currentCategory = urlCat;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.category === urlCat);
+  });
+}
+
+Promise.all([
+  fetchArticles(false),
+  loadTrending(),
+  loadCategoryCounts(),
+]).catch(console.warn);
+</script>
 </body>
 </html>
