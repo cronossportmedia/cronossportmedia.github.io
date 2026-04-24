@@ -1793,6 +1793,9 @@ async function loadNews() {
           </div>
         </a>`;
     }).join('');
+
+    // Cards loaded async — mark visible immediately (scroll-reveal observer already ran)
+    grid.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
   } catch (err) {
     console.warn('[index] News loading error:', err);
   }
