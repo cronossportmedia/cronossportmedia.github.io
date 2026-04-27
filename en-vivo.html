@@ -1136,12 +1136,14 @@ audio.volume = savedVol;
 
 const ICON_PLAY  = '<path d="M8 5v14l11-7z"/>';
 const ICON_PAUSE = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+const ICON_SPINNER = '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" fill="none" stroke-dasharray="50 20" stroke-linecap="round"/>';
+let loading = false;
 
 function updateAllPlayIcons(isPlaying) {
   const icon = isPlaying ? ICON_PAUSE : ICON_PLAY;
   ['cardPlayBtn','headerPlayBtn','broadcastPlayBtn','mobilePlayBtn','spPlayBtn'].forEach(id => {
     const svg = document.querySelector('#' + id + ' svg');
-    if (svg) svg.innerHTML = icon;
+    if (svg) { svg.innerHTML = icon; svg.style.animation = ''; }
   });
   ['cardPlayBtn','headerPlayer','spPlayBtn'].forEach(id => {
     const el = document.getElementById(id);
@@ -1149,21 +1151,47 @@ function updateAllPlayIcons(isPlaying) {
   });
 }
 
+function setLoadingState(isLoading) {
+  loading = isLoading;
+  ['cardPlayBtn','headerPlayBtn','broadcastPlayBtn','mobilePlayBtn','spPlayBtn'].forEach(id => {
+    const svg = document.querySelector('#' + id + ' svg');
+    if (!svg) return;
+    if (isLoading) {
+      svg.innerHTML = ICON_SPINNER;
+      svg.style.animation = 'spin-ring 1s linear infinite';
+    }
+  });
+}
+
 function setPlaying(val) {
+  if (loading) return;
   playing = val;
   if (playing) {
-    audio.load();
-    audio.play().catch(() => { playing = false; updateAllPlayIcons(false); });
+    setLoadingState(true);
     stickyPlayer.classList.remove('hidden');
-    document.getElementById('cardStatus').textContent = '● Escuchando en vivo';
-    document.getElementById('miniWave').style.display = 'flex';
+    document.getElementById('cardStatus').textContent = 'Conectando…';
+    document.getElementById('miniWave').style.display = 'none';
+    audio.load();
+    audio.play().catch(() => {
+      playing = false;
+      setLoadingState(false);
+      updateAllPlayIcons(false);
+      document.getElementById('cardStatus').textContent = 'Error al conectar';
+    });
   } else {
     audio.pause();
     document.getElementById('cardStatus').textContent = 'Presiona play para escuchar';
     document.getElementById('miniWave').style.display = 'none';
+    updateAllPlayIcons(false);
   }
-  updateAllPlayIcons(playing);
 }
+
+audio.addEventListener('playing', () => {
+  setLoadingState(false);
+  updateAllPlayIcons(true);
+  document.getElementById('cardStatus').textContent = '● Escuchando en vivo';
+  document.getElementById('miniWave').style.display = 'flex';
+});
 
 ['cardPlayBtn','headerPlayer','broadcastPlayBtn','mobilePlayBtn'].forEach(id => {
   const el = document.getElementById(id);
