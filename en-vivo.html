@@ -1070,7 +1070,7 @@ ul { list-style: none; }
         </div>
       </div>
       <button class="sp-play-btn" id="spPlayBtn" aria-label="Pausar">
-        <svg viewBox="0 0 24 24" fill="currentColor" id="spPlayIcon"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" id="spPlayIcon"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <div class="sp-volume">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1134,28 +1134,35 @@ let playing = false;
 const savedVol = parseFloat(localStorage.getItem('crono-vol') || '0.8');
 audio.volume = savedVol;
 
+const ICON_PLAY  = '<path d="M8 5v14l11-7z"/>';
+const ICON_PAUSE = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+
+function updateAllPlayIcons(isPlaying) {
+  const icon = isPlaying ? ICON_PAUSE : ICON_PLAY;
+  ['cardPlayBtn','headerPlayBtn','broadcastPlayBtn','mobilePlayBtn','spPlayBtn'].forEach(id => {
+    const svg = document.querySelector('#' + id + ' svg');
+    if (svg) svg.innerHTML = icon;
+  });
+  ['cardPlayBtn','headerPlayer','spPlayBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('is-playing', isPlaying);
+  });
+}
+
 function setPlaying(val) {
   playing = val;
-  const cardBtn = document.getElementById('cardPlayBtn');
-  const miniPlayer = document.getElementById('headerPlayer');
   if (playing) {
-    audio.play().catch(() => {});
+    audio.load();
+    audio.play().catch(() => { playing = false; updateAllPlayIcons(false); });
     stickyPlayer.classList.remove('hidden');
     document.getElementById('cardStatus').textContent = '● Escuchando en vivo';
     document.getElementById('miniWave').style.display = 'flex';
-    document.querySelector('#cardPlayBtn svg').innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
-    cardBtn && cardBtn.classList.add('is-playing');
-    miniPlayer && miniPlayer.classList.add('is-playing');
-    document.getElementById('spPlayBtn') && document.getElementById('spPlayBtn').classList.add('is-playing');
   } else {
     audio.pause();
     document.getElementById('cardStatus').textContent = 'Presiona play para escuchar';
     document.getElementById('miniWave').style.display = 'none';
-    document.querySelector('#cardPlayBtn svg').innerHTML = '<path d="M8 5v14l11-7z"/>';
-    cardBtn && cardBtn.classList.remove('is-playing');
-    miniPlayer && miniPlayer.classList.remove('is-playing');
-    document.getElementById('spPlayBtn') && document.getElementById('spPlayBtn').classList.remove('is-playing');
   }
+  updateAllPlayIcons(playing);
 }
 
 ['cardPlayBtn','headerPlayer','broadcastPlayBtn','mobilePlayBtn'].forEach(id => {
@@ -1466,6 +1473,7 @@ function wireAudioPlayers() {
         if (statusEl) statusEl.textContent = 'Señal inestable...';
       });
 
+      audioEl.load();
       audioEl.play().catch(() => {
         btn.innerHTML = svgPlay();
         if (statusEl) statusEl.textContent = 'Error al reproducir';
