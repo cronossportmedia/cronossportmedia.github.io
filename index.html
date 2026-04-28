@@ -939,6 +939,135 @@ ul { list-style: none; }
 /* ── ADVANCED VISUALIZER ───────────────────────────────────── */
 #radioVizCanvas { opacity: .92; }
 
+/* ── BANNER CAROUSEL ──────────────────────────────────────── */
+.banner-carousel {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+}
+.banner-carousel .carousel-viewport {
+  overflow: hidden;
+  border-radius: var(--r-lg);
+}
+.banner-carousel .carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+.banner-carousel .carousel-slide {
+  min-width: 100%;
+  position: relative;
+  flex-shrink: 0;
+}
+.banner-carousel .carousel-slide a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+.banner-carousel .carousel-slide img {
+  width: 100%;
+  aspect-ratio: 4 / 1;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+.banner-carousel .carousel-cta-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent 0%, rgba(0,0,0,.65) 100%);
+  padding: 32px 24px 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+.banner-carousel .carousel-cta-text {
+  color: #fff;
+  font-family: var(--font-d);
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.banner-carousel .carousel-cta-btn {
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: var(--r);
+  font-family: var(--font-b);
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background .2s;
+}
+.banner-carousel .carousel-cta-btn:hover { background: var(--orange-hi); }
+
+/* Arrows */
+.banner-carousel .carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0,0,0,.4);
+  color: #fff;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .2s, opacity .2s;
+  opacity: .7;
+}
+.banner-carousel .carousel-arrow:hover { background: rgba(0,0,0,.7); opacity: 1; }
+.banner-carousel .carousel-arrow--prev { left: 12px; }
+.banner-carousel .carousel-arrow--next { right: 12px; }
+
+/* Dots */
+.banner-carousel .carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+.banner-carousel .carousel-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,.45);
+  cursor: pointer;
+  transition: background .3s, transform .3s;
+  padding: 0;
+}
+.banner-carousel .carousel-dot.active {
+  background: var(--orange);
+  transform: scale(1.2);
+}
+
+/* Light mode */
+[data-theme="light"] .banner-carousel .carousel-arrow { background: rgba(255,255,255,.6); color: var(--text); }
+[data-theme="light"] .banner-carousel .carousel-arrow:hover { background: rgba(255,255,255,.9); }
+[data-theme="light"] .banner-carousel .carousel-dot { background: rgba(0,0,0,.25); }
+[data-theme="light"] .banner-carousel .carousel-dot.active { background: var(--orange); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .banner-carousel { padding: 0; border-radius: 0; }
+  .banner-carousel .carousel-viewport { border-radius: 0; }
+  .banner-carousel .carousel-slide img { aspect-ratio: 16 / 7; }
+  .banner-carousel .carousel-arrow { display: none; }
+  .banner-carousel .carousel-cta-overlay { padding: 20px 16px 14px; }
+  .banner-carousel .carousel-cta-text { font-size: .95rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1749,26 +1878,175 @@ async function applySiteConfig() {
       if (heroDesc) heroDesc.textContent = config.hero.subtitulo;
     }
 
-    // Banner
-    if (config.banner?.activo) {
-      const bannerUrl = config.banner.imagen_url
-        ? config.banner.imagen_url.replace('/upload/', '/upload/w_1200,q_auto,f_auto/')
-        : '';
-      if (bannerUrl) {
-        const bannerHtml = document.createElement('a');
-        bannerHtml.href = config.banner.url_destino || '#';
-        if (config.banner.nueva_tab) bannerHtml.target = '_blank';
-        bannerHtml.style.cssText = 'display:block;max-width:1280px;margin:0 auto;padding:0 24px;';
-        const img = document.createElement('img');
-        img.src = bannerUrl;
-        img.alt = config.banner.alt_text || 'Banner';
-        img.style.cssText = 'width:100%;border-radius:var(--r-lg);';
-        bannerHtml.appendChild(img);
+    // Banner Carousel
+    if (config.banner?.activo && Array.isArray(config.banner.slides)) {
+      const slides = config.banner.slides
+        .filter(s => s.activo)
+        .sort((a, b) => (a.orden ?? 0) - (b.orden ?? 0));
+
+      if (slides.length > 0) {
+        // Build carousel container
+        const section = document.createElement('section');
+        section.className = 'banner-carousel';
+        section.id = 'banner-carousel';
+        section.setAttribute('aria-label', 'Banner promocional');
+        section.setAttribute('tabindex', '0');
+
+        const viewport = document.createElement('div');
+        viewport.className = 'carousel-viewport';
+        const track = document.createElement('div');
+        track.className = 'carousel-track';
+
+        slides.forEach((slide, i) => {
+          const div = document.createElement('div');
+          div.className = 'carousel-slide';
+          div.setAttribute('role', 'img');
+          div.setAttribute('aria-label', slide.alt_text || `Slide ${i + 1}`);
+
+          const desktopUrl = getCloudinaryUrl(slide.imagen_url, 1280, 320);
+          const img = document.createElement('img');
+          img.src = desktopUrl;
+          img.alt = slide.alt_text || 'Banner';
+          img.loading = i === 0 ? 'eager' : 'lazy';
+
+          if (slide.url_destino) {
+            const link = document.createElement('a');
+            link.href = slide.url_destino;
+            if (slide.nueva_tab) link.target = '_blank';
+            link.rel = 'noopener';
+            link.appendChild(img);
+            div.appendChild(link);
+          } else {
+            div.appendChild(img);
+          }
+
+          // CTA overlay
+          if (slide.cta_texto) {
+            const overlay = document.createElement('div');
+            overlay.className = 'carousel-cta-overlay';
+            const txt = document.createElement('span');
+            txt.className = 'carousel-cta-text';
+            txt.textContent = slide.cta_texto;
+            overlay.appendChild(txt);
+            if (slide.url_destino) {
+              const btn = document.createElement('button');
+              btn.className = 'carousel-cta-btn';
+              btn.textContent = 'Ver más';
+              btn.onclick = () => {
+                const w = slide.nueva_tab ? window.open(slide.url_destino, '_blank') : null;
+                if (!w) window.location.href = slide.url_destino;
+              };
+              overlay.appendChild(btn);
+            }
+            div.appendChild(overlay);
+          }
+
+          track.appendChild(div);
+        });
+
+        viewport.appendChild(track);
+        section.appendChild(viewport);
+
+        const isMulti = slides.length > 1;
+
+        // Dots
+        if (isMulti) {
+          const dotsContainer = document.createElement('div');
+          dotsContainer.className = 'carousel-dots';
+          slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.setAttribute('aria-label', `Ir a slide ${i + 1}`);
+            dotsContainer.appendChild(dot);
+          });
+          section.appendChild(dotsContainer);
+
+          // Arrows
+          const prevBtn = document.createElement('button');
+          prevBtn.className = 'carousel-arrow carousel-arrow--prev';
+          prevBtn.setAttribute('aria-label', 'Anterior');
+          prevBtn.innerHTML = '&#8249;';
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'carousel-arrow carousel-arrow--next';
+          nextBtn.setAttribute('aria-label', 'Siguiente');
+          nextBtn.innerHTML = '&#8250;';
+          section.appendChild(prevBtn);
+          section.appendChild(nextBtn);
+        }
+
+        // Position in DOM
         const hero = document.querySelector('.hero');
         if (hero && config.banner.posicion === 'above') {
-          hero.parentNode.insertBefore(bannerHtml, hero);
+          hero.parentNode.insertBefore(section, hero);
         } else if (hero) {
-          hero.parentNode.insertBefore(bannerHtml, hero.nextSibling);
+          hero.parentNode.insertBefore(section, hero.nextSibling);
+        }
+
+        // Carousel controller
+        if (isMulti) {
+          const autoplay = config.banner.autoplay !== false;
+          const interval = config.banner.autoplay_interval || 5000;
+          let current = 0;
+          let timer = null;
+          const dots = section.querySelectorAll('.carousel-dot');
+
+          function goTo(idx) {
+            current = ((idx % slides.length) + slides.length) % slides.length;
+            track.style.transform = `translateX(-${current * 100}%)`;
+            dots.forEach((d, i) => d.classList.toggle('active', i === current));
+          }
+
+          function next() { goTo(current + 1); }
+          function prev() { goTo(current - 1); }
+
+          function startAutoplay() {
+            stopAutoplay();
+            if (autoplay) timer = setInterval(next, interval);
+          }
+          function stopAutoplay() {
+            if (timer) { clearInterval(timer); timer = null; }
+          }
+
+          // Arrows
+          section.querySelector('.carousel-arrow--next').addEventListener('click', () => { next(); startAutoplay(); });
+          section.querySelector('.carousel-arrow--prev').addEventListener('click', () => { prev(); startAutoplay(); });
+
+          // Dots
+          dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => { goTo(i); startAutoplay(); });
+          });
+
+          // Pause on hover/focus
+          section.addEventListener('mouseenter', stopAutoplay);
+          section.addEventListener('mouseleave', startAutoplay);
+          section.addEventListener('focusin', stopAutoplay);
+          section.addEventListener('focusout', startAutoplay);
+
+          // Keyboard
+          section.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') { prev(); startAutoplay(); }
+            if (e.key === 'ArrowRight') { next(); startAutoplay(); }
+          });
+
+          // Touch/swipe
+          let touchStartX = 0;
+          let touchDeltaX = 0;
+          section.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchDeltaX = 0;
+            stopAutoplay();
+          }, { passive: true });
+          section.addEventListener('touchmove', (e) => {
+            touchDeltaX = e.touches[0].clientX - touchStartX;
+          }, { passive: true });
+          section.addEventListener('touchend', () => {
+            if (Math.abs(touchDeltaX) > 50) {
+              touchDeltaX < 0 ? next() : prev();
+            }
+            startAutoplay();
+          });
+
+          startAutoplay();
         }
       }
     }

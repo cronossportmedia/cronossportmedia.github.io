@@ -119,9 +119,25 @@ export async function loadSiteConfig() {
       getDoc(doc(db, 'site_config', 'sections_visibility')),
     ]);
 
+    const bannerRaw = bannerSnap.exists() ? bannerSnap.data() : {};
+
+    // Retrocompatibilidad: si no tiene slides[], construir array desde campos raíz
+    if (!Array.isArray(bannerRaw.slides) && bannerRaw.imagen_url) {
+      bannerRaw.slides = [{
+        id: 'legacy_0',
+        imagen_url: bannerRaw.imagen_url,
+        alt_text: bannerRaw.alt_text || 'Banner',
+        url_destino: bannerRaw.url_destino || '',
+        nueva_tab: bannerRaw.nueva_tab || false,
+        cta_texto: '',
+        orden: 0,
+        activo: true,
+      }];
+    }
+
     const config = {
       hero:     heroSnap.exists()     ? heroSnap.data()     : {},
-      banner:   bannerSnap.exists()   ? bannerSnap.data()   : {},
+      banner:   bannerRaw,
       sections: sectionsSnap.exists() ? sectionsSnap.data() : {},
     };
 
