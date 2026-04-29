@@ -5,31 +5,31 @@
  * Proyecto Firebase: cronossportmedia-e07ef
  *
  * USO:
- *   1. Abre la consola del navegador en https://cronoplay.com (o localhost)
- *      estando logueado como super_admin.
- *   2. Pega este script completo en la consola.
- *   3. Espera a que imprima "✅ Seed completado".
+ *   1. Abre https://cronoplay.com/admin/dashboard.html logueado como super_admin.
+ *   2. Abre DevTools → Console.
+ *   3. Pega este script completo en la consola.
+ *   4. Espera a que imprima "✅ Seed completado".
  *
- * NOTA: Usa import() dinámico para funcionar en la consola del navegador.
+ * NOTA: Usa la instancia de Firebase ya autenticada en la página.
  */
 
 (async () => {
-  const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  const { getApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
   const { getFirestore, doc, setDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
 
-  const firebaseConfig = {
-    apiKey:            "AIzaSyACGQlXKkdJsvsuIn77ZQ06SghlTvUTDLI",
-    authDomain:        "cronossportmedia-e07ef.firebaseapp.com",
-    projectId:         "cronossportmedia-e07ef",
-    storageBucket:     "cronossportmedia-e07ef.firebasestorage.app",
-    messagingSenderId: "898405181430",
-    appId:             "1:898405181430:web:12ad5dc59fa049c26609d7"
-  };
-
-  const app = initializeApp(firebaseConfig, "seed-app");
+  // Usar la app ya inicializada en la página (con la sesión activa)
+  const app = getApp();
   const db  = getFirestore(app);
+  const auth = getAuth(app);
 
-  const SUPER_ADMIN_UID = "fLoZr3oYaGhB2Lp7U6Hodku5xkD2";
+  // Verificar que hay usuario logueado
+  const user = auth.currentUser;
+  if (!user) {
+    console.error("❌ No hay usuario logueado. Abre este script desde admin/dashboard.html estando logueado como super_admin.");
+    return;
+  }
+  console.log(`👤 Usuario autenticado: ${user.email} (${user.uid})`);
 
   const documents = {
     hero: {
@@ -38,7 +38,7 @@
       cta_text: "Escuchar en vivo",
       cta_url: "/en-vivo.html",
       updated_at: serverTimestamp(),
-      updated_by: SUPER_ADMIN_UID
+      updated_by: user.uid
     },
 
     banner: {
@@ -49,7 +49,7 @@
       transition: "slide",
       slides: [],
       updated_at: serverTimestamp(),
-      updated_by: SUPER_ADMIN_UID
+      updated_by: user.uid
     },
 
     social_links: {
@@ -58,7 +58,7 @@
       twitter: "",
       tiktok: "",
       updated_at: serverTimestamp(),
-      updated_by: SUPER_ADMIN_UID
+      updated_by: user.uid
     },
 
     sections_visibility: {
@@ -69,7 +69,7 @@
       show_banner: false,
       show_stats_bar: false,
       updated_at: serverTimestamp(),
-      updated_by: SUPER_ADMIN_UID
+      updated_by: user.uid
     },
 
     live_players: {
@@ -87,7 +87,7 @@
         }
       ],
       updated_at: serverTimestamp(),
-      updated_by: SUPER_ADMIN_UID
+      updated_by: user.uid
     }
   };
 
