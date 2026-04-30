@@ -105,18 +105,27 @@ export async function loadPublishedArticles(category = 'all', cursor = null, pag
 
 /**
  * Carga la configuración del sitio desde Firestore.
- * @returns {{ hero: object, banner: object, sections: object }}
+ * @returns {{ hero: object, banner: object, sections: object, social_links: object }}
  */
 export async function loadSiteConfig() {
-  try {
-    // Check sessionStorage cache first
-    const cached = sessionStorage.getItem('crono_site_config');
-    if (cached) return JSON.parse(cached);
+  const CACHE_KEY = 'crono_site_config';
+  const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
-    const [heroSnap, bannerSnap, sectionsSnap] = await Promise.all([
+  try {
+    // Check sessionStorage cache with TTL
+    const cached = sessionStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (parsed._ts && (Date.now() - parsed._ts) < CACHE_TTL) {
+        return parsed;
+      }
+    }
+
+    const [heroSnap, bannerSnap, sectionsSnap, socialSnap] = await Promise.all([
       getDoc(doc(db, 'site_config', 'hero')),
       getDoc(doc(db, 'site_config', 'banner')),
       getDoc(doc(db, 'site_config', 'sections_visibility')),
+      getDoc(doc(db, 'site_config', 'social_links')),
     ]);
 
     const bannerRaw = bannerSnap.exists() ? bannerSnap.data() : {};
@@ -136,16 +145,18 @@ export async function loadSiteConfig() {
     }
 
     const config = {
-      hero:     heroSnap.exists()     ? heroSnap.data()     : {},
-      banner:   bannerRaw,
-      sections: sectionsSnap.exists() ? sectionsSnap.data() : {},
+      hero:         heroSnap.exists()     ? heroSnap.data()     : {},
+      banner:       bannerRaw,
+      sections:     sectionsSnap.exists() ? sectionsSnap.data() : {},
+      social_links: socialSnap.exists()   ? socialSnap.data()   : {},
+      _ts: Date.now(),
     };
 
-    sessionStorage.setItem('crono_site_config', JSON.stringify(config));
+    sessionStorage.setItem(CACHE_KEY, JSON.stringify(config));
     return config;
   } catch (err) {
     console.warn('[firebase-loader]', err);
-    return { hero: {}, banner: {}, sections: {} };
+    return { hero: {}, banner: {}, sections: {}, social_links: {} };
   }
 }
 

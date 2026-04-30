@@ -1442,17 +1442,25 @@
     xhr.onload = () => {
       if (progressEl) progressEl.classList.remove('active');
       if (xhr.status === 200) {
-        const res = JSON.parse(xhr.responseText);
-        const slide = carouselSlides.find(s => s.id === slideId);
-        if (slide) {
-          syncSlidesFromDOM();
-          slide.imagen_url = res.secure_url;
-          renderSlidesList();
-          renderCarouselPreview();
+        try {
+          const res = JSON.parse(xhr.responseText);
+          const slide = carouselSlides.find(s => s.id === slideId);
+          if (slide) {
+            syncSlidesFromDOM();
+            slide.imagen_url = res.secure_url;
+            renderSlidesList();
+            renderCarouselPreview();
+          }
+        } catch (e) {
+          console.error('[Cloudinary] Error al procesar respuesta:', e);
+          const errEl = document.getElementById('slideError_' + slideId);
+          if (errEl) { errEl.textContent = 'Error al subir la imagen. Intenta de nuevo.'; errEl.classList.add('visible'); }
+          showToast('Error al subir la imagen. Intenta de nuevo.', 'error');
         }
       } else {
         const errEl = document.getElementById('slideError_' + slideId);
         if (errEl) { errEl.textContent = 'Error al subir. Intenta de nuevo.'; errEl.classList.add('visible'); }
+        showToast('Error al subir la imagen. Intenta de nuevo.', 'error');
       }
     };
 
@@ -1460,6 +1468,7 @@
       if (progressEl) progressEl.classList.remove('active');
       const errEl = document.getElementById('slideError_' + slideId);
       if (errEl) { errEl.textContent = 'Error de conexión.'; errEl.classList.add('visible'); }
+      showToast('Error de conexión al subir la imagen.', 'error');
     };
 
     xhr.send(formData);

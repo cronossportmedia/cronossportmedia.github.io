@@ -326,9 +326,15 @@
 
     <header class="mobile-header">
       <div class="mobile-brand">Crono Play</div>
-      <button class="hamburger-btn" id="hamburgerBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
+      <div style="display:flex;align-items:center;gap:0.5rem;">
+        <button id="theme-toggle-mobile" aria-label="Cambiar tema" style="width:36px;height:36px;border-radius:50%;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s;flex-shrink:0;">
+          <span class="icon-sun"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span>
+          <span class="icon-moon" style="display:none;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+        </button>
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
     </header>
 
     <div class="topbar">
@@ -397,10 +403,11 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 </button>
 
-<div class="modal-overlay" id="rejectModal">
+<div class="modal-overlay" id="rejectModal" role="dialog" aria-modal="true" aria-labelledby="rejectModalTitle">
   <div class="modal">
-    <div class="modal-title">Rechazar artículo</div>
+    <h2 class="modal-title" id="rejectModalTitle">Rechazar artículo</h2>
     <p class="modal-desc">Indica el motivo del rechazo para que el reportero pueda corregirlo.</p>
+    <label for="rejectNote" style="display:block;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--color-muted);margin-bottom:0.45rem;">Motivo del rechazo</label>
     <textarea id="rejectNote" placeholder="Ej: El titular no refleja el contenido. Por favor revisa la introducción..."></textarea>
     <div class="modal-actions">
       <button class="btn-ghost" id="cancelReject">Cancelar</button>
@@ -581,9 +588,7 @@
 
   async function handleAction(action, articleId) {
     if (action === 'reject') {
-      rejectTarget = articleId;
-      document.getElementById('rejectNote').value = '';
-      document.getElementById('rejectModal').classList.add('open');
+      openRejectModal(articleId);
       return;
     }
 
@@ -613,10 +618,52 @@
     } catch { showToast('Error al actualizar el artículo.', 'error'); }
   }
 
-  document.getElementById('cancelReject').addEventListener('click', () => {
-    document.getElementById('rejectModal').classList.remove('open');
+  // --- Focus trap & accessibility for reject modal ---
+  let rejectModalCleanup = null;
+  let rejectModalTrigger = null;
+  const rejectModalEl = document.getElementById('rejectModal');
+  const mainContent = document.querySelector('.app');
+
+  function openRejectModal(articleId) {
+    rejectTarget = articleId;
+    rejectModalTrigger = document.activeElement;
+    document.getElementById('rejectNote').value = '';
+    rejectModalEl.classList.add('open');
+    mainContent.setAttribute('aria-hidden', 'true');
+    rejectModalCleanup = trapFocus(rejectModalEl);
+  }
+
+  function closeRejectModal() {
+    rejectModalEl.classList.remove('open');
+    mainContent.removeAttribute('aria-hidden');
     rejectTarget = null;
-  });
+    if (rejectModalCleanup) { rejectModalCleanup(); rejectModalCleanup = null; }
+    if (rejectModalTrigger) { rejectModalTrigger.focus(); rejectModalTrigger = null; }
+  }
+
+  function trapFocus(modal) {
+    const focusable = modal.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    function handleKeydown(e) {
+      if (e.key === 'Escape') { closeRejectModal(); return; }
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
+
+    modal.addEventListener('keydown', handleKeydown);
+    first.focus();
+    return () => modal.removeEventListener('keydown', handleKeydown);
+  }
+
+  document.getElementById('cancelReject').addEventListener('click', closeRejectModal);
 
   document.getElementById('confirmReject').addEventListener('click', async () => {
     const note = document.getElementById('rejectNote').value.trim();
@@ -629,8 +676,7 @@
       });
       showToast('Artículo rechazado.', 'success');
     } catch { showToast('Error al rechazar el artículo.', 'error'); }
-    document.getElementById('rejectModal').classList.remove('open');
-    rejectTarget = null;
+    closeRejectModal();
   });
 
   document.querySelectorAll('.filter-btn').forEach(btn => {
