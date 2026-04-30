@@ -1062,7 +1062,7 @@ ul { list-style: none; }
 @media (max-width: 768px) {
   .banner-carousel { padding: 0; border-radius: 0; }
   .banner-carousel .carousel-viewport { border-radius: 0; }
-  .banner-carousel .carousel-slide img { aspect-ratio: 16 / 7; max-height: 45vw; }
+  .banner-carousel .carousel-slide img { aspect-ratio: 16 / 7; }
   .banner-carousel .carousel-arrow { display: none; }
   .banner-carousel .carousel-cta-overlay { padding: 20px 16px 14px; }
   .banner-carousel .carousel-cta-text { font-size: .95rem; }
@@ -1920,11 +1920,8 @@ async function applySiteConfig() {
           div.setAttribute('aria-label', slide.alt_text || `Slide ${i + 1}`);
 
           const desktopUrl = getCloudinaryUrl(slide.imagen_url, 1280, 320);
-          const mobileUrl = getCloudinaryUrl(slide.imagen_url, 768, 340);
           const img = document.createElement('img');
-          img.src = mobileUrl;
-          img.srcset = `${mobileUrl} 768w, ${desktopUrl} 1280w`;
-          img.sizes = '(max-width: 768px) 100vw, 1280px';
+          img.src = desktopUrl;
           img.alt = slide.alt_text || 'Banner';
           img.loading = i === 0 ? 'eager' : 'lazy';
 
