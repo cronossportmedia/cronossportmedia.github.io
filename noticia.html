@@ -413,6 +413,21 @@ ul { list-style: none; }
 .embed-video { max-width: 100%; margin: 1.5rem auto; }
 .embed-video video { width: 100%; border-radius: var(--r); background: #000; max-height: 70vh; display: block; }
 
+.article-audio {
+  margin: 0 0 2.5rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.25rem 1.5rem;
+}
+.article-audio__label {
+  font-family: var(--font-d); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--orange); margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 6px;
+}
+.article-audio audio { width: 100%; display: block; accent-color: var(--orange); }
+
 /* ── TAGS ─────────────────────────────────────────────────── */
 .article-tags {
   margin-top: 40px; padding-top: 24px;
@@ -939,6 +954,20 @@ function renderArticle(a) {
     ? `<img class="article-featured-img" src="${esc(transformImg(a.featured_image))}" alt="${esc(a.title)}" loading="eager">`
     : '';
 
+  // Audio player
+  const audioHtml = a.media_audio_url
+    ? `<div class="article-audio">
+         <div class="article-audio__label">
+           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+           Audio
+         </div>
+         <audio controls preload="metadata" style="width:100%">
+           <source src="${esc(a.media_audio_url)}" type="audio/mpeg">
+           Tu navegador no soporta reproducción de audio.
+         </audio>
+       </div>`
+    : '';
+
   // Tags
   const tagsHtml = a.tags?.length
     ? `<div class="article-tags">
@@ -967,6 +996,7 @@ function renderArticle(a) {
       </div>
 
       ${imgHtml}
+      ${audioHtml}
 
       <div class="article-body" id="articleBody">${safeBody}</div>
 
