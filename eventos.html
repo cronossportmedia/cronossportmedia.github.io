@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Contacto — Crono Play</title>
-<meta name="description" content="Ponte en contacto con el equipo de Crono Play. Colaboraciones, sugerencias y soporte.">
+<title>Eventos especiales — Crono Play</title>
+<meta name="description" content="Cobertura completa de eventos deportivos venezolanos: maratones, partidos, ferias y conciertos. Calendario en vivo en Crono Play.">
 <meta name="theme-color" content="#F5611A">
 <meta name="msapplication-TileColor" content="#070B12">
 <meta name="msapplication-config" content="/assets/browserconfig.xml">
@@ -29,20 +29,19 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Crono Play">
-<meta property="og:url" content="https://cronoplay.com/contacto">
-<meta property="og:title" content="Contacto — Crono Play">
-<meta property="og:description" content="Ponte en contacto con el equipo de Crono Play. Colaboraciones, sugerencias y soporte.">
-<meta property="og:image" content="https://cronoplay.com/assets/img/og-image.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://cronoplay.com/eventos.html">
+<meta property="og:title" content="Eventos especiales — Crono Play">
+<meta property="og:description" content="Calendario y cobertura de eventos deportivos venezolanos.">
+<meta property="og:image" content="https://cronoplay.com/assets/img/og-default.png">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@CronoPlayVzla">
-<meta name="twitter:title" content="Contacto — Crono Play">
-<meta name="twitter:description" content="Ponte en contacto con el equipo de Crono Play.">
-<meta name="twitter:image" content="https://cronoplay.com/assets/img/og-image.png">
+<meta name="twitter:title" content="Eventos especiales — Crono Play">
+<meta name="twitter:description" content="Calendario y cobertura de eventos deportivos venezolanos.">
+<meta name="twitter:image" content="https://cronoplay.com/assets/img/og-default.png">
 
+<link rel="canonical" href="https://cronoplay.com/eventos.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -90,18 +89,13 @@
 [data-theme="light"] .header__nav a.active { color: var(--text); background: var(--border); }
 [data-theme="light"] .header__mini-player { background: var(--card); border-color: var(--border-hi); }
 [data-theme="light"] .theme-btn { border-color: var(--border); color: var(--muted); }
-[data-theme="light"] .contact-hero { background: linear-gradient(160deg, #EBF0FB 0%, #F4F6F9 60%); }
-[data-theme="light"] .contact-hero .hero-grid-bg {
+[data-theme="light"] .ticker { background: var(--orange); }
+[data-theme="light"] .hero { background: linear-gradient(160deg, #EBF0FB 0%, #F4F6F9 60%); }
+[data-theme="light"] .hero-grid-bg {
   background-image: linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
 }
-[data-theme="light"] .contact-form-section { background: var(--surface); }
-[data-theme="light"] .contact-card { background: var(--card); border-color: var(--border); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
-[data-theme="light"] .faq-card { background: var(--card); border-color: var(--border); }
-[data-theme="light"] .faq-card summary { color: var(--text); }
-[data-theme="light"] .form-input { background: var(--bg); border-color: var(--border); color: var(--text); }
-[data-theme="light"] .form-input:focus { border-color: var(--orange); }
-[data-theme="light"] .form-input::placeholder { color: var(--muted); }
+[data-theme="light"] .event-card-public { background: var(--card); border-color: var(--border); box-shadow: 0 2px 8px rgba(0,0,0,.06); }
 [data-theme="light"] .footer { background: #0F172A; }
 [data-theme="light"] .sticky-player { background: rgba(255,255,255,.96); border-top-color: var(--border); }
 [data-theme="light"] .sticky-player__title { color: var(--text); }
@@ -130,6 +124,11 @@ ul { list-style: none; }
   text-transform: uppercase; letter-spacing: .12em; color: var(--orange);
 }
 .label--blue { color: var(--blue); }
+.dot-live {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--red);
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
 
 .btn-primary {
   display: inline-flex; align-items: center; gap: 10px;
@@ -160,8 +159,35 @@ ul { list-style: none; }
   100% { transform: scale(1.18); opacity: 0; }
 }
 
-.reveal { opacity: 0; transform: translateY(32px); transition: opacity .6s ease, transform .6s ease; }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+/* ── TICKER ────────────────────────────────────────────────── */
+.ticker {
+  background: var(--orange); height: 36px;
+  display: flex; align-items: center; overflow: hidden;
+  position: relative; z-index: 200;
+}
+.ticker__tag {
+  flex-shrink: 0; padding: 0 20px;
+  font-family: var(--font-d); font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: #fff; background: var(--orange-dk); height: 100%;
+  display: flex; align-items: center; gap: 6px;
+  position: relative; z-index: 2;
+  box-shadow: 8px 0 16px 8px var(--orange-dk);
+}
+.ticker__track {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: ticker-scroll 40s linear infinite;
+}
+.ticker__track:hover { animation-play-state: paused; }
+.ticker__item {
+  padding: 0 32px; font-size: 12.5px; font-weight: 600; color: #fff;
+  font-family: var(--font-d);
+}
+.ticker__item span { opacity: .6; margin-right: 8px; }
+@keyframes ticker-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
 /* ── HEADER ────────────────────────────────────────────────── */
 .header {
@@ -211,7 +237,7 @@ ul { list-style: none; }
 }
 .header__mini-player:hover { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(245,97,26,.12); }
 .mini-play-btn {
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   background: var(--orange); display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; transition: background .15s, transform .15s, box-shadow .2s;
   box-shadow: 0 2px 10px rgba(245,97,26,.4);
@@ -264,12 +290,6 @@ ul { list-style: none; }
 .menu-btn:hover { color: var(--text); }
 .menu-btn svg { width: 18px; height: 18px; }
 
-.dot-live {
-  width: 7px; height: 7px; border-radius: 50%; background: var(--red);
-  animation: blink 1.4s ease-in-out infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
-
 /* ── MOBILE MENU ───────────────────────────────────────────── */
 .mobile-overlay {
   display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
@@ -302,16 +322,16 @@ ul { list-style: none; }
 }
 .mobile-menu__foot { padding: 16px; border-top: 1px solid var(--border); }
 
-/* ── CONTACT HERO ────────────────────────────────────────── */
-.contact-hero {
+/* ── PAGE HERO ───────────────────────────────────────────── */
+.hero {
   position: relative; overflow: hidden;
-  padding: 80px 0 88px;
+  padding: 48px 0 40px;
   background: linear-gradient(160deg, #0B1320 0%, var(--bg) 60%);
 }
-.contact-hero::before {
+.hero::before {
   content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 70% 30%, rgba(0,119,204,.12) 0%, transparent 55%),
-              radial-gradient(ellipse at 20% 80%, rgba(245,97,26,.08) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 80% 20%, rgba(245,97,26,.09) 0%, transparent 55%),
+              radial-gradient(ellipse at 10% 90%, rgba(0,119,204,.08) 0%, transparent 50%);
   pointer-events: none;
 }
 .hero-grid-bg {
@@ -323,206 +343,213 @@ ul { list-style: none; }
   mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
   -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%);
 }
-.contact-hero__content {
-  position: relative; text-align: center; max-width: 720px; margin: 0 auto;
-}
-.contact-hero__title {
+.hero__page-title {
   font-family: var(--font-d); font-weight: 800;
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   line-height: 1.05; letter-spacing: -.02em;
-  margin-bottom: 20px; color: var(--text);
+  color: var(--text); position: relative;
 }
-.contact-hero__title em { font-style: normal; color: var(--orange); }
-.contact-hero__desc {
-  font-size: 17px; color: var(--muted); line-height: 1.7; max-width: 560px;
-  margin: 0 auto;
+.hero__page-title em { font-style: normal; color: var(--orange); }
+.hero__page-desc {
+  font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 560px;
+  margin-top: 12px; position: relative;
 }
 
-/* ── CONTACT FORM SECTION ────────────────────────────────── */
-.contact-form-section {
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-}
-.contact-layout {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
-}
-.contact-layout h2 {
-  font-family: var(--font-d); font-size: clamp(1.4rem, 2.8vw, 2rem);
-  font-weight: 800; line-height: 1.2; margin-bottom: 32px;
-}
-.form-group { margin-bottom: 24px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.form-label {
-  display: block; font-size: 13px; font-weight: 600; color: var(--muted-hi);
-  margin-bottom: 8px;
-}
-.form-input {
-  width: 100%; padding: 12px 16px; border-radius: var(--r);
-  border: 1.5px solid var(--border); background: var(--card);
-  color: var(--text); font-family: var(--font-b); font-size: 14px;
-  transition: border-color .2s;
-}
-.form-input:focus { outline: none; border-color: var(--orange); box-shadow: 0 0 0 3px rgba(245,97,26,.12); }
-.form-input::placeholder { color: var(--muted); }
-textarea.form-input { resize: vertical; min-height: 120px; }
-select.form-input { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B8099' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
-.form-submit {
-  display: inline-flex; align-items: center; gap: 10px;
-  padding: 14px 32px; border-radius: 50px;
-  background: var(--orange); color: #fff;
-  font-family: var(--font-d); font-weight: 700; font-size: 14px;
-  transition: background .18s, transform .14s;
-  box-shadow: 0 4px 20px rgba(245,97,26,.35);
-}
-.form-submit:hover { background: var(--orange-hi); transform: translateY(-2px); }
+/* ── EVENTS SECTIONS ─────────────────────────────────────── */
+.events-list-page { padding-bottom: 40px; }
 
-/* ── CONTACT INFO ────────────────────────────────────────── */
-.contact-info { display: flex; flex-direction: column; gap: 32px; }
-.info-item {
-  display: flex; align-items: flex-start; gap: 16px;
+.events-section {
+  padding: 48px 0 0;
 }
-.info-icon {
-  width: 48px; height: 48px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+.events-section__title {
+  font-family: var(--font-d); font-size: clamp(1.3rem, 3vw, 1.8rem);
+  font-weight: 800; color: var(--text); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 10px;
 }
-.info-icon svg { width: 22px; height: 22px; }
-.info-icon--orange { background: rgba(245,97,26,.1); color: var(--orange); }
-.info-icon--blue { background: rgba(0,119,204,.1); color: var(--blue); }
-.info-title { font-family: var(--font-d); font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-.info-text { font-size: 14px; color: var(--muted); line-height: 1.5; }
-.info-text a { color: var(--muted); transition: color .15s; }
-.info-text a:hover { color: var(--orange); }
 
-/* ── SOCIALS ─────────────────────────────────────────────── */
-.social-links { display: flex; gap: 12px; margin-top: 8px; }
-.social-icon {
-  width: 44px; height: 44px; border-radius: 10px;
-  border: 1.5px solid var(--border); display: flex;
-  align-items: center; justify-content: center;
-  color: var(--muted); transition: border-color .2s, color .2s, background .2s;
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
-.social-icon:hover { border-color: var(--orange); color: var(--orange); background: rgba(245,97,26,.06); }
-.social-icon svg { width: 18px; height: 18px; fill: currentColor; }
 
-/* ── FAQ ─────────────────────────────────────────────────── */
-.faq-card {
+/* ── EVENT CARD ──────────────────────────────────────────── */
+.event-card-public {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: var(--r-lg); padding: 24px; margin-top: 8px;
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
 }
-.faq-card h3 {
-  font-family: var(--font-d); font-size: 16px; font-weight: 700;
-  margin-bottom: 16px;
+.event-card-public:hover {
+  border-color: var(--border-hi); transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,0,0,.4);
 }
-.faq-card details { border-bottom: 1px solid var(--border); }
-.faq-card details:last-child { border-bottom: none; }
-.faq-card summary {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 0; cursor: pointer; font-family: var(--font-d);
-  font-size: 14px; font-weight: 600; color: var(--text);
-  list-style: none;
+.event-card-public a { display: block; text-decoration: none; color: inherit; }
+.event-card-public__media {
+  position: relative; aspect-ratio: 16/9; overflow: hidden;
+  background: var(--border);
 }
-.faq-card summary::-webkit-details-marker { display: none; }
-.faq-card summary svg { width: 16px; height: 16px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
-.faq-card details[open] summary svg { transform: rotate(180deg); }
-.faq-card details p {
-  padding: 0 0 14px; font-size: 13.5px; color: var(--muted); line-height: 1.6;
+.event-card-public__media img {
+  width: 100%; height: 100%; object-fit: cover;
 }
-.faq-card details p a { color: var(--orange); }
-.faq-card details p a:hover { text-decoration: underline; }
+.event-card-public__media .badge {
+  position: absolute; top: 12px; left: 12px;
+  padding: 4px 10px; border-radius: 6px;
+  font-family: var(--font-d); font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: #fff;
+}
+.badge--upcoming { background: var(--blue); }
+.badge--live {
+  background: var(--red);
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,50,50,.5); }
+  50%     { box-shadow: 0 0 0 6px rgba(255,50,50,0); }
+}
+.badge--finished { background: var(--muted); }
 
-/* ── NEWSLETTER ──────────────────────────────────────────── */
-.newsletter-section {
-  background: var(--bg);
-  position: relative;
+.event-card-public__body {
+  padding: 20px;
 }
-.newsletter-section::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 0%, rgba(245,97,26,.06) 0%, transparent 65%);
-  pointer-events: none;
+.event-card-public__date {
+  font-family: var(--font-d); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em;
+  color: var(--orange); margin-bottom: 8px;
 }
-.newsletter__inner {
-  position: relative; text-align: center; max-width: 600px; margin: 0 auto;
+.event-card-public__body h3 {
+  font-family: var(--font-d); font-size: 16px; font-weight: 700;
+  color: var(--text); line-height: 1.35; margin-bottom: 8px;
 }
-.newsletter__inner h2 {
-  font-family: var(--font-d); font-size: clamp(1.4rem, 2.8vw, 2rem);
-  font-weight: 800; margin-bottom: 12px;
+.event-card-public:hover .event-card-public__body h3 {
+  color: var(--orange-hi);
 }
-.newsletter__inner p {
-  font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 28px;
+.event-card-public__body p {
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.newsletter-form {
-  display: flex; gap: 12px; max-width: 480px; margin: 0 auto;
+
+/* ── LOADING / ERROR / EMPTY STATES ──────────────────────── */
+.events-loading, .events-error {
+  text-align: center; padding: 80px 24px;
 }
-.newsletter-form .form-input { flex: 1; }
-.newsletter-form button {
-  padding: 12px 24px; border-radius: var(--r); background: var(--orange);
-  color: #fff; font-family: var(--font-d); font-weight: 700; font-size: 14px;
-  white-space: nowrap; transition: background .18s;
+.events-loading p, .events-error p {
+  font-size: 15px; color: var(--muted);
+  font-family: var(--font-d); font-weight: 600;
 }
-.newsletter-form button:hover { background: var(--orange-hi); }
-.newsletter-note {
-  font-size: 12px; color: var(--muted); margin-top: 12px;
+.events-empty {
+  text-align: center; padding: 40px 24px;
+  font-size: 14px; color: var(--muted);
+  font-family: var(--font-d);
 }
 
 /* ── FOOTER ────────────────────────────────────────────────── */
 .footer { background: #040709; border-top: 1px solid var(--border); padding: 64px 0 32px; }
 .footer__grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 48px; }
-.footer__brand p { font-size: 13.5px; color: var(--muted); line-height: 1.7; margin-top: 16px; }
-.footer__socials { display: flex; gap: 12px; margin-top: 20px; }
-.footer__socials .social-icon { width: 36px; height: 36px; border-radius: 8px; }
-.footer__col h4 { font-family: var(--font-d); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 20px; }
-.footer__col a { display: block; font-size: 14px; color: var(--muted-hi); padding: 5px 0; transition: color .15s; }
-.footer__col a:hover { color: var(--text); }
-.footer__bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 32px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); }
-
-/* ── STICKY PLAYER ─────────────────────────────────────────── */
-.sticky-player {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
-  background: rgba(7,11,18,.96); backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border);
+.footer__brand p { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 16px 0 24px; max-width: 260px; }
+.footer__socials { display: flex; gap: 10px; }
+.social-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: var(--card);
+  border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  color: var(--muted); transition: background .15s, color .15s, border-color .15s;
 }
-.sticky-player.hidden { display: none; }
+.social-icon:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
+.social-icon svg { width: 16px; height: 16px; fill: currentColor; }
+.footer__col h4 {
+  font-family: var(--font-d); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--blue); margin-bottom: 20px;
+}
+.footer__col ul { display: flex; flex-direction: column; gap: 12px; }
+.footer__col ul a {
+  font-size: 14px; color: var(--muted);
+  transition: color .15s;
+}
+.footer__col ul a:hover { color: var(--text); }
+.footer__bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: 12.5px; color: var(--muted);
+}
+
+/* ── STICKY PLAYER ────────────────────────────────────────── */
+.sticky-player {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 180;
+  background: rgba(10,15,24,.96); backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border); padding: 0;
+  transform: translateY(0);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sticky-player.hidden { transform: translateY(100%); }
 .sticky-player__inner {
-  display: flex; align-items: center; gap: 16px; height: 72px;
+  height: 68px; display: flex; align-items: center; gap: 20px;
 }
 .sticky-player__info { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
 .sticky-player__thumb {
   width: 44px; height: 44px; border-radius: 8px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
+  background: var(--orange); display: flex; align-items: center; justify-content: center;
 }
+.sticky-player__thumb svg { width: 20px; height: 20px; fill: #fff; }
 .sticky-player__meta { min-width: 0; }
-.sticky-player__title { font-family: var(--font-d); font-weight: 700; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sticky-player__title {
+  font-family: var(--font-d); font-size: 14px; font-weight: 700; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
 .sticky-player__sub { font-size: 12px; color: var(--red); font-weight: 600; }
-.sticky-player__viz { display: flex; align-items: flex-end; gap: 2.5px; height: 22px; }
+.sticky-player__viz {
+  display: flex; align-items: flex-end; gap: 3px; height: 24px;
+}
 .sticky-player__viz span {
   width: 3px; border-radius: 2px; background: var(--orange);
-  animation: sp-wave var(--d,.8s) ease-in-out infinite var(--delay,0s);
+  animation: mini-wave var(--d,.8s) ease-in-out infinite var(--delay,0s);
 }
-@keyframes sp-wave { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.3)} }
+.sticky-player__viz span:nth-child(1) { --d:.7s;  --delay:0s;   height: 8px; }
+.sticky-player__viz span:nth-child(2) { --d:.9s;  --delay:.1s;  height: 16px; }
+.sticky-player__viz span:nth-child(3) { --d:.75s; --delay:.2s;  height: 22px; }
+.sticky-player__viz span:nth-child(4) { --d:.85s; --delay:.08s; height: 13px; }
+.sticky-player__viz span:nth-child(5) { --d:.65s; --delay:.15s; height: 18px; }
 .sp-play-btn {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--orange); display: flex; align-items: center;
-  justify-content: center; flex-shrink: 0;
-  transition: background .15s; box-shadow: 0 2px 12px rgba(245,97,26,.35);
+  width: 48px; height: 48px; border-radius: 50%; background: var(--orange);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  position: relative;
+  transition: background .15s, transform .1s, box-shadow .2s;
+  box-shadow: 0 3px 14px rgba(245,97,26,.4);
 }
-.sp-play-btn:hover { background: var(--orange-hi); }
-.sp-play-btn svg { width: 20px; height: 20px; fill: #fff; }
+.sp-play-btn::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(245,97,26,.5);
+  animation: btn-pulse 2s ease-in-out infinite;
+}
+.sp-play-btn:hover { background: var(--orange-hi); transform: scale(1.08); box-shadow: 0 6px 22px rgba(245,97,26,.55); }
+.sp-play-btn svg { width: 18px; height: 18px; fill: #fff; }
 .sp-volume { display: flex; align-items: center; gap: 8px; }
-.sp-volume svg { width: 18px; height: 18px; color: var(--muted); }
-.sp-volume input[type="range"] { width: 80px; accent-color: var(--orange); }
+.sp-volume svg { width: 16px; height: 16px; color: var(--muted); flex-shrink: 0; }
+.sp-volume input {
+  width: 80px; -webkit-appearance: none; appearance: none;
+  height: 3px; border-radius: 2px; background: var(--border-hi); cursor: pointer; outline: none;
+}
+.sp-volume input::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--orange); cursor: pointer;
+}
 .sp-close {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); transition: color .15s;
+  padding: 8px; color: var(--muted); transition: color .15s;
+  display: flex; align-items: center;
 }
 .sp-close:hover { color: var(--text); }
 .sp-close svg { width: 18px; height: 18px; }
 
+/* ── REVEALS ───────────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-d1 { transition-delay: .1s; }
+.reveal-d2 { transition-delay: .2s; }
+.reveal-d3 { transition-delay: .3s; }
+
 /* ── RESPONSIVE ────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+  .events-grid { grid-template-columns: repeat(2, 1fr); }
   .footer__grid { grid-template-columns: 1fr 1fr; gap: 32px; }
 }
 @media (max-width: 768px) {
@@ -530,17 +557,13 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
   .header__mini-player .mini-info { display: none; }
   .mini-wave { display: none; }
   .menu-btn { display: flex; }
-  .contact-hero { padding: 48px 0 56px; }
-  .form-row { grid-template-columns: 1fr; }
+  .hero { padding: 36px 0 28px; }
+  .events-grid { grid-template-columns: 1fr; }
   .footer__grid { grid-template-columns: 1fr; }
   .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
   .sticky-player__viz { display: none; }
   .sp-volume { display: none; }
   .section { padding: 56px 0; }
-  .newsletter-form { flex-direction: column; }
-}
-@media (max-width: 480px) {
-  .contact-hero__title { font-size: 1.75rem; }
 }
 @media (max-width: 375px) {
   html { font-size: 14px; }
@@ -549,9 +572,34 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 }
 /* Ensure footer clears sticky player */
 .footer { padding-bottom: 100px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .ticker-content { animation: none; }
+}
 </style>
 </head>
 <body>
+
+<!-- Breaking News Ticker -->
+<div class="ticker" aria-label="Noticias de último momento">
+  <div class="ticker__tag">
+    <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="currentColor" opacity=".9"/></svg>
+    Última Hora
+  </div>
+  <div class="ticker__track" aria-live="polite" id="tickerTrack">
+    <span class="ticker__item"><span>⚽</span>Venezuela vence 2-1 a Colombia en amistoso internacional</span>
+    <span class="ticker__item"><span>🏎️</span>GP de Miami: Verstappen lidera los libres con récord de vuelta</span>
+    <span class="ticker__item"><span>🏀</span>NBA Playoffs: Lakers clasifican a semifinales de conferencia</span>
+    <span class="ticker__item"><span>⚽</span>Liga BBVA: Jornada 32 – resultados y tabla de posiciones</span>
+    <span class="ticker__item"><span>🎙️</span>Crono Play en vivo: Análisis completo Copa Libertadores</span>
+    <span class="ticker__item"><span>⚽</span>Venezuela vence 2-1 a Colombia en amistoso internacional</span>
+    <span class="ticker__item"><span>🏎️</span>GP de Miami: Verstappen lidera los libres con récord de vuelta</span>
+    <span class="ticker__item"><span>🏀</span>NBA Playoffs: Lakers clasifican a semifinales de conferencia</span>
+    <span class="ticker__item"><span>⚽</span>Liga BBVA: Jornada 32 – resultados y tabla de posiciones</span>
+    <span class="ticker__item"><span>🎙️</span>Crono Play en vivo: Análisis completo Copa Libertadores</span>
+  </div>
+</div>
 
 <!-- Header -->
 <header class="header">
@@ -570,9 +618,9 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
           <span class="dot-live"></span> En Vivo
         </a>
         <a href="noticias.html">Noticias</a>
-        <a href="eventos.html" data-nav-events>Eventos</a>
+        <a href="eventos.html" class="active" data-nav-events>Eventos</a>
         <a href="nosotros.html">Nosotros</a>
-        <a href="contacto.html" class="active">Contacto</a>
+        <a href="contacto.html">Contacto</a>
       </nav>
 
       <div class="header__actions">
@@ -624,9 +672,9 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
     <a href="index.html">Inicio</a>
     <a href="en-vivo.html" style="color:var(--red)"><span class="dot-live" style="width:6px;height:6px"></span> En Vivo</a>
     <a href="noticias.html">Noticias</a>
-    <a href="eventos.html" data-nav-events>Eventos</a>
+    <a href="eventos.html" class="active" data-nav-events>Eventos</a>
     <a href="nosotros.html">Nosotros</a>
-    <a href="contacto.html" class="active">Contacto</a>
+    <a href="contacto.html">Contacto</a>
   </nav>
   <div class="mobile-menu__foot">
     <button class="btn-primary" style="width:100%;justify-content:center" id="mobilePlayBtn">
@@ -636,142 +684,56 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
   </div>
 </div>
 
-<!-- Contact Hero -->
-<section class="contact-hero" data-screen-label="Hero">
+<!-- Page Hero -->
+<section class="hero">
   <div class="hero-grid-bg" aria-hidden="true"></div>
-  <div class="container">
-    <div class="contact-hero__content">
-      <div style="margin-bottom:20px">
-        <span class="label label--blue">
-          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-          Contacto
-        </span>
-      </div>
-      <h1 class="contact-hero__title">
-        Ponte en <em>Contacto</em>
-      </h1>
-      <p class="contact-hero__desc">
-        Queremos escucharte. Ya sea para colaboraciones, sugerencias o simplemente para saludar, estamos aquí.
-      </p>
+  <div class="container" style="position:relative">
+    <div class="label" style="margin-bottom:12px">
+      <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      Eventos
     </div>
+    <h1 class="hero__page-title">Eventos <em>especiales</em></h1>
+    <p class="hero__page-desc">Sigue la cobertura completa de los eventos que importan al deporte venezolano.</p>
   </div>
 </section>
 
-<!-- Contact Form & Info -->
-<section class="contact-form-section section reveal">
+<!-- Main Content -->
+<main class="events-list-page">
   <div class="container">
-    <div class="contact-layout">
 
-      <!-- Contact Form -->
-      <div>
-        <h2>Envíanos un mensaje</h2>
-        <form id="contactForm" action="https://formspree.io/f/xojpeool" method="POST" novalidate>
-          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-          <input type="hidden" name="_subject" value="Nuevo mensaje desde cronossportmedia.github.io">
-          <div class="form-row form-group">
-            <div>
-              <label for="contact-name" class="form-label">Nombre completo <span style="color:var(--orange)">*</span></label>
-              <input type="text" id="contact-name" name="nombre" required minlength="2" class="form-input" placeholder="Tu nombre completo" autocomplete="name">
-            </div>
-            <div>
-              <label for="contact-email" class="form-label">Correo electrónico <span style="color:var(--orange)">*</span></label>
-              <input type="email" id="contact-email" name="_replyto" required class="form-input" placeholder="tu@correo.com" autocomplete="email">
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="contact-subject" class="form-label">Asunto <span style="color:var(--orange)">*</span></label>
-            <select id="contact-subject" name="asunto" required class="form-input">
-              <option value="" disabled selected>Selecciona un asunto</option>
-              <option value="Quiero ser parte del equipo">Quiero ser parte del equipo</option>
-              <option value="Propuesta de contenido">Propuesta de contenido</option>
-              <option value="Consulta general">Consulta general</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="contact-message" class="form-label">Mensaje <span style="color:var(--orange)">*</span></label>
-            <textarea id="contact-message" name="mensaje" rows="5" required minlength="10" class="form-input" placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
-          </div>
-          <button type="submit" class="form-submit" id="submitBtn">
-            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            <span id="submitText">Enviar mensaje</span>
-          </button>
-        </form>
-        <div id="feedbackSuccess" class="form-feedback" style="display:none;margin-top:16px;padding:16px;border-radius:var(--r);background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--text)">
-          <strong>¡Mensaje enviado!</strong> Te respondemos a la brevedad.
-        </div>
-        <div id="feedbackError" class="form-feedback" style="display:none;margin-top:16px;padding:16px;border-radius:var(--r);background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--text)">
-          <strong>Algo salió mal.</strong> Por favor intenta de nuevo más tarde.
-        </div>
-      </div>
+    <section class="events-section" data-section="live" hidden>
+      <h2 class="events-section__title">
+        <span class="dot-live"></span> En vivo ahora
+      </h2>
+      <div class="events-grid"></div>
+    </section>
 
-      <!-- Contact Info & FAQ -->
-      <div>
-        <h2>Información de contacto</h2>
-        <div class="contact-info">
-          <div class="info-item">
-            <div class="info-icon info-icon--blue">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            </div>
-            <div>
-              <div class="info-title">Ubicación</div>
-              <div class="info-text">Venezuela</div>
-            </div>
-          </div>
-          <div class="info-item">
-            <div class="info-icon info-icon--orange">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div>
-              <div class="info-title">Horario</div>
-              <div class="info-text">Lunes a Viernes, 9:00 – 18:00 VET</div>
-            </div>
-          </div>
+    <section class="events-section" data-section="upcoming">
+      <h2 class="events-section__title">Próximos eventos</h2>
+      <div class="events-grid"></div>
+      <p class="events-empty" hidden>Pronto se anunciarán nuevos eventos.</p>
+    </section>
 
-          <!-- Social Links -->
-          <div>
-            <div class="info-title" style="margin-bottom:12px">Síguenos en redes</div>
-            <div class="social-links">
-              <a href="https://www.youtube.com/@CronoPlayVzla" class="social-icon" aria-label="YouTube" target="_blank" rel="noopener">
-                <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-              </a>
-              <a href="#" class="social-icon" aria-label="Instagram">
-                <svg viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/></svg>
-              </a>
-              <a href="#" class="social-icon" aria-label="X / Twitter">
-                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              </a>
-            </div>
-          </div>
-        </div>
+    <section class="events-section" data-section="finished" hidden>
+      <h2 class="events-section__title">Eventos pasados</h2>
+      <div class="events-grid"></div>
+    </section>
 
-        <!-- FAQ -->
-        <div class="faq-card">
-          <h3>Preguntas frecuentes</h3>
-          <details>
-            <summary>
-              ¿Cómo puedo escuchar en vivo?
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </summary>
-            <p>Puedes escuchar nuestra señal en vivo directamente desde nuestra web haciendo clic en "Escuchar" o en la sección "En Vivo".</p>
-          </details>
-          <details>
-            <summary>
-              ¿Dónde encuentro los podcasts?
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </summary>
-            <p>Todos nuestros podcasts están disponibles en la sección <a href="podcast.html">Podcast</a> de esta web.</p>
-          </details>
-        </div>
-      </div>
-    </div>
+    <section class="events-loading" data-state="loading">
+      <p>Cargando eventos...</p>
+    </section>
+
+    <section class="events-error" data-state="error" hidden>
+      <p>No pudimos cargar los eventos en este momento.</p>
+    </section>
+
   </div>
-</section>
-
-<!-- Newsletter (commented out — not yet implemented) -->
+</main>
 
 <!-- Footer -->
-<footer class="footer" data-screen-label="Footer">
+<footer class="footer">
   <div class="container">
     <div class="footer__grid">
       <div class="footer__brand">
@@ -801,6 +763,7 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
           <li><a href="index.html">Inicio</a></li>
           <li><a href="en-vivo.html">En Vivo</a></li>
           <li><a href="noticias.html">Noticias</a></li>
+          <li><a href="eventos.html">Eventos</a></li>
           <li><a href="nosotros.html">Nosotros</a></li>
           <li><a href="contacto.html">Contacto</a></li>
         </ul>
@@ -816,8 +779,8 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
       </div>
     </div>
     <div class="footer__bottom">
-      <span>&copy; 2026 Crono Play &middot; Todos los derechos reservados</span>
-      <span>Hecho con pasión por el deporte</span>
+      <span>© 2026 Crono Play · Todos los derechos reservados</span>
+      <span>Hecho con pasión por el deporte 🎙️</span>
     </div>
   </div>
 </footer>
@@ -832,7 +795,7 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
         </div>
         <div class="sticky-player__meta">
           <div class="sticky-player__title">Radio Crono Play</div>
-          <div class="sticky-player__sub">EN VIVO</div>
+          <div class="sticky-player__sub">● EN VIVO</div>
         </div>
         <div class="sticky-player__viz">
           <span style="--d:.7s;--delay:0s"></span>
@@ -843,7 +806,7 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
         </div>
       </div>
       <button class="sp-play-btn" id="spPlayBtn" aria-label="Pausar">
-        <svg viewBox="0 0 24 24" fill="currentColor" id="spPlayIcon"><path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" id="spPlayIcon"><path d="M8 5v14l11-7z"/></svg>
       </button>
       <div class="sp-volume">
         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -863,13 +826,13 @@ select.form-input { cursor: pointer; appearance: none; background-image: url("da
 <audio id="radioAudio" preload="none"><source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg"></audio>
 
 <script>
-// ── THEME ────────────────────────────────────────────────────
+// ── THEME TOGGLE ───────────────────────────────────────────────
 const root = document.documentElement;
-const savedTheme = localStorage.getItem('crono-theme') || 'dark';
 const themeToggle = document.getElementById('themeToggle');
 const iconSun = document.getElementById('iconSun');
 const iconMoon = document.getElementById('iconMoon');
 
+const savedTheme = localStorage.getItem('crono-theme') || 'light';
 function applyTheme(theme) {
   root.setAttribute('data-theme', theme);
   if (theme === 'light') {
@@ -886,7 +849,7 @@ themeToggle.addEventListener('click', () => {
   applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
 
-// ── AUDIO PLAYER ──────────────────────────────────────────────
+// ── AUDIO PLAYER ───────────────────────────────────────────────
 const audio = document.getElementById('radioAudio');
 const stickyPlayer = document.getElementById('stickyPlayer');
 let playing = false;
@@ -902,20 +865,16 @@ function setPlaying(val) {
     stickyPlayer.classList.remove('hidden');
     document.getElementById('miniWave').style.display = 'flex';
     miniPlayer && miniPlayer.classList.add('is-playing');
+    document.getElementById('spPlayBtn') && document.getElementById('spPlayBtn').classList.add('is-playing');
   } else {
     audio.pause();
     document.getElementById('miniWave').style.display = 'none';
     miniPlayer && miniPlayer.classList.remove('is-playing');
-  }
-  const spIcon = document.getElementById('spPlayIcon');
-  if (spIcon) {
-    spIcon.innerHTML = playing
-      ? '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>'
-      : '<path d="M8 5v14l11-7z"/>';
+    document.getElementById('spPlayBtn') && document.getElementById('spPlayBtn').classList.remove('is-playing');
   }
 }
 
-['heroPlayBtn','headerPlayer','mobilePlayBtn'].forEach(id => {
+['headerPlayer','mobilePlayBtn'].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener('click', () => setPlaying(!playing));
 });
@@ -926,6 +885,7 @@ document.getElementById('spClose').addEventListener('click', () => {
   stickyPlayer.classList.add('hidden');
 });
 
+// Volume sync
 const spVol = document.getElementById('spVolume');
 if (spVol) {
   spVol.value = savedVol * 100;
@@ -935,7 +895,7 @@ if (spVol) {
   });
 }
 
-// ── MOBILE MENU ───────────────────────────────────────────────
+// ── MOBILE MENU ────────────────────────────────────────────────
 const overlay = document.getElementById('mobileOverlay');
 const menu = document.getElementById('mobileMenu');
 const menuBtn = document.getElementById('menuBtn');
@@ -949,47 +909,7 @@ menuClose.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-// ── CONTACT FORM (Formspree) ─────────────────────────────────
-const contactForm = document.getElementById('contactForm');
-const submitBtn = document.getElementById('submitBtn');
-const submitText = document.getElementById('submitText');
-const feedbackSuccess = document.getElementById('feedbackSuccess');
-const feedbackError = document.getElementById('feedbackError');
-
-if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!contactForm.checkValidity()) { contactForm.reportValidity(); return; }
-
-    submitBtn.disabled = true;
-    submitText.textContent = 'Enviando...';
-    feedbackSuccess.style.display = 'none';
-    feedbackError.style.display = 'none';
-
-    fetch(contactForm.action, {
-      method: 'POST',
-      body: new FormData(contactForm),
-      headers: { 'Accept': 'application/json' }
-    })
-    .then(res => {
-      if (res.ok) {
-        contactForm.reset();
-        feedbackSuccess.style.display = 'block';
-      } else {
-        feedbackError.style.display = 'block';
-      }
-    })
-    .catch(() => {
-      feedbackError.style.display = 'block';
-    })
-    .finally(() => {
-      submitBtn.disabled = false;
-      submitText.textContent = 'Enviar mensaje';
-    });
-  });
-}
-
-// ── SCROLL REVEALS ────────────────────────────────────────────
+// ── SCROLL REVEALS ─────────────────────────────────────────────
 const reveals = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
@@ -997,6 +917,22 @@ const io = new IntersectionObserver((entries) => {
 reveals.forEach(el => io.observe(el));
 </script>
 
+<!-- Events List Module -->
+<script type="module" src="js/events-list.js"></script>
+
+<!-- Sections Visibility -->
+<script type="module">
+import { loadSiteConfig } from './js/firebase-loader.js';
+try {
+  const config = await loadSiteConfig();
+  if (config.sections?.show_events_hub === false) {
+    document.querySelectorAll('[data-nav-events]').forEach(el => {
+      const li = el.closest('li');
+      if (li) li.hidden = true; else el.hidden = true;
+    });
+  }
+} catch (e) { /* default: show */ }
+</script>
 <script type="module" src="js/footer-socials.js"></script>
 </body>
 </html>

@@ -1,0 +1,3184 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Editar evento — Crono Play</title>
+
+  <script>(function(){if(localStorage.getItem('crono-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');})();</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-bg:         #F5F7FA;
+      --color-surface:    #FFFFFF;
+      --color-surface-2:  #EEF0F5;
+      --color-border:     rgba(0, 0, 0, 0.07);
+      --color-accent:     #F5611A;
+      --color-accent-hi:  #FF7A38;
+      --color-accent-dk:  #C44A0E;
+      --color-accent-alt: #0077CC;
+      --color-text:       #1A202C;
+      --color-muted:      #718096;
+      --color-success:    #10B981;
+      --color-error:      #FF3232;
+      --color-warning:    #F59E0B;
+      --color-info:       #3B82F6;
+      --font-heading:     'Space Grotesk', sans-serif;
+      --font-body:        'Inter', sans-serif;
+      --radius:           10px;
+      --radius-lg:        16px;
+      --shadow-sm:        0 1px 3px rgba(0,0,0,0.08);
+      --shadow-md:        0 4px 12px rgba(0,0,0,0.10);
+      --shadow-lg:        0 8px 24px rgba(0,0,0,0.12);
+      --transition:       0.18s ease;
+    }
+
+    [data-theme="dark"] {
+      --color-bg:         #0D1B2A;
+      --color-surface:    #1B2D45;
+      --color-surface-2:  #162338;
+      --color-border:     rgba(255, 255, 255, 0.07);
+      --color-accent:     #F5611A;
+      --color-accent-alt: #00D4FF;
+      --color-text:       #F0F0F0;
+      --color-muted:      #A0AEC0;
+      --color-success:    #10B981;
+      --color-error:      #FF3232;
+      --color-warning:    #F59E0B;
+      --color-info:       #3B82F6;
+      --shadow-sm:        0 1px 3px rgba(0,0,0,0.20);
+      --shadow-md:        0 4px 12px rgba(0,0,0,0.28);
+      --shadow-lg:        0 8px 24px rgba(0,0,0,0.36);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+    button { cursor: pointer; font-family: inherit; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── Topbar ──────────────────────────────────────────────────────── */
+    .admin-topbar {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px) saturate(1.3);
+      -webkit-backdrop-filter: blur(12px) saturate(1.3);
+      border-bottom: 1px solid var(--color-border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    }
+    [data-theme="dark"] .admin-topbar {
+      background: rgba(27,45,69,0.78);
+      box-shadow: 0 1px 8px rgba(0,0,0,0.18);
+    }
+    .admin-topbar > div {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .back-link {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--color-muted);
+      transition: color var(--transition);
+      white-space: nowrap;
+    }
+    .back-link:hover { color: var(--color-accent); }
+    .admin-topbar h1 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 320px;
+    }
+    .event-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+    }
+    .event-status-pill[data-status="upcoming"] {
+      background: rgba(59,130,246,0.12);
+      color: var(--color-info);
+    }
+    .event-status-pill[data-status="live"] {
+      background: rgba(245,97,26,0.12);
+      color: var(--color-accent);
+      animation: pulse-live 1.5s ease-in-out infinite;
+    }
+    .event-status-pill[data-status="finished"] {
+      background: rgba(16,185,129,0.12);
+      color: var(--color-success);
+    }
+    .event-status-pill[data-status="inactive"] {
+      background: rgba(113,128,150,0.12);
+      color: var(--color-muted);
+    }
+    .event-status-pill[data-status="cancelled"] {
+      background: rgba(255,50,50,0.12);
+      color: var(--color-error);
+    }
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .autosave-indicator {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--color-warning);
+      white-space: nowrap;
+    }
+
+    /* ── Buttons ─────────────────────────────────────────────────────── */
+    .btn-primary, .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 50px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: none;
+      transition: all var(--transition);
+      min-height: 36px;
+    }
+    .btn-primary {
+      background: var(--color-accent);
+      color: white;
+      box-shadow: 0 2px 10px rgba(245,97,26,0.25);
+    }
+    .btn-primary:hover {
+      background: #e85d2a;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(245,97,26,0.35);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--color-border);
+      color: var(--color-muted);
+    }
+    .btn-ghost:hover {
+      color: var(--color-text);
+      border-color: var(--color-muted);
+    }
+
+    /* ── Main layout ─────────────────────────────────────────────────── */
+    .event-editor {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .editor-intro {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .editor-intro h2 {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .editor-intro p {
+      font-size: 0.82rem;
+      color: var(--color-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Block card base (used by 03B-03E sub-tasks) ─────────────────── */
+    .block-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-sm);
+      transition: opacity var(--transition), box-shadow var(--transition);
+    }
+    .block-card.inactive { opacity: 0.6; }
+    .block-card__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 1px solid transparent;
+    }
+    .block-card__header.expanded {
+      border-bottom-color: var(--color-border);
+    }
+    .block-card__title {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .block-card__controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .block-card__chevron {
+      width: 18px;
+      height: 18px;
+      color: var(--color-muted);
+      transition: transform 0.2s ease;
+    }
+    .block-card__chevron.open { transform: rotate(180deg); }
+    .block-card__body {
+      padding: 1.25rem;
+      display: none;
+    }
+    .block-card__body.open { display: block; }
+
+    /* ── Switch component ────────────────────────────────────────────── */
+    .switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .switch-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--color-border);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .switch-slider::before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .switch input:checked + .switch-slider {
+      background: var(--color-accent);
+    }
+    .switch input:checked + .switch-slider::before {
+      transform: translateX(20px);
+    }
+    .switch-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Field components ───────────────────────────────────────────────── */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.85rem;
+    }
+    .field-group:last-child { margin-bottom: 0; }
+    .field-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--color-muted);
+    }
+    .field-label .req { color: var(--color-accent); margin-left: 2px; }
+    .field-input, .field-select {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      background: var(--color-surface-2);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .field-input:focus, .field-select:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(245,97,26,0.10);
+    }
+    .field-input:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      background: var(--color-surface-2);
+    }
+    .field-input[type="color"] {
+      width: 48px;
+      height: 36px;
+      padding: 2px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .field-help {
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      line-height: 1.4;
+    }
+    .field-error {
+      font-size: 0.72rem;
+      color: var(--color-error);
+      display: none;
+    }
+    .field-error.visible { display: block; }
+
+    /* Color picker row */
+    .color-picker-row {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .color-preview {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1.5px solid var(--color-border);
+      flex-shrink: 0;
+    }
+    .color-value {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: var(--color-muted);
+    }
+    .btn-clear-color {
+      font-size: 0.72rem;
+      padding: 0.2rem 0.5rem;
+      background: rgba(255,50,50,0.08);
+      border: 1px solid rgba(255,50,50,0.15);
+      border-radius: 6px;
+      color: var(--color-error);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .btn-clear-color:hover { background: rgba(255,50,50,0.18); }
+
+    /* Upload component */
+    .upload-zone {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+    }
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--color-accent);
+      background: rgba(245,97,26,0.04);
+    }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .upload-zone__label {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+    .upload-zone__hint {
+      font-size: 0.7rem;
+      color: var(--color-muted);
+      margin-top: 0.2rem;
+      opacity: 0.6;
+    }
+    .upload-zone__icon {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 0.5rem;
+      color: var(--color-muted);
+      transition: color var(--transition);
+    }
+    .upload-zone:hover .upload-zone__icon { color: var(--color-accent); }
+
+    .upload-preview {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: none;
+    }
+    .upload-preview img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      border-radius: var(--radius);
+    }
+    .upload-preview__actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .upload-preview__btn {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .upload-preview__btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+    .upload-preview__btn--remove {
+      background: rgba(255,50,50,0.08);
+      border-color: rgba(255,50,50,0.15);
+      color: var(--color-error);
+    }
+    .upload-preview__btn--remove:hover {
+      background: rgba(255,50,50,0.18);
+    }
+
+    .upload-progress {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--color-muted);
+      padding: 0.5rem 0;
+    }
+    .upload-progress.visible { display: flex; }
+    .upload-progress__bar {
+      flex: 1;
+      height: 6px;
+      background: var(--color-surface-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .upload-progress__fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hi));
+      border-radius: 99px;
+      transition: width 0.2s;
+    }
+
+    /* Fieldset CTA */
+    .fieldset-cta {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 0.85rem 1rem;
+      background: var(--color-surface-2);
+    }
+    .fieldset-cta__legend {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-muted);
+      margin-bottom: 0.65rem;
+    }
+    .fieldset-cta .field-group { margin-bottom: 0.6rem; }
+    .fieldset-cta .field-group:last-child { margin-bottom: 0; }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--color-text);
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-accent);
+      cursor: pointer;
+    }
+
+    /* ── Textarea ─────────────────────────────────────────────────────── */
+    .field-textarea {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      background: var(--color-surface-2);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      outline: none;
+      resize: vertical;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .field-textarea:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(245,97,26,0.10);
+    }
+
+    /* ── Segmented control ────────────────────────────────────────────── */
+    .segmented-control {
+      display: inline-flex;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--color-surface-2);
+    }
+    .segmented-control__option {
+      position: relative;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: all var(--transition);
+      border-right: 1px solid var(--color-border);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .segmented-control__option:last-child { border-right: none; }
+    .segmented-control__option:hover { color: var(--color-text); }
+    .segmented-control__option.active {
+      background: var(--color-accent);
+      color: white;
+      border-color: var(--color-accent);
+    }
+    .segmented-control__option input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* ── Radio cards ──────────────────────────────────────────────────── */
+    .radio-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.65rem;
+    }
+    .radio-card {
+      position: relative;
+      padding: 0.85rem 0.75rem;
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface-2);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      user-select: none;
+    }
+    .radio-card:hover { border-color: var(--color-muted); }
+    .radio-card.active {
+      border-color: var(--color-accent);
+      background: rgba(245,97,26,0.06);
+      box-shadow: 0 0 0 3px rgba(245,97,26,0.10);
+    }
+    .radio-card__icon { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .radio-card__label { font-size: 0.75rem; font-weight: 600; color: var(--color-text); }
+    .radio-card input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    /* ── Gallery list ────────────────────────────────────────────────── */
+    .gallery-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .gallery-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface-2);
+    }
+    .gallery-item__thumb {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .gallery-item__info {
+      flex: 1;
+      min-width: 0;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .gallery-item__actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .gallery-item__btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all var(--transition);
+    }
+    .gallery-item__btn:hover { color: var(--color-text); border-color: var(--color-muted); }
+    .gallery-item__btn--remove:hover { color: var(--color-error); border-color: var(--color-error); }
+    .btn-add-gallery {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--color-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-add-gallery:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    /* ── Info box (read-only hint) ───────────────────────────────────── */
+    .info-box {
+      background: rgba(59,130,246,0.06);
+      border: 1px solid rgba(59,130,246,0.15);
+      border-radius: var(--radius);
+      padding: 0.65rem 0.85rem;
+      font-size: 0.78rem;
+      color: var(--color-info);
+      line-height: 1.5;
+    }
+    [data-theme="dark"] .info-box {
+      background: rgba(59,130,246,0.08);
+    }
+
+    /* ── Conditional sections ─────────────────────────────────────────── */
+    .media-section { display: none; }
+    .media-section.active { display: block; }
+
+    /* ── Loading / Error states ───────────────────────────────────────── */
+    .loading-msg, .error-msg {
+      text-align: center;
+      padding: 3rem 1rem;
+      font-size: 0.9rem;
+      color: var(--color-muted);
+    }
+    .error-msg {
+      color: var(--color-error);
+      background: rgba(255,50,50,0.06);
+      border: 1px solid rgba(255,50,50,0.15);
+      border-radius: var(--radius-lg);
+    }
+    .loading-spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid rgba(245,97,26,0.2);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 0.75rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Toast ────────────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-lg);
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 600;
+      max-width: 360px;
+      pointer-events: none;
+      box-shadow: var(--shadow-lg);
+    }
+    .toast.show {
+      display: flex;
+      animation: slideUp 0.2s ease;
+    }
+    .toast.success {
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.3);
+      color: var(--color-success);
+    }
+    .toast.error {
+      background: rgba(255,50,50,0.15);
+      border: 1px solid rgba(255,50,50,0.3);
+      color: var(--color-error);
+    }
+    .toast.warning {
+      background: rgba(245,158,11,0.15);
+      border: 1px solid rgba(245,158,11,0.3);
+      color: var(--color-warning);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Confirmation modal ──────────────────────────────────────────── */
+    .confirm-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.15s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .confirm-modal {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      max-width: 380px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .confirm-modal__msg {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+    }
+    .confirm-modal__actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    .confirm-modal__btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .confirm-modal__btn--cancel {
+      background: var(--color-surface-2);
+      color: var(--color-muted);
+      border: 1.5px solid var(--color-border);
+    }
+    .confirm-modal__btn--cancel:hover { color: var(--color-text); border-color: var(--color-muted); }
+    .confirm-modal__btn--delete {
+      background: var(--color-error);
+      color: white;
+      box-shadow: 0 2px 8px rgba(255,50,50,0.25);
+    }
+    .confirm-modal__btn--delete:hover { background: #e02020; }
+
+    /* ── Schedule item card ───────────────────────────────────────────── */
+    .schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .schedule-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface-2);
+    }
+    .schedule-item__time {
+      width: 90px;
+      flex-shrink: 0;
+    }
+    .schedule-item__name {
+      flex: 1;
+      min-width: 0;
+    }
+    .schedule-item__desc {
+      flex: 1.2;
+      min-width: 0;
+    }
+    .schedule-item__actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .schedule-item input, .schedule-item textarea {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .schedule-item input:focus, .schedule-item textarea:focus {
+      border-color: var(--color-accent);
+    }
+    .schedule-item textarea { resize: vertical; line-height: 1.4; }
+
+    /* ── Sponsor item card ────────────────────────────────────────────── */
+    .sponsor-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .sponsor-tier-header {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-muted);
+      padding: 0.5rem 0 0.2rem;
+      border-bottom: 1px solid var(--color-border);
+      margin-top: 0.5rem;
+    }
+    .sponsor-tier-header:first-child { margin-top: 0; }
+    .sponsor-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      background: var(--color-surface-2);
+    }
+    .sponsor-item__logo {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+      border-radius: 6px;
+      border: 1.5px dashed var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color var(--transition);
+      position: relative;
+    }
+    .sponsor-item__logo:hover { border-color: var(--color-accent); }
+    .sponsor-item__logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .sponsor-item__logo-placeholder {
+      font-size: 0.65rem;
+      color: var(--color-muted);
+      text-align: center;
+    }
+    .sponsor-item__logo input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .sponsor-item__fields {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .sponsor-item__row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .sponsor-item__fields input,
+    .sponsor-item__fields select {
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: 6px;
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    .sponsor-item__fields input:focus,
+    .sponsor-item__fields select:focus {
+      border-color: var(--color-accent);
+    }
+    .sponsor-item__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .sponsor-item__switch {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .switch--sm {
+      width: 34px;
+      height: 18px;
+    }
+    .switch--sm .switch-slider::before {
+      height: 12px;
+      width: 12px;
+      left: 3px;
+      bottom: 3px;
+    }
+    .switch--sm input:checked + .switch-slider::before {
+      transform: translateX(16px);
+    }
+
+    /* ── List item action button (shared) ─────────────────────────────── */
+    .list-item__btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all var(--transition);
+    }
+    .list-item__btn:hover { color: var(--color-text); border-color: var(--color-muted); }
+    .list-item__btn--remove:hover { color: var(--color-error); border-color: var(--color-error); }
+    .list-item__btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    /* ── Empty state ─────────────────────────────────────────────────── */
+    .list-empty-state {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: var(--color-muted);
+      font-size: 0.82rem;
+      font-style: italic;
+    }
+
+    /* ── Add button (list) ────────────────────────────────────────────── */
+    .btn-add-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border: 1.5px dashed var(--color-border);
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--color-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: 0.6rem;
+    }
+    .btn-add-item:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+    }
+
+    /* ── Select disabled + no-players ────────────────────────────────── */
+    .field-select:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      background: var(--color-surface-2);
+    }
+    .no-players-msg {
+      font-size: 0.8rem;
+      color: var(--color-warning);
+      line-height: 1.5;
+      margin-top: 0.35rem;
+    }
+    .no-players-msg a {
+      color: var(--color-accent);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .no-players-msg a:hover {
+      color: var(--color-accent-hi);
+    }
+
+    /* ── Field error state (input border) ────────────────────────────── */
+    .field-input.has-error,
+    .field-select.has-error {
+      border-color: var(--color-error);
+    }
+    .field-input.has-error:focus,
+    .field-select.has-error:focus {
+      box-shadow: 0 0 0 3px rgba(255,50,50,0.10);
+    }
+
+    /* ── Preview dialog (3 options) ──────────────────────────────────── */
+    .preview-dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.15s ease;
+    }
+    .preview-dialog {
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+    .preview-dialog__msg {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      margin-bottom: 1.25rem;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .preview-dialog__actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .preview-dialog__btn {
+      padding: 0.6rem 1rem;
+      border-radius: 50px;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      width: 100%;
+    }
+    .preview-dialog__btn--primary {
+      background: var(--color-accent);
+      color: white;
+      box-shadow: 0 2px 10px rgba(245,97,26,0.25);
+    }
+    .preview-dialog__btn--primary:hover {
+      background: #e85d2a;
+    }
+    .preview-dialog__btn--secondary {
+      background: var(--color-surface-2);
+      color: var(--color-text);
+      border: 1.5px solid var(--color-border);
+    }
+    .preview-dialog__btn--secondary:hover {
+      border-color: var(--color-muted);
+    }
+    .preview-dialog__btn--cancel {
+      background: transparent;
+      color: var(--color-muted);
+    }
+    .preview-dialog__btn--cancel:hover {
+      color: var(--color-text);
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .admin-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+      }
+      .admin-topbar > div {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+      .admin-topbar h1 {
+        max-width: 100%;
+        font-size: 0.95rem;
+      }
+      .topbar-actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+      .event-editor {
+        padding: 1rem;
+      }
+      .toast {
+        bottom: auto;
+        top: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+      }
+      .schedule-item {
+        flex-direction: column;
+      }
+      .schedule-item__time { width: 100%; }
+      .schedule-item__actions { flex-direction: row; align-self: flex-end; }
+      .sponsor-item {
+        flex-direction: column;
+      }
+      .sponsor-item__logo { width: 100%; height: 80px; }
+      .sponsor-item__actions { flex-direction: row; align-self: flex-end; }
+      .sponsor-item__row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="admin-topbar">
+    <div>
+      <a href="site-settings.html#tab-eventos" class="back-link">&larr; Volver a eventos</a>
+      <h1 id="eventName">Cargando&hellip;</h1>
+      <span class="event-status-pill" id="eventStatusPill" hidden></span>
+    </div>
+    <div class="topbar-actions">
+      <span class="autosave-indicator" id="autosaveIndicator" hidden>Cambios sin guardar</span>
+      <button type="button" id="btnPreview" class="btn-ghost">Vista previa &nearr;</button>
+      <button type="button" id="btnSave" class="btn-primary" disabled>Guardar cambios</button>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main class="event-editor">
+    <aside class="editor-intro">
+      <h2>&iquest;C&oacute;mo funciona esta p&aacute;gina?</h2>
+      <p>Cada bloque de abajo es una secci&oacute;n de la p&aacute;gina del evento. Activ&aacute; los que quieras mostrar y dej&aacute; apagados los que no apliquen. Prob&aacute; con &ldquo;Vista previa&rdquo; antes de hacer visible el evento.</p>
+    </aside>
+
+    <!-- Los bloques se agregan en sub-tareas 03B a 03E -->
+    <div id="blocksContainer">
+      <div class="loading-msg" id="loadingMsg">
+        <div class="loading-spinner"></div>
+        Cargando evento&hellip;
+      </div>
+
+      <!-- ═══ BLOQUE: Datos del evento (header) ═══ -->
+      <div class="block-card" id="blockHeader" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Datos del evento</span>
+          <span class="block-card__chevron open">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </div>
+        <div class="block-card__body open">
+          <div class="field-group">
+            <label class="field-label" for="hdrName">Nombre del evento <span class="req">*</span></label>
+            <input class="field-input" type="text" id="hdrName" required>
+            <span class="field-error" id="hdrNameError">El nombre del evento es obligatorio.</span>
+            <span class="field-help">Nombre oficial del evento.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="hdrTagline">Frase del evento</label>
+            <input class="field-input" type="text" id="hdrTagline">
+            <span class="field-help">Frase corta que describe el evento. Ejemplo: &laquo;El marat&oacute;n m&aacute;s grande del pa&iacute;s&raquo;.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="hdrEventDate">Fecha y hora de inicio</label>
+            <input class="field-input" type="datetime-local" id="hdrEventDate">
+            <span class="field-error" id="hdrEventDateError">La fecha de inicio es obligatoria.</span>
+            <span class="field-help">Fecha y hora de inicio del evento.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="hdrEventEndDate">Fecha y hora de fin</label>
+            <input class="field-input" type="datetime-local" id="hdrEventEndDate">
+            <span class="field-help">Fecha y hora de fin. Si es un solo d&iacute;a, dej&aacute; la misma fecha con hora de cierre.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="hdrLocation">Lugar del evento</label>
+            <input class="field-input" type="text" id="hdrLocation">
+            <span class="field-help">Direcci&oacute;n o lugar del evento.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="hdrTagFilter">Tag de noticias</label>
+            <input class="field-input" type="text" id="hdrTagFilter" disabled readonly>
+            <span class="field-help">Tag que se usa para vincular noticias a este evento. Se define al crear el evento.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Color principal del evento</label>
+            <div class="color-picker-row">
+              <input class="field-input" type="color" id="hdrBrandColor" value="#F5611A">
+              <span class="color-preview" id="hdrColorPreview" style="background:#F5611A;"></span>
+              <span class="color-value" id="hdrColorValue">#F5611A</span>
+              <button type="button" class="btn-clear-color" id="hdrColorClear">Borrar</button>
+            </div>
+            <span class="field-help">Color principal del evento. Se usa en botones y acentos de la p&aacute;gina.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Visibilidad del evento</label>
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <label class="switch">
+                <input type="checkbox" id="hdrActive">
+                <span class="switch-slider"></span>
+              </label>
+              <span class="switch-label" id="hdrActiveLabel">Oculto</span>
+            </div>
+            <span class="field-help">Si est&aacute; oculto, la p&aacute;gina del evento no ser&aacute; accesible para el p&uacute;blico.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Banner principal (hero) ═══ -->
+      <div class="block-card" id="blockHero" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Banner principal del evento</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="heroActive" checked>
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="heroActiveLabel">Visible</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Es el banner grande que la gente ve primero al entrar al evento. Sub&iacute; una imagen apaisada (m&iacute;nimo 1600&times;900 px) y un t&iacute;tulo corto.</p>
+
+          <div class="field-group">
+            <label class="field-label">Imagen de fondo</label>
+            <div class="upload-preview" id="heroBgPreview">
+              <img id="heroBgImg" src="" alt="Fondo del hero">
+              <div class="upload-preview__actions">
+                <button type="button" class="upload-preview__btn" id="heroBgChange">Cambiar</button>
+                <button type="button" class="upload-preview__btn upload-preview__btn--remove" id="heroBgRemove">Quitar</button>
+              </div>
+            </div>
+            <div class="upload-zone" id="heroBgZone">
+              <input type="file" id="heroBgInput" accept="image/jpeg,image/png,image/webp">
+              <svg class="upload-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <div class="upload-zone__label">Hac&eacute; click o arrastr&aacute; una imagen</div>
+              <div class="upload-zone__hint">Apaisada, m&iacute;nimo 1600&times;900 px. M&aacute;ximo 5 MB. JPG, PNG o WebP.</div>
+            </div>
+            <div class="upload-progress" id="heroBgProgress">
+              <span>Subiendo...</span>
+              <div class="upload-progress__bar"><div class="upload-progress__fill" id="heroBgBar"></div></div>
+            </div>
+            <span class="field-help">Imagen apaisada. M&iacute;nimo 1600&times;900 px. M&aacute;ximo 5 MB.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Logo del evento (opcional)</label>
+            <div class="upload-preview" id="heroLogoPreview">
+              <img id="heroLogoImg" src="" alt="Logo del evento">
+              <div class="upload-preview__actions">
+                <button type="button" class="upload-preview__btn" id="heroLogoChange">Cambiar</button>
+                <button type="button" class="upload-preview__btn upload-preview__btn--remove" id="heroLogoRemove">Quitar</button>
+              </div>
+            </div>
+            <div class="upload-zone" id="heroLogoZone">
+              <input type="file" id="heroLogoInput" accept="image/jpeg,image/png,image/webp">
+              <svg class="upload-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <div class="upload-zone__label">Hac&eacute; click o arrastr&aacute; el logo</div>
+              <div class="upload-zone__hint">PNG con fondo transparente preferible.</div>
+            </div>
+            <div class="upload-progress" id="heroLogoProgress">
+              <span>Subiendo...</span>
+              <div class="upload-progress__bar"><div class="upload-progress__fill" id="heroLogoBar"></div></div>
+            </div>
+            <span class="field-help">Logo del evento o patrocinador principal. PNG con fondo transparente.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="heroTitle">T&iacute;tulo del banner</label>
+            <input class="field-input" type="text" id="heroTitle">
+            <span class="field-help">Si lo dej&aacute;s vac&iacute;o usamos el nombre del evento.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="heroSubtitle">Subt&iacute;tulo</label>
+            <input class="field-input" type="text" id="heroSubtitle">
+          </div>
+
+          <div class="fieldset-cta">
+            <div class="fieldset-cta__legend">Bot&oacute;n principal (opcional)</div>
+            <div class="field-group">
+              <label class="field-label" for="heroCtaPrimaryText">Texto del bot&oacute;n</label>
+              <input class="field-input" type="text" id="heroCtaPrimaryText" placeholder="Ej: M&aacute;s informaci&oacute;n">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="heroCtaPrimaryUrl">Link del bot&oacute;n</label>
+              <input class="field-input" type="url" id="heroCtaPrimaryUrl" placeholder="https://...">
+              <span class="field-error" id="heroCtaPrimaryUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+            </div>
+            <label class="checkbox-row">
+              <input type="checkbox" id="heroCtaPrimaryNewTab">
+              Abrir en pesta&ntilde;a nueva
+            </label>
+          </div>
+
+          <div class="fieldset-cta" style="margin-top:0.75rem;">
+            <div class="fieldset-cta__legend">Bot&oacute;n secundario (opcional)</div>
+            <div class="field-group">
+              <label class="field-label" for="heroCtaSecondaryText">Texto del bot&oacute;n</label>
+              <input class="field-input" type="text" id="heroCtaSecondaryText">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="heroCtaSecondaryUrl">Link del bot&oacute;n</label>
+              <input class="field-input" type="url" id="heroCtaSecondaryUrl" placeholder="https://...">
+              <span class="field-error" id="heroCtaSecondaryUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+            </div>
+            <label class="checkbox-row">
+              <input type="checkbox" id="heroCtaSecondaryNewTab">
+              Abrir en pesta&ntilde;a nueva
+            </label>
+          </div>
+
+          <div class="field-group" style="margin-top:0.75rem;">
+            <label class="checkbox-row">
+              <input type="checkbox" id="heroShowDateBadge" checked>
+              Mostrar fecha en el banner
+            </label>
+          </div>
+          <div class="field-group">
+            <label class="checkbox-row">
+              <input type="checkbox" id="heroShowStatusBadge" checked>
+              Mostrar estado del evento (Pr&oacute;ximamente / EN VIVO / Finalizado)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Cuenta regresiva (countdown) ═══ -->
+      <div class="block-card" id="blockCountdown" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Cuenta regresiva</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="countdownActive" checked>
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="countdownActiveLabel">Visible</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Cuenta los d&iacute;as que faltan para el evento. Ideal cuando todav&iacute;a falta m&aacute;s de una semana.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="countdownTitle">T&iacute;tulo de la cuenta regresiva</label>
+            <input class="field-input" type="text" id="countdownTitle" value="Faltan">
+            <span class="field-help">Texto que aparece encima de la cuenta regresiva.</span>
+          </div>
+          <div class="field-group">
+            <label class="checkbox-row">
+              <input type="checkbox" id="countdownHideWhenStarted" checked>
+              Ocultar cuando empieza el evento
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Cobertura del evento (news_strip) ═══ -->
+      <div class="block-card" id="blockNewsStrip" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Cobertura del evento (noticias)</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="newsStripActive" checked>
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="newsStripActiveLabel">Visible</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Mostr&aacute; las noticias publicadas de este evento. Etiquet&aacute; las noticias con el tag indicado y aparecen ac&aacute; autom&aacute;ticamente.</p>
+
+          <div class="info-box" id="newsStripTagInfo">
+            Las noticias etiquetadas con <strong id="newsStripTagDisplay">—</strong> aparecen ac&aacute; autom&aacute;ticamente.
+          </div>
+
+          <div class="field-group" style="margin-top:0.85rem;">
+            <label class="field-label" for="newsStripTitle">T&iacute;tulo de la secci&oacute;n</label>
+            <input class="field-input" type="text" id="newsStripTitle" value="Cobertura del evento">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="newsStripMaxItems">Cu&aacute;ntas noticias mostrar</label>
+            <select class="field-select" id="newsStripMaxItems">
+              <option value="3">3 noticias</option>
+              <option value="6">6 noticias</option>
+              <option value="9">9 noticias</option>
+              <option value="12">12 noticias</option>
+            </select>
+            <span class="field-help">Cu&aacute;ntas noticias mostrar en la secci&oacute;n.</span>
+          </div>
+          <div class="field-group">
+            <label class="checkbox-row">
+              <input type="checkbox" id="newsStripShowMore" checked>
+              Incluir bot&oacute;n &laquo;Ver todas&raquo; que lleva a la lista completa de noticias
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Bloque destacado (feature) ═══ -->
+      <div class="block-card" id="blockFeature" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Bloque destacado (texto + imagen)</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="featureActive">
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="featureActiveLabel">Oculto</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Espacio grande con texto + foto, ideal para promocionar la app del evento, un sponsor principal, o un anuncio importante.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="featureEyebrow">Texto superior (eyebrow)</label>
+            <input class="field-input" type="text" id="featureEyebrow" placeholder="Ej: DESCÁRGALA HOY MISMO">
+            <span class="field-help">Texto peque&ntilde;o en may&uacute;sculas que aparece arriba del t&iacute;tulo. Ejemplo: &laquo;DESC&Aacute;RGALA HOY MISMO&raquo;.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="featureTitle">T&iacute;tulo del bloque</label>
+            <input class="field-input" type="text" id="featureTitle" style="font-size:1.1rem;font-weight:600;">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="featureBody">Texto descriptivo</label>
+            <textarea class="field-textarea" id="featureBody" rows="5" placeholder="Descripci&oacute;n del bloque destacado..."></textarea>
+            <span class="field-help">Acepta saltos de l&iacute;nea. Para texto en negrita, us&aacute; &lt;strong&gt; o &lt;em&gt;.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Imagen del bloque</label>
+            <div class="upload-preview" id="featureImgPreview">
+              <img id="featureImgImg" src="" alt="Imagen del bloque destacado">
+              <div class="upload-preview__actions">
+                <button type="button" class="upload-preview__btn" id="featureImgChange">Cambiar</button>
+                <button type="button" class="upload-preview__btn upload-preview__btn--remove" id="featureImgRemove">Quitar</button>
+              </div>
+            </div>
+            <div class="upload-zone" id="featureImgZone">
+              <input type="file" id="featureImgInput" accept="image/jpeg,image/png,image/webp">
+              <svg class="upload-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <div class="upload-zone__label">Hac&eacute; click o arrastr&aacute; una imagen</div>
+              <div class="upload-zone__hint">JPG, PNG o WebP. M&aacute;ximo 5 MB.</div>
+            </div>
+            <div class="upload-progress" id="featureImgProgress">
+              <span>Subiendo...</span>
+              <div class="upload-progress__bar"><div class="upload-progress__fill" id="featureImgBar"></div></div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">Posici&oacute;n de la imagen</label>
+            <div class="segmented-control" id="featureImagePosition">
+              <label class="segmented-control__option active" data-value="left">
+                <input type="radio" name="featureImgPos" value="left" checked>
+                ◀ Foto a la izquierda
+              </label>
+              <label class="segmented-control__option" data-value="right">
+                <input type="radio" name="featureImgPos" value="right">
+                Foto a la derecha ▶
+              </label>
+            </div>
+          </div>
+
+          <div class="fieldset-cta">
+            <div class="fieldset-cta__legend">Bot&oacute;n de acci&oacute;n (opcional)</div>
+            <div class="field-group">
+              <label class="field-label" for="featureCtaText">Texto del bot&oacute;n</label>
+              <input class="field-input" type="text" id="featureCtaText">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="featureCtaUrl">Link del bot&oacute;n</label>
+              <input class="field-input" type="url" id="featureCtaUrl" placeholder="https://...">
+              <span class="field-error" id="featureCtaUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+            </div>
+            <label class="checkbox-row">
+              <input type="checkbox" id="featureCtaNewTab">
+              Abrir en pesta&ntilde;a nueva
+            </label>
+          </div>
+
+          <div class="field-group" style="margin-top:0.75rem;">
+            <label class="field-label">Color de fondo del bloque (opcional)</label>
+            <div class="color-picker-row">
+              <input class="field-input" type="color" id="featureBgColor" value="#FFFFFF">
+              <span class="color-preview" id="featureBgColorPreview" style="background:#FFFFFF;"></span>
+              <span class="color-value" id="featureBgColorValue">Sin color</span>
+              <button type="button" class="btn-clear-color" id="featureBgColorClear">Sin color de fondo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Imagen, video o galería (media) ═══ -->
+      <div class="block-card" id="blockMedia" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Imagen, video o galer&iacute;a</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="mediaActive">
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="mediaActiveLabel">Oculto</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Recurso visual grande. &Uacute;til para mapas de ruta, videos del evento anterior, o galer&iacute;a de fotos.</p>
+
+          <div class="field-group">
+            <label class="field-label">Tipo de contenido</label>
+            <div class="radio-cards" id="mediaTypeCards">
+              <label class="radio-card active" data-value="image">
+                <input type="radio" name="mediaType" value="image" checked>
+                <div class="radio-card__icon">📷</div>
+                <div class="radio-card__label">Una imagen</div>
+              </label>
+              <label class="radio-card" data-value="video">
+                <input type="radio" name="mediaType" value="video">
+                <div class="radio-card__icon">🎬</div>
+                <div class="radio-card__label">Un video</div>
+              </label>
+              <label class="radio-card" data-value="gallery">
+                <input type="radio" name="mediaType" value="gallery">
+                <div class="radio-card__icon">🖼️</div>
+                <div class="radio-card__label">Galer&iacute;a de fotos</div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Media: image section -->
+          <div class="media-section active" id="mediaSectionImage">
+            <div class="field-group">
+              <label class="field-label">Imagen</label>
+              <div class="upload-preview" id="mediaImgPreview">
+                <img id="mediaImgImg" src="" alt="Imagen del media">
+                <div class="upload-preview__actions">
+                  <button type="button" class="upload-preview__btn" id="mediaImgChange">Cambiar</button>
+                  <button type="button" class="upload-preview__btn upload-preview__btn--remove" id="mediaImgRemove">Quitar</button>
+                </div>
+              </div>
+              <div class="upload-zone" id="mediaImgZone">
+                <input type="file" id="mediaImgInput" accept="image/jpeg,image/png,image/webp">
+                <svg class="upload-zone__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <div class="upload-zone__label">Hac&eacute; click o arrastr&aacute; una imagen</div>
+                <div class="upload-zone__hint">JPG, PNG o WebP. M&aacute;ximo 5 MB.</div>
+              </div>
+              <div class="upload-progress" id="mediaImgProgress">
+                <span>Subiendo...</span>
+                <div class="upload-progress__bar"><div class="upload-progress__fill" id="mediaImgBar"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Media: video section -->
+          <div class="media-section" id="mediaSectionVideo">
+            <div class="field-group">
+              <label class="field-label" for="mediaVideoUrl">URL del video</label>
+              <input class="field-input" type="url" id="mediaVideoUrl" placeholder="https://www.youtube.com/watch?v=...">
+              <span class="field-help">Peg&aacute; la URL de YouTube o Vimeo. Tambi&eacute;n funciona con archivos .mp4/.webm directos.</span>
+              <span class="field-error" id="mediaVideoUrlError">Ingres&aacute; una URL v&aacute;lida de video.</span>
+            </div>
+          </div>
+
+          <!-- Media: gallery section -->
+          <div class="media-section" id="mediaSectionGallery">
+            <div class="field-group">
+              <label class="field-label">Fotos de la galer&iacute;a</label>
+              <div class="gallery-list" id="galleryList"></div>
+              <button type="button" class="btn-add-gallery" id="btnAddGalleryPhoto">
+                + Agregar foto
+              </button>
+              <input type="file" id="galleryFileInput" accept="image/jpeg,image/png,image/webp" style="display:none;">
+            </div>
+          </div>
+
+          <div class="field-group" style="margin-top:0.85rem;">
+            <label class="field-label" for="mediaTitle">T&iacute;tulo (opcional)</label>
+            <input class="field-input" type="text" id="mediaTitle">
+            <span class="field-help">Texto que aparece encima del recurso.</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="mediaCaption">Pie de imagen / video (opcional)</label>
+            <input class="field-input" type="text" id="mediaCaption">
+            <span class="field-help">Pie de imagen / video.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Programación / horarios (schedule) ═══ -->
+      <div class="block-card" id="blockSchedule" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Programaci&oacute;n / horarios</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="scheduleActive" checked>
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="scheduleActiveLabel">Visible</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Mostr&aacute; la agenda del evento: horarios, actividades y descripciones opcionales.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="scheduleTitle">T&iacute;tulo de la secci&oacute;n</label>
+            <input class="field-input" type="text" id="scheduleTitle" value="Programación">
+          </div>
+
+          <div class="schedule-list" id="scheduleList"></div>
+          <div class="list-empty-state" id="scheduleEmpty">Todav&iacute;a no hay entradas. Hac&eacute; clic en &laquo;+ Agregar entrada&raquo; para empezar.</div>
+          <button type="button" class="btn-add-item" id="btnAddScheduleItem">+ Agregar entrada</button>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Patrocinadores del evento (sponsors) ═══ -->
+      <div class="block-card" id="blockSponsors" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Patrocinadores del evento</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="sponsorsActive" checked>
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="sponsorsActiveLabel">Visible</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Los sponsors de mayor nivel se muestran m&aacute;s grandes y arriba. Cada nivel tiene su propio tama&ntilde;o de logo.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="sponsorsTitle">T&iacute;tulo de la secci&oacute;n</label>
+            <input class="field-input" type="text" id="sponsorsTitle" value="Patrocinadores oficiales">
+          </div>
+
+          <div class="sponsor-list" id="sponsorList"></div>
+          <div class="list-empty-state" id="sponsorsEmpty">No hay patrocinadores a&uacute;n. Hac&eacute; clic en &laquo;+ Agregar sponsor&raquo; para agregar el primero.</div>
+          <button type="button" class="btn-add-item" id="btnAddSponsor">+ Agregar sponsor</button>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Transmisión en vivo (live_stream) ═══ -->
+      <div class="block-card" id="blockLiveStream" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Transmisi&oacute;n en vivo</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="liveStreamActive">
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="liveStreamActiveLabel">Oculto</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Vincula un reproductor de radio o video para transmitir en vivo el d&iacute;a del evento.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="liveStreamTitle">T&iacute;tulo de la secci&oacute;n</label>
+            <input class="field-input" type="text" id="liveStreamTitle" value="Transmisión en vivo">
+            <span class="field-help">Texto que aparece encima del reproductor.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="liveStreamPlayer">Aliado de transmisi&oacute;n</label>
+            <select class="field-select" id="liveStreamPlayer">
+              <option value="">— Seleccion&aacute; un aliado —</option>
+            </select>
+            <div class="no-players-msg" id="noPlayersMsg" style="display:none;">
+              No hay aliados de transmisi&oacute;n activos. <a href="site-settings.html#tab-reproductores">Configurar aliados</a>
+            </div>
+            <span class="field-help">Eleg&iacute; el reproductor que se va a usar durante la transmisi&oacute;n.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="checkbox-row">
+              <input type="checkbox" id="liveStreamAutoShow" checked>
+              Solo mostrar este bloque cuando el evento est&eacute; en vivo
+            </label>
+            <span class="field-help">Recomendado: dej&aacute; esta opci&oacute;n activada. As&iacute; el reproductor solo aparece el d&iacute;a del evento.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ BLOQUE: Botón flotante mobile (cta_sticky) ═══ -->
+      <div class="block-card" id="blockCtaSticky" style="display:none;">
+        <div class="block-card__header expanded" onclick="toggleBlock(this.parentElement)">
+          <span class="block-card__title">Bot&oacute;n flotante (mobile)</span>
+          <div class="block-card__controls">
+            <label class="switch">
+              <input type="checkbox" id="ctaStickyActive">
+              <span class="switch-slider"></span>
+            </label>
+            <span class="switch-label" id="ctaStickyActiveLabel">Oculto</span>
+            <span class="block-card__chevron open">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="6 9 12 15 18 9"/></svg>
+            </span>
+          </div>
+        </div>
+        <div class="block-card__body open">
+          <p class="field-help" style="margin-bottom:1rem;">Bot&oacute;n que queda fijo abajo de la pantalla en celulares. Ideal para llevar al usuario a la inscripci&oacute;n o la transmisi&oacute;n.</p>
+
+          <div class="field-group">
+            <label class="field-label" for="ctaStickyText">Texto del bot&oacute;n</label>
+            <input class="field-input" type="text" id="ctaStickyText" maxlength="30" placeholder="Ej: Ver en vivo">
+            <span class="field-help">Texto del bot&oacute;n. Mantenelo corto: &laquo;Ver en vivo&raquo;, &laquo;Inscr&iacute;bete&raquo;, &laquo;Comprar entrada&raquo;.</span>
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="ctaStickyUrl">Link del bot&oacute;n</label>
+            <input class="field-input" type="url" id="ctaStickyUrl" placeholder="https://...">
+            <span class="field-error" id="ctaStickyUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+          </div>
+
+          <div class="field-group">
+            <label class="checkbox-row">
+              <input type="checkbox" id="ctaStickyMobileOnly" checked>
+              Mostrar solo en celulares
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Preview dialog (3 options) -->
+  <div class="preview-dialog-backdrop" id="previewDialog" style="display:none;">
+    <div class="preview-dialog">
+      <p class="preview-dialog__msg">Ten&eacute;s cambios sin guardar.</p>
+      <div class="preview-dialog__actions">
+        <button type="button" class="preview-dialog__btn preview-dialog__btn--primary" id="previewSaveAndOpen">Guardar y previsualizar</button>
+        <button type="button" class="preview-dialog__btn preview-dialog__btn--secondary" id="previewOpenWithout">Previsualizar sin guardar</button>
+        <button type="button" class="preview-dialog__btn preview-dialog__btn--cancel" id="previewCancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation modal -->
+  <div class="confirm-modal-backdrop" id="confirmModal" style="display:none;">
+    <div class="confirm-modal">
+      <p class="confirm-modal__msg" id="confirmModalMsg"></p>
+      <div class="confirm-modal__actions">
+        <button type="button" class="confirm-modal__btn confirm-modal__btn--cancel" id="confirmModalCancel">Cancelar</button>
+        <button type="button" class="confirm-modal__btn confirm-modal__btn--delete" id="confirmModalDelete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+
+<script type="module">
+  import { auth, db } from "../js/firebase-config.js";
+  import { onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { doc, getDoc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // ── State ──────────────────────────────────────────────────────────────────
+  const state = { slug: null, data: null, dirty: false };
+
+  // ── Auth guard ─────────────────────────────────────────────────────────────
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { location.replace('index.html'); return; }
+
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (!snap.exists() || !snap.data().active || snap.data().role !== 'super_admin') {
+      location.replace('index.html');
+      return;
+    }
+
+    loadEvent();
+  });
+
+  // ── Load event ─────────────────────────────────────────────────────────────
+  async function loadEvent() {
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('slug');
+
+    if (!slug) {
+      showError('No se encontró el evento. Volvé al listado e intentá de nuevo.');
+      return;
+    }
+
+    try {
+      const docRef = doc(db, 'events', slug);
+      const snap = await getDoc(docRef);
+
+      if (!snap.exists()) {
+        showError(`El evento "${slug}" no existe o fue eliminado.`);
+        return;
+      }
+
+      state.slug = slug;
+      state.data = snap.data();
+
+      document.getElementById('eventName').textContent = state.data.name;
+      updateStatusPill(state.data);
+      document.getElementById('btnSave').disabled = false;
+
+      // Hydrate blocks
+      hydrateForm(state.data);
+
+    } catch (err) {
+      console.error('Error loading event:', err);
+      if (err.code === 'permission-denied') {
+        showError('No tenés permiso para ver este evento.');
+      } else {
+        showError('No pudimos cargar el evento. Revisá tu conexión e intentá de nuevo.');
+      }
+    }
+  }
+
+  // ── Status pill ────────────────────────────────────────────────────────────
+  function updateStatusPill(data) {
+    const pill = document.getElementById('eventStatusPill');
+    const status = computeStatus(data);
+
+    const labels = {
+      upcoming:  'Próximamente',
+      live:      'EN VIVO',
+      finished:  'Finalizado',
+      inactive:  'Inactivo',
+      cancelled: 'Cancelado'
+    };
+
+    pill.textContent = labels[status] || status;
+    pill.dataset.status = status;
+    pill.hidden = false;
+  }
+
+  function computeStatus(data) {
+    if (!data.active) return 'inactive';
+    if (data.status_override) return data.status_override;
+
+    const now = Date.now();
+    const start = data.event_date?.toMillis ? data.event_date.toMillis() : null;
+    const end = data.event_end_date?.toMillis ? data.event_end_date.toMillis() : null;
+
+    if (!start) return 'upcoming';
+    if (now < start) return 'upcoming';
+    if (end && now > end) return 'finished';
+    if (now >= start) return 'live';
+    return 'upcoming';
+  }
+
+  // ── Hydrate form (03B blocks: header, hero, countdown + 03C: news_strip, feature, media) ──
+  function hydrateForm(data) {
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('blockHeader').style.display = '';
+    document.getElementById('blockHero').style.display = '';
+    document.getElementById('blockCountdown').style.display = '';
+    document.getElementById('blockNewsStrip').style.display = '';
+    document.getElementById('blockFeature').style.display = '';
+    document.getElementById('blockMedia').style.display = '';
+    document.getElementById('blockSchedule').style.display = '';
+    document.getElementById('blockSponsors').style.display = '';
+    document.getElementById('blockLiveStream').style.display = '';
+    document.getElementById('blockCtaSticky').style.display = '';
+
+    // Header fields
+    document.getElementById('hdrName').value = data.name || '';
+    document.getElementById('hdrTagline').value = data.tagline || '';
+    document.getElementById('hdrLocation').value = data.location || '';
+    document.getElementById('hdrTagFilter').value = data.tag_filter || '';
+
+    if (data.event_date) {
+      const d = data.event_date.toDate ? data.event_date.toDate() : new Date(data.event_date);
+      document.getElementById('hdrEventDate').value = toLocalISO(d);
+    }
+    if (data.event_end_date) {
+      const d = data.event_end_date.toDate ? data.event_end_date.toDate() : new Date(data.event_end_date);
+      document.getElementById('hdrEventEndDate').value = toLocalISO(d);
+    }
+
+    const color = data.brand_color || '#F5611A';
+    document.getElementById('hdrBrandColor').value = color;
+    document.getElementById('hdrColorPreview').style.background = color;
+    document.getElementById('hdrColorValue').textContent = color;
+
+    const active = data.active !== undefined ? data.active : false;
+    document.getElementById('hdrActive').checked = active;
+    document.getElementById('hdrActiveLabel').textContent = active ? 'Visible' : 'Oculto';
+
+    // Hero block
+    const hero = data.blocks?.hero || {};
+    document.getElementById('heroActive').checked = hero.active !== false;
+    document.getElementById('heroActiveLabel').textContent = hero.active !== false ? 'Visible' : 'Oculto';
+    if (!hero.active) {
+      document.getElementById('blockHero').classList.add('inactive');
+      collapseBlock(document.getElementById('blockHero'));
+    }
+
+    if (hero.background_image_url) {
+      showUploadPreview('heroBg', hero.background_image_url);
+    }
+    if (hero.logo_url) {
+      showUploadPreview('heroLogo', hero.logo_url);
+    }
+
+    document.getElementById('heroTitle').value = hero.title || '';
+    document.getElementById('heroSubtitle').value = hero.subtitle || '';
+
+    if (hero.cta_primary) {
+      document.getElementById('heroCtaPrimaryText').value = hero.cta_primary.text || '';
+      document.getElementById('heroCtaPrimaryUrl').value = hero.cta_primary.url || '';
+      document.getElementById('heroCtaPrimaryNewTab').checked = hero.cta_primary.new_tab || false;
+    }
+    if (hero.cta_secondary) {
+      document.getElementById('heroCtaSecondaryText').value = hero.cta_secondary.text || '';
+      document.getElementById('heroCtaSecondaryUrl').value = hero.cta_secondary.url || '';
+      document.getElementById('heroCtaSecondaryNewTab').checked = hero.cta_secondary.new_tab || false;
+    }
+
+    document.getElementById('heroShowDateBadge').checked = hero.show_date_badge !== false;
+    document.getElementById('heroShowStatusBadge').checked = hero.show_status_badge !== false;
+
+    // Countdown block
+    const countdown = data.blocks?.countdown || {};
+    document.getElementById('countdownActive').checked = countdown.active !== false;
+    document.getElementById('countdownActiveLabel').textContent = countdown.active !== false ? 'Visible' : 'Oculto';
+    if (!countdown.active) {
+      document.getElementById('blockCountdown').classList.add('inactive');
+      collapseBlock(document.getElementById('blockCountdown'));
+    }
+    document.getElementById('countdownTitle').value = countdown.title || 'Faltan';
+    document.getElementById('countdownHideWhenStarted').checked = countdown.hide_when_started !== false;
+
+    // News strip block
+    const newsStrip = data.blocks?.news_strip || {};
+    document.getElementById('newsStripActive').checked = newsStrip.active !== false;
+    document.getElementById('newsStripActiveLabel').textContent = newsStrip.active !== false ? 'Visible' : 'Oculto';
+    if (!newsStrip.active) {
+      document.getElementById('blockNewsStrip').classList.add('inactive');
+      collapseBlock(document.getElementById('blockNewsStrip'));
+    }
+    document.getElementById('newsStripTitle').value = newsStrip.title || 'Cobertura del evento';
+    document.getElementById('newsStripMaxItems').value = String(newsStrip.max_items || 3);
+    document.getElementById('newsStripShowMore').checked = newsStrip.show_more_link !== false;
+    document.getElementById('newsStripTagDisplay').textContent = data.tag_filter || '(sin tag)';
+
+    // Feature block
+    const feature = data.blocks?.feature || {};
+    document.getElementById('featureActive').checked = feature.active || false;
+    document.getElementById('featureActiveLabel').textContent = feature.active ? 'Visible' : 'Oculto';
+    if (!feature.active) {
+      document.getElementById('blockFeature').classList.add('inactive');
+      collapseBlock(document.getElementById('blockFeature'));
+    }
+    document.getElementById('featureEyebrow').value = feature.eyebrow || '';
+    document.getElementById('featureTitle').value = feature.title || '';
+    document.getElementById('featureBody').value = feature.body || '';
+    if (feature.image_url) {
+      showUploadPreview('featureImg', feature.image_url);
+    }
+    // Image position segmented control
+    const imgPos = feature.image_position || 'right';
+    document.querySelectorAll('#featureImagePosition .segmented-control__option').forEach(opt => {
+      opt.classList.toggle('active', opt.dataset.value === imgPos);
+      opt.querySelector('input').checked = opt.dataset.value === imgPos;
+    });
+    // CTA
+    if (feature.cta) {
+      document.getElementById('featureCtaText').value = feature.cta.text || '';
+      document.getElementById('featureCtaUrl').value = feature.cta.url || '';
+      document.getElementById('featureCtaNewTab').checked = feature.cta.new_tab || false;
+    }
+    // Background color
+    if (feature.background_color) {
+      document.getElementById('featureBgColor').value = feature.background_color;
+      document.getElementById('featureBgColorPreview').style.background = feature.background_color;
+      document.getElementById('featureBgColorValue').textContent = feature.background_color;
+      featureBgColorSet = true;
+    }
+
+    // Media block
+    const media = data.blocks?.media || {};
+    document.getElementById('mediaActive').checked = media.active || false;
+    document.getElementById('mediaActiveLabel').textContent = media.active ? 'Visible' : 'Oculto';
+    if (!media.active) {
+      document.getElementById('blockMedia').classList.add('inactive');
+      collapseBlock(document.getElementById('blockMedia'));
+    }
+    const mediaType = media.type || 'image';
+    setMediaType(mediaType);
+    document.getElementById('mediaTitle').value = media.title || '';
+    document.getElementById('mediaCaption').value = media.caption || '';
+
+    if (mediaType === 'image' && media.url) {
+      showUploadPreview('mediaImg', media.url);
+    } else if (mediaType === 'video') {
+      document.getElementById('mediaVideoUrl').value = media.url ? media.url : (media.youtube_id ? `https://www.youtube.com/watch?v=${media.youtube_id}` : '');
+    } else if (mediaType === 'gallery' && media.gallery_images) {
+      galleryImages = [...media.gallery_images];
+      renderGalleryList();
+    }
+
+    // Attach change listeners for dirty tracking
+    attachDirtyListeners();
+
+    // Live stream block
+    const liveStream = data.blocks?.live_stream || {};
+    document.getElementById('liveStreamActive').checked = liveStream.active || false;
+    document.getElementById('liveStreamActiveLabel').textContent = liveStream.active ? 'Visible' : 'Oculto';
+    if (!liveStream.active) {
+      document.getElementById('blockLiveStream').classList.add('inactive');
+      collapseBlock(document.getElementById('blockLiveStream'));
+    }
+    document.getElementById('liveStreamTitle').value = liveStream.title || 'Transmisión en vivo';
+    document.getElementById('liveStreamAutoShow').checked = liveStream.auto_show_when_live !== false;
+    // Load players then set selected value
+    loadAvailablePlayers().then(() => {
+      if (liveStream.player_id) {
+        document.getElementById('liveStreamPlayer').value = liveStream.player_id;
+      }
+    });
+
+    // CTA sticky block
+    const ctaSticky = data.blocks?.cta_sticky || {};
+    document.getElementById('ctaStickyActive').checked = ctaSticky.active || false;
+    document.getElementById('ctaStickyActiveLabel').textContent = ctaSticky.active ? 'Visible' : 'Oculto';
+    if (!ctaSticky.active) {
+      document.getElementById('blockCtaSticky').classList.add('inactive');
+      collapseBlock(document.getElementById('blockCtaSticky'));
+    }
+    document.getElementById('ctaStickyText').value = ctaSticky.text || '';
+    document.getElementById('ctaStickyUrl').value = ctaSticky.url || '';
+    document.getElementById('ctaStickyMobileOnly').checked = ctaSticky.mobile_only !== false;
+
+    // Schedule block
+    const schedule = data.blocks?.schedule || {};
+    document.getElementById('scheduleActive').checked = schedule.active !== false;
+    document.getElementById('scheduleActiveLabel').textContent = schedule.active !== false ? 'Visible' : 'Oculto';
+    if (!schedule.active) {
+      document.getElementById('blockSchedule').classList.add('inactive');
+      collapseBlock(document.getElementById('blockSchedule'));
+    }
+    document.getElementById('scheduleTitle').value = schedule.title || 'Programación';
+    scheduleItems = Array.isArray(schedule.items) ? schedule.items.map(it => ({ time: it.time || '', label: it.label || '', description: it.description || '' })) : [];
+    renderScheduleList();
+
+    // Sponsors block
+    const sponsors = data.blocks?.sponsors || {};
+    document.getElementById('sponsorsActive').checked = sponsors.active !== false;
+    document.getElementById('sponsorsActiveLabel').textContent = sponsors.active !== false ? 'Visible' : 'Oculto';
+    if (!sponsors.active) {
+      document.getElementById('blockSponsors').classList.add('inactive');
+      collapseBlock(document.getElementById('blockSponsors'));
+    }
+    document.getElementById('sponsorsTitle').value = sponsors.title || 'Patrocinadores oficiales';
+    sponsorItems = Array.isArray(sponsors.items) ? sponsors.items.map(s => ({
+      id: s.id || 'sponsor_' + Date.now() + Math.random().toString(36).slice(2,6),
+      name: s.name || '',
+      logo_url: s.logo_url || '',
+      url: s.url || '',
+      tier: s.tier || 'bronze',
+      order: s.order ?? 0,
+      active: s.active !== false,
+    })) : [];
+    renderSponsorList();
+  }
+
+  function toLocalISO(date) {
+    const off = date.getTimezoneOffset();
+    const local = new Date(date.getTime() - off * 60000);
+    return local.toISOString().slice(0, 16);
+  }
+
+  // ── Load available live players ───────────────────────────────────────────
+  async function loadAvailablePlayers() {
+    try {
+      const snap = await getDoc(doc(db, 'site_config', 'live_players'));
+      if (!snap.exists()) {
+        disablePlayerSelect();
+        return;
+      }
+      const players = snap.data().players || [];
+      const activePlayers = players.filter(p => p.active !== false);
+
+      const select = document.getElementById('liveStreamPlayer');
+      if (activePlayers.length === 0) {
+        disablePlayerSelect();
+        return;
+      }
+      activePlayers.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = `${p.name} (${p.type === 'audio' ? 'radio' : 'video'})`;
+        select.appendChild(opt);
+      });
+    } catch (err) {
+      console.error('Error loading players:', err);
+      disablePlayerSelect();
+    }
+  }
+
+  function disablePlayerSelect() {
+    const select = document.getElementById('liveStreamPlayer');
+    select.disabled = true;
+    document.getElementById('noPlayersMsg').style.display = '';
+  }
+
+  // ── Dirty flag tracking ────────────────────────────────────────────────────
+  function markDirty() {
+    state.dirty = true;
+    document.getElementById('autosaveIndicator').hidden = false;
+  }
+
+  function markClean() {
+    state.dirty = false;
+    document.getElementById('autosaveIndicator').hidden = true;
+  }
+
+  // ── Error display ──────────────────────────────────────────────────────────
+  function showError(msg) {
+    document.getElementById('blocksContainer').innerHTML =
+      `<div class="error-msg"><p>${msg}</p><p style="margin-top:0.75rem;"><a href="site-settings.html#tab-eventos" style="color:var(--color-accent);font-weight:600;">&larr; Volver al listado</a></p></div>`;
+  }
+
+  // ── Toast ──────────────────────────────────────────────────────────────────
+  let toastTimer = null;
+  function showToast(msg, type = 'success') {
+    const toast = document.getElementById('toast');
+    clearTimeout(toastTimer);
+    toast.textContent = msg;
+    toast.className = `toast show ${type}`;
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 4000);
+  }
+
+  // ── Preview button (dirty state aware, P11) ────────────────────────────────
+  document.getElementById('btnPreview').addEventListener('click', () => {
+    if (!state.slug) return;
+    const url = `../evento.html?slug=${encodeURIComponent(state.slug)}`;
+
+    if (!state.dirty) {
+      window.open(url, '_blank');
+      return;
+    }
+
+    // Show 3-option dialog
+    const backdrop = document.getElementById('previewDialog');
+    backdrop.style.display = '';
+
+    function cleanup() {
+      backdrop.style.display = 'none';
+      document.getElementById('previewSaveAndOpen').removeEventListener('click', onSaveAndOpen);
+      document.getElementById('previewOpenWithout').removeEventListener('click', onOpenWithout);
+      document.getElementById('previewCancel').removeEventListener('click', onCancel);
+      backdrop.removeEventListener('click', onBackdrop);
+    }
+    async function onSaveAndOpen() {
+      cleanup();
+      await saveEvent();
+      window.open(url, '_blank');
+    }
+    function onOpenWithout() {
+      cleanup();
+      window.open(url, '_blank');
+    }
+    function onCancel() { cleanup(); }
+    function onBackdrop(e) { if (e.target === backdrop) cleanup(); }
+
+    document.getElementById('previewSaveAndOpen').addEventListener('click', onSaveAndOpen);
+    document.getElementById('previewOpenWithout').addEventListener('click', onOpenWithout);
+    document.getElementById('previewCancel').addEventListener('click', onCancel);
+    backdrop.addEventListener('click', onBackdrop);
+  });
+
+  // ── Save button (handled after hydrate in 03B+ blocks) ─────────────────────
+
+  // ── Warn on unsaved changes ────────────────────────────────────────────────
+  window.addEventListener('beforeunload', (e) => {
+    if (state.dirty) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // Export for sub-tasks
+  window.__eventEditor = { state, markDirty, markClean, showToast, showError };
+
+  // ── Cloudinary upload ──────────────────────────────────────────────────────
+  const CLOUDINARY_CLOUD = 'dgfmlxvfn';
+  const CLOUDINARY_PRESET = 'cronos_articles';
+  const MAX_SIZE = 5 * 1024 * 1024;
+  const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+  async function uploadImage(file) {
+    if (!ALLOWED_TYPES.includes(file.type)) throw new Error('Formato no permitido. Usa JPG, PNG o WebP.');
+    if (file.size > MAX_SIZE) throw new Error('Imagen mayor a 5 MB.');
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: fd });
+    const json = await res.json().catch(() => null);
+    if (!res.ok || !json?.secure_url) throw new Error('Error al subir imagen.');
+    return json.secure_url;
+  }
+
+  // ── Upload component wiring ────────────────────────────────────────────────
+  // Image URLs stored in state
+  const imageUrls = { heroBg: '', heroLogo: '', featureImg: '', mediaImg: '' };
+
+  function initUploadComponent(prefix) {
+    const zone = document.getElementById(`${prefix}Zone`);
+    const input = document.getElementById(`${prefix}Input`);
+    const progress = document.getElementById(`${prefix}Progress`);
+    const bar = document.getElementById(`${prefix}Bar`);
+    const changeBtn = document.getElementById(`${prefix}Change`);
+    const removeBtn = document.getElementById(`${prefix}Remove`);
+
+    input.addEventListener('change', (e) => {
+      if (e.target.files[0]) handleUpload(prefix, e.target.files[0]);
+    });
+
+    zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      if (e.dataTransfer.files[0]) handleUpload(prefix, e.dataTransfer.files[0]);
+    });
+
+    changeBtn.addEventListener('click', () => input.click());
+    removeBtn.addEventListener('click', () => {
+      imageUrls[prefix] = '';
+      hideUploadPreview(prefix);
+      markDirty();
+    });
+  }
+
+  async function handleUpload(prefix, file) {
+    const zone = document.getElementById(`${prefix}Zone`);
+    const progress = document.getElementById(`${prefix}Progress`);
+    const bar = document.getElementById(`${prefix}Bar`);
+
+    zone.style.display = 'none';
+    progress.classList.add('visible');
+
+    let pct = 0;
+    const ticker = setInterval(() => { pct = Math.min(pct + 8, 85); bar.style.width = pct + '%'; }, 150);
+
+    try {
+      const url = await uploadImage(file);
+      clearInterval(ticker);
+      bar.style.width = '100%';
+      imageUrls[prefix] = url;
+      setTimeout(() => {
+        progress.classList.remove('visible');
+        bar.style.width = '0%';
+        showUploadPreview(prefix, url);
+      }, 400);
+      showToast('Imagen subida correctamente.', 'success');
+      markDirty();
+    } catch (err) {
+      clearInterval(ticker);
+      progress.classList.remove('visible');
+      bar.style.width = '0%';
+      zone.style.display = '';
+      showToast(err.message, 'error');
+    }
+  }
+
+  function showUploadPreview(prefix, url) {
+    const preview = document.getElementById(`${prefix}Preview`);
+    const img = document.getElementById(`${prefix}Img`);
+    const zone = document.getElementById(`${prefix}Zone`);
+    img.src = url;
+    preview.style.display = 'block';
+    zone.style.display = 'none';
+    imageUrls[prefix] = url;
+  }
+
+  function hideUploadPreview(prefix) {
+    const preview = document.getElementById(`${prefix}Preview`);
+    const img = document.getElementById(`${prefix}Img`);
+    const zone = document.getElementById(`${prefix}Zone`);
+    const input = document.getElementById(`${prefix}Input`);
+    img.src = '';
+    preview.style.display = 'none';
+    zone.style.display = '';
+    input.value = '';
+  }
+
+  // ── Toggle blocks ──────────────────────────────────────────────────────────
+  window.toggleBlock = function(cardEl) {
+    const body = cardEl.querySelector('.block-card__body');
+    const header = cardEl.querySelector('.block-card__header');
+    const chevron = cardEl.querySelector('.block-card__chevron');
+    const isOpen = body.classList.contains('open');
+    if (isOpen) {
+      body.classList.remove('open');
+      header.classList.remove('expanded');
+      chevron.classList.remove('open');
+    } else {
+      body.classList.add('open');
+      header.classList.add('expanded');
+      chevron.classList.add('open');
+    }
+  };
+
+  function collapseBlock(cardEl) {
+    const body = cardEl.querySelector('.block-card__body');
+    const header = cardEl.querySelector('.block-card__header');
+    const chevron = cardEl.querySelector('.block-card__chevron');
+    body.classList.remove('open');
+    header.classList.remove('expanded');
+    if (chevron) chevron.classList.remove('open');
+  }
+
+  function expandBlock(cardEl) {
+    const body = cardEl.querySelector('.block-card__body');
+    const header = cardEl.querySelector('.block-card__header');
+    const chevron = cardEl.querySelector('.block-card__chevron');
+    body.classList.add('open');
+    header.classList.add('expanded');
+    if (chevron) chevron.classList.add('open');
+  }
+
+  // ── Switch handlers ────────────────────────────────────────────────────────
+  function initSwitchHandler(switchId, labelId, cardId) {
+    const input = document.getElementById(switchId);
+    const label = document.getElementById(labelId);
+    const card = cardId ? document.getElementById(cardId) : null;
+
+    input.addEventListener('change', () => {
+      const isOn = input.checked;
+      label.textContent = isOn ? 'Visible' : 'Oculto';
+      if (card) {
+        card.classList.toggle('inactive', !isOn);
+        if (isOn) {
+          expandBlock(card);
+        } else {
+          collapseBlock(card);
+        }
+      }
+      showToast(isOn ? 'Bloque visible' : 'Bloque oculto', 'success');
+      markDirty();
+    });
+  }
+
+  // Header active switch (no collapse behavior — always visible)
+  document.getElementById('hdrActive').addEventListener('change', () => {
+    const isOn = document.getElementById('hdrActive').checked;
+    document.getElementById('hdrActiveLabel').textContent = isOn ? 'Visible' : 'Oculto';
+    showToast(isOn ? 'Evento visible' : 'Evento oculto', 'success');
+    markDirty();
+  });
+
+  // Color picker
+  document.getElementById('hdrBrandColor').addEventListener('input', (e) => {
+    const v = e.target.value;
+    document.getElementById('hdrColorPreview').style.background = v;
+    document.getElementById('hdrColorValue').textContent = v;
+    markDirty();
+  });
+  document.getElementById('hdrColorClear').addEventListener('click', () => {
+    const def = '#F5611A';
+    document.getElementById('hdrBrandColor').value = def;
+    document.getElementById('hdrColorPreview').style.background = def;
+    document.getElementById('hdrColorValue').textContent = def;
+    markDirty();
+  });
+
+  // ── Dirty listeners ────────────────────────────────────────────────────────
+  function attachDirtyListeners() {
+    const inputs = document.querySelectorAll('#blocksContainer input, #blocksContainer select, #blocksContainer textarea');
+    inputs.forEach(input => {
+      const ev = (input.type === 'checkbox' || input.type === 'radio') ? 'change' : 'input';
+      input.addEventListener(ev, () => markDirty());
+    });
+  }
+
+  // ── Collect form data (used by save) ───────────────────────────────────────
+  function collectFormData() {
+    const d = state.data || {};
+
+    // Header
+    d.name = document.getElementById('hdrName').value.trim();
+    d.tagline = document.getElementById('hdrTagline').value.trim();
+    d.location = document.getElementById('hdrLocation').value.trim();
+    d.active = document.getElementById('hdrActive').checked;
+    d.brand_color = document.getElementById('hdrBrandColor').value;
+
+    const evDate = document.getElementById('hdrEventDate').value;
+    if (evDate) d.event_date = new Date(evDate);
+    const evEnd = document.getElementById('hdrEventEndDate').value;
+    if (evEnd) d.event_end_date = new Date(evEnd);
+
+    // Hero
+    if (!d.blocks) d.blocks = {};
+    d.blocks.hero = {
+      active: document.getElementById('heroActive').checked,
+      background_image_url: imageUrls.heroBg || '',
+      logo_url: imageUrls.heroLogo || '',
+      title: document.getElementById('heroTitle').value.trim(),
+      subtitle: document.getElementById('heroSubtitle').value.trim(),
+      cta_primary: buildCta('heroCtaPrimary'),
+      cta_secondary: buildCta('heroCtaSecondary'),
+      show_date_badge: document.getElementById('heroShowDateBadge').checked,
+      show_status_badge: document.getElementById('heroShowStatusBadge').checked,
+    };
+
+    // Countdown
+    d.blocks.countdown = {
+      active: document.getElementById('countdownActive').checked,
+      title: document.getElementById('countdownTitle').value.trim() || 'Faltan',
+      hide_when_started: document.getElementById('countdownHideWhenStarted').checked,
+    };
+
+    // News strip
+    d.blocks.news_strip = {
+      active: document.getElementById('newsStripActive').checked,
+      title: document.getElementById('newsStripTitle').value.trim() || 'Cobertura del evento',
+      max_items: parseInt(document.getElementById('newsStripMaxItems').value) || 3,
+      show_more_link: document.getElementById('newsStripShowMore').checked,
+    };
+
+    // Feature
+    const rawBody = document.getElementById('featureBody').value.trim();
+    const cleanBody = typeof DOMPurify !== 'undefined'
+      ? DOMPurify.sanitize(rawBody, { ALLOWED_TAGS: ['p','br','strong','em','a','ul','ol','li'], ALLOWED_ATTR: ['href'] })
+      : rawBody;
+
+    const featureImgPos = document.querySelector('#featureImagePosition .segmented-control__option.active')?.dataset.value || 'right';
+    d.blocks.feature = {
+      active: document.getElementById('featureActive').checked,
+      eyebrow: document.getElementById('featureEyebrow').value.trim(),
+      title: document.getElementById('featureTitle').value.trim(),
+      body: cleanBody,
+      image_url: imageUrls.featureImg || '',
+      image_position: featureImgPos,
+      cta: buildCta('featureCta'),
+      background_color: featureBgColorSet ? document.getElementById('featureBgColor').value : '',
+    };
+
+    // Media
+    const mediaType = document.querySelector('#mediaTypeCards .radio-card.active')?.dataset.value || 'image';
+    const mediaBlock = {
+      active: document.getElementById('mediaActive').checked,
+      type: mediaType,
+      title: document.getElementById('mediaTitle').value.trim(),
+      caption: document.getElementById('mediaCaption').value.trim(),
+    };
+    if (mediaType === 'image') {
+      mediaBlock.url = imageUrls.mediaImg || '';
+    } else if (mediaType === 'video') {
+      mediaBlock.url = document.getElementById('mediaVideoUrl').value.trim();
+      // Extract YouTube ID if applicable
+      const ytMatch = mediaBlock.url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+      if (ytMatch) mediaBlock.youtube_id = ytMatch[1];
+    } else if (mediaType === 'gallery') {
+      mediaBlock.gallery_images = galleryImages;
+    }
+    d.blocks.media = mediaBlock;
+
+    // Schedule
+    d.blocks.schedule = {
+      active: document.getElementById('scheduleActive').checked,
+      title: document.getElementById('scheduleTitle').value.trim() || 'Programación',
+      items: scheduleItems.map(it => ({
+        time: it.time || '',
+        label: it.label || '',
+        description: it.description || '',
+      })),
+    };
+
+    // Sponsors
+    d.blocks.sponsors = {
+      active: document.getElementById('sponsorsActive').checked,
+      title: document.getElementById('sponsorsTitle').value.trim() || 'Patrocinadores oficiales',
+      items: sponsorItems.map((s, i) => ({
+        id: s.id || 'sponsor_' + Date.now(),
+        name: s.name || '',
+        logo_url: s.logo_url || '',
+        url: s.url || '',
+        tier: s.tier || 'bronze',
+        order: i,
+        active: s.active !== false,
+      })),
+    };
+
+    // Live stream
+    d.blocks.live_stream = {
+      active: document.getElementById('liveStreamActive').checked,
+      title: document.getElementById('liveStreamTitle').value.trim() || 'Transmisión en vivo',
+      player_id: document.getElementById('liveStreamPlayer').value || '',
+      auto_show_when_live: document.getElementById('liveStreamAutoShow').checked,
+    };
+
+    // CTA sticky
+    d.blocks.cta_sticky = {
+      active: document.getElementById('ctaStickyActive').checked,
+      text: document.getElementById('ctaStickyText').value.trim(),
+      url: document.getElementById('ctaStickyUrl').value.trim(),
+      mobile_only: document.getElementById('ctaStickyMobileOnly').checked,
+    };
+
+    return d;
+  }
+
+  function buildCta(prefix) {
+    const text = document.getElementById(`${prefix}Text`).value.trim();
+    const url = document.getElementById(`${prefix}Url`).value.trim();
+    if (!text && !url) return null;
+    return {
+      text,
+      url,
+      new_tab: document.getElementById(`${prefix}NewTab`).checked,
+    };
+  }
+
+  // ── Init uploads and switches after DOM ────────────────────────────────────
+  initUploadComponent('heroBg');
+  initUploadComponent('heroLogo');
+  initUploadComponent('featureImg');
+  initUploadComponent('mediaImg');
+  initSwitchHandler('heroActive', 'heroActiveLabel', 'blockHero');
+  initSwitchHandler('countdownActive', 'countdownActiveLabel', 'blockCountdown');
+  initSwitchHandler('newsStripActive', 'newsStripActiveLabel', 'blockNewsStrip');
+  initSwitchHandler('featureActive', 'featureActiveLabel', 'blockFeature');
+  initSwitchHandler('mediaActive', 'mediaActiveLabel', 'blockMedia');
+
+  // ── Segmented control (feature image_position) ─────────────────────────────
+  document.querySelectorAll('#featureImagePosition .segmented-control__option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('#featureImagePosition .segmented-control__option').forEach(o => {
+        o.classList.remove('active');
+        o.querySelector('input').checked = false;
+      });
+      opt.classList.add('active');
+      opt.querySelector('input').checked = true;
+      markDirty();
+    });
+  });
+
+  // ── Radio cards (media type) ───────────────────────────────────────────────
+  document.querySelectorAll('#mediaTypeCards .radio-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const val = card.dataset.value;
+      setMediaType(val);
+      markDirty();
+    });
+  });
+
+  function setMediaType(val) {
+    document.querySelectorAll('#mediaTypeCards .radio-card').forEach(c => {
+      c.classList.toggle('active', c.dataset.value === val);
+      c.querySelector('input').checked = c.dataset.value === val;
+    });
+    document.getElementById('mediaSectionImage').classList.toggle('active', val === 'image');
+    document.getElementById('mediaSectionVideo').classList.toggle('active', val === 'video');
+    document.getElementById('mediaSectionGallery').classList.toggle('active', val === 'gallery');
+  }
+
+  // ── Media video URL validation (handled by initBlurValidation below) ────
+
+  // ── Gallery management ─────────────────────────────────────────────────────
+  let galleryImages = [];
+
+  document.getElementById('btnAddGalleryPhoto').addEventListener('click', () => {
+    document.getElementById('galleryFileInput').click();
+  });
+
+  document.getElementById('galleryFileInput').addEventListener('change', async (e) => {
+    if (!e.target.files[0]) return;
+    const file = e.target.files[0];
+    e.target.value = '';
+
+    try {
+      showToast('Subiendo foto...', 'success');
+      const url = await uploadImage(file);
+      galleryImages.push({ url, alt: '' });
+      renderGalleryList();
+      markDirty();
+      showToast('Foto agregada a la galería.', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  });
+
+  function renderGalleryList() {
+    const container = document.getElementById('galleryList');
+    container.innerHTML = '';
+    galleryImages.forEach((img, i) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.innerHTML = `
+        <img class="gallery-item__thumb" src="${img.url}" alt="${img.alt || ''}">
+        <span class="gallery-item__info">Foto ${i + 1}</span>
+        <div class="gallery-item__actions">
+          <button type="button" class="gallery-item__btn" title="Mover arriba" data-action="up" data-i="${i}" ${i === 0 ? 'disabled style="opacity:0.3"' : ''}>↑</button>
+          <button type="button" class="gallery-item__btn" title="Mover abajo" data-action="down" data-i="${i}" ${i === galleryImages.length - 1 ? 'disabled style="opacity:0.3"' : ''}>↓</button>
+          <button type="button" class="gallery-item__btn gallery-item__btn--remove" title="Quitar foto" data-action="remove" data-i="${i}">✕</button>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+
+    container.querySelectorAll('.gallery-item__btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const action = e.currentTarget.dataset.action;
+        const idx = parseInt(e.currentTarget.dataset.i);
+        if (action === 'up' && idx > 0) {
+          [galleryImages[idx - 1], galleryImages[idx]] = [galleryImages[idx], galleryImages[idx - 1]];
+          renderGalleryList();
+          markDirty();
+        } else if (action === 'down' && idx < galleryImages.length - 1) {
+          [galleryImages[idx], galleryImages[idx + 1]] = [galleryImages[idx + 1], galleryImages[idx]];
+          renderGalleryList();
+          markDirty();
+        } else if (action === 'remove') {
+          if (confirm('¿Quitar esta foto de la galería?')) {
+            galleryImages.splice(idx, 1);
+            renderGalleryList();
+            markDirty();
+          }
+        }
+      });
+    });
+  }
+
+  // ── Feature background color ───────────────────────────────────────────────
+  let featureBgColorSet = false;
+
+  document.getElementById('featureBgColor').addEventListener('input', (e) => {
+    const v = e.target.value;
+    document.getElementById('featureBgColorPreview').style.background = v;
+    document.getElementById('featureBgColorValue').textContent = v;
+    featureBgColorSet = true;
+    markDirty();
+  });
+  document.getElementById('featureBgColorClear').addEventListener('click', () => {
+    document.getElementById('featureBgColor').value = '#FFFFFF';
+    document.getElementById('featureBgColorPreview').style.background = '#FFFFFF';
+    document.getElementById('featureBgColorValue').textContent = 'Sin color';
+    featureBgColorSet = false;
+    markDirty();
+  });
+
+  // ── Validation (inline errors on blur, P3) ─────────────────────────────────
+  function isValidUrl(s) { return /^https?:\/\/.+/i.test(s); }
+
+  function showFieldError(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    const err = document.getElementById(errorId);
+    if (input) input.classList.add('has-error');
+    if (err) err.classList.add('visible');
+  }
+
+  function clearFieldError(inputId, errorId) {
+    const input = document.getElementById(inputId);
+    const err = document.getElementById(errorId);
+    if (input) input.classList.remove('has-error');
+    if (err) err.classList.remove('visible');
+  }
+
+  function validate() {
+    let valid = true;
+    // Clear all previous errors
+    document.querySelectorAll('.field-input.has-error, .field-select.has-error').forEach(el => el.classList.remove('has-error'));
+    document.querySelectorAll('.field-error.visible').forEach(el => el.classList.remove('visible'));
+
+    // Name required
+    const name = document.getElementById('hdrName').value.trim();
+    if (!name) {
+      showFieldError('hdrName', 'hdrNameError');
+      valid = false;
+    }
+
+    // Event date required
+    const evDate = document.getElementById('hdrEventDate').value;
+    if (!evDate) {
+      showFieldError('hdrEventDate', 'hdrEventDateError');
+      valid = false;
+    }
+
+    // URL validations (only if non-empty)
+    const urlFields = [
+      { id: 'heroCtaPrimaryUrl', errId: 'heroCtaPrimaryUrlError' },
+      { id: 'heroCtaSecondaryUrl', errId: 'heroCtaSecondaryUrlError' },
+      { id: 'featureCtaUrl', errId: 'featureCtaUrlError' },
+      { id: 'mediaVideoUrl', errId: 'mediaVideoUrlError' },
+      { id: 'ctaStickyUrl', errId: 'ctaStickyUrlError' },
+    ];
+    urlFields.forEach(({ id, errId }) => {
+      const val = document.getElementById(id)?.value.trim();
+      if (val && !isValidUrl(val)) {
+        showFieldError(id, errId);
+        valid = false;
+      }
+    });
+
+    // Sponsor URLs
+    sponsorItems.forEach((s, i) => {
+      if (s.url && !isValidUrl(s.url)) {
+        valid = false;
+        // Highlight inline — sponsor inputs have data-field="url"
+        const inp = document.querySelector(`.sponsor-item input[data-field="url"][data-i="${i}"]`);
+        if (inp) inp.classList.add('has-error');
+      }
+    });
+
+    if (!valid) {
+      showToast('Revisá los campos marcados en rojo.', 'error');
+      // Scroll to first error
+      const firstErr = document.querySelector('.has-error');
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return valid;
+  }
+
+  // ── Inline blur validation ────────────────────────────────────────────────
+  function initBlurValidation(inputId, errorId, validatorFn) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('blur', () => {
+      const val = input.value.trim();
+      if (validatorFn(val)) {
+        clearFieldError(inputId, errorId);
+      } else {
+        showFieldError(inputId, errorId);
+      }
+    });
+    input.addEventListener('input', () => clearFieldError(inputId, errorId));
+  }
+
+  // Required field validators
+  initBlurValidation('hdrName', 'hdrNameError', v => v.length > 0);
+  initBlurValidation('hdrEventDate', 'hdrEventDateError', v => v.length > 0);
+
+  // URL validators (valid if empty or valid URL)
+  const urlValidator = v => !v || isValidUrl(v);
+  initBlurValidation('heroCtaPrimaryUrl', 'heroCtaPrimaryUrlError', urlValidator);
+  initBlurValidation('heroCtaSecondaryUrl', 'heroCtaSecondaryUrlError', urlValidator);
+  initBlurValidation('featureCtaUrl', 'featureCtaUrlError', urlValidator);
+  initBlurValidation('mediaVideoUrl', 'mediaVideoUrlError', urlValidator);
+  initBlurValidation('ctaStickyUrl', 'ctaStickyUrlError', urlValidator);
+
+  // ── Save event ────────────────────────────────────────────────────────────
+  async function saveEvent() {
+    const btn = document.getElementById('btnSave');
+    btn.disabled = true;
+    btn.textContent = 'Guardando…';
+
+    try {
+      if (!validate()) {
+        btn.disabled = false;
+        btn.textContent = 'Guardar cambios';
+        return;
+      }
+
+      const formData = collectFormData();
+      formData.updated_at = serverTimestamp();
+      formData.updated_by = auth.currentUser?.uid || '';
+
+      await setDoc(doc(db, 'events', state.slug), formData, { merge: true });
+      state.data = { ...state.data, ...formData };
+      showToast('Cambios guardados.', 'success');
+      markClean();
+      updateStatusPill(state.data);
+      document.getElementById('eventName').textContent = formData.name || state.slug;
+    } catch (err) {
+      console.error('Save error:', err);
+      if (err.code === 'permission-denied') {
+        showToast('No tenés permiso para guardar este cambio.', 'error');
+      } else {
+        showToast('Error al guardar. Intentá de nuevo.', 'error');
+      }
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Guardar cambios';
+    }
+  }
+
+  // ── Override save handler ──────────────────────────────────────────────────
+  document.getElementById('btnSave').addEventListener('click', () => {
+    if (!state.slug) return;
+    saveEvent();
+  });
+
+  // ── Confirmation modal (P6) ────────────────────────────────────────────────
+  function confirmDelete(message) {
+    return new Promise(resolve => {
+      const backdrop = document.getElementById('confirmModal');
+      document.getElementById('confirmModalMsg').textContent = message;
+      backdrop.style.display = '';
+
+      function cleanup(result) {
+        backdrop.style.display = 'none';
+        document.getElementById('confirmModalCancel').removeEventListener('click', onCancel);
+        document.getElementById('confirmModalDelete').removeEventListener('click', onDelete);
+        backdrop.removeEventListener('click', onBackdrop);
+        resolve(result);
+      }
+      function onCancel() { cleanup(false); }
+      function onDelete() { cleanup(true); }
+      function onBackdrop(e) { if (e.target === backdrop) cleanup(false); }
+
+      document.getElementById('confirmModalCancel').addEventListener('click', onCancel);
+      document.getElementById('confirmModalDelete').addEventListener('click', onDelete);
+      backdrop.addEventListener('click', onBackdrop);
+    });
+  }
+
+  // ── Schedule list management ───────────────────────────────────────────────
+  let scheduleItems = [];
+
+  function renderScheduleList() {
+    const container = document.getElementById('scheduleList');
+    const emptyEl = document.getElementById('scheduleEmpty');
+    container.innerHTML = '';
+
+    if (scheduleItems.length === 0) {
+      emptyEl.style.display = '';
+      return;
+    }
+    emptyEl.style.display = 'none';
+
+    scheduleItems.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = 'schedule-item';
+      el.innerHTML = `
+        <div class="schedule-item__time">
+          <input type="time" value="${item.time || ''}" data-field="time" data-i="${i}" aria-label="Hora">
+        </div>
+        <div class="schedule-item__name">
+          <input type="text" value="${escAttr(item.label || '')}" placeholder="Actividad" data-field="label" data-i="${i}" aria-label="Actividad">
+        </div>
+        <div class="schedule-item__desc">
+          <textarea rows="2" placeholder="Descripción (opcional)" data-field="description" data-i="${i}" aria-label="Descripción">${escHtml(item.description || '')}</textarea>
+        </div>
+        <div class="schedule-item__actions">
+          <button type="button" class="list-item__btn" title="Mover arriba" data-action="up" data-i="${i}" ${i === 0 ? 'disabled' : ''}>↑</button>
+          <button type="button" class="list-item__btn" title="Mover abajo" data-action="down" data-i="${i}" ${i === scheduleItems.length - 1 ? 'disabled' : ''}>↓</button>
+          <button type="button" class="list-item__btn list-item__btn--remove" title="Eliminar" data-action="remove" data-i="${i}">✕</button>
+        </div>
+      `;
+      container.appendChild(el);
+    });
+
+    // Attach listeners
+    container.querySelectorAll('input, textarea').forEach(inp => {
+      inp.addEventListener('input', (e) => {
+        const idx = parseInt(e.target.dataset.i);
+        const field = e.target.dataset.field;
+        scheduleItems[idx][field] = e.target.value;
+        markDirty();
+      });
+    });
+
+    container.querySelectorAll('.list-item__btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const action = e.currentTarget.dataset.action;
+        const idx = parseInt(e.currentTarget.dataset.i);
+        if (action === 'up' && idx > 0) {
+          [scheduleItems[idx - 1], scheduleItems[idx]] = [scheduleItems[idx], scheduleItems[idx - 1]];
+          renderScheduleList();
+          markDirty();
+        } else if (action === 'down' && idx < scheduleItems.length - 1) {
+          [scheduleItems[idx], scheduleItems[idx + 1]] = [scheduleItems[idx + 1], scheduleItems[idx]];
+          renderScheduleList();
+          markDirty();
+        } else if (action === 'remove') {
+          const ok = await confirmDelete('¿Eliminar esta entrada de la programación?');
+          if (ok) {
+            scheduleItems.splice(idx, 1);
+            renderScheduleList();
+            markDirty();
+          }
+        }
+      });
+    });
+  }
+
+  document.getElementById('btnAddScheduleItem').addEventListener('click', () => {
+    scheduleItems.push({ time: '', label: '', description: '' });
+    renderScheduleList();
+    markDirty();
+    // Focus the new time input
+    const lastTime = document.querySelector('#scheduleList .schedule-item:last-child input[type="time"]');
+    if (lastTime) lastTime.focus();
+  });
+
+  // ── Sponsors list management ───────────────────────────────────────────────
+  let sponsorItems = [];
+  const TIER_ORDER = ['diamond', 'gold', 'silver', 'bronze'];
+  const TIER_LABELS = { diamond: 'Diamante', gold: 'Oro', silver: 'Plata', bronze: 'Bronce' };
+
+  function renderSponsorList() {
+    const container = document.getElementById('sponsorList');
+    const emptyEl = document.getElementById('sponsorsEmpty');
+    container.innerHTML = '';
+
+    if (sponsorItems.length === 0) {
+      emptyEl.style.display = '';
+      return;
+    }
+    emptyEl.style.display = 'none';
+
+    // Group by tier for visual separators
+    let currentTier = null;
+    // Get items with their original indices for within-tier reordering
+    const tierGroups = {};
+    sponsorItems.forEach((s, i) => {
+      const t = s.tier || 'bronze';
+      if (!tierGroups[t]) tierGroups[t] = [];
+      tierGroups[t].push({ ...s, _idx: i });
+    });
+
+    TIER_ORDER.forEach(tier => {
+      const group = tierGroups[tier];
+      if (!group || group.length === 0) return;
+
+      const header = document.createElement('div');
+      header.className = 'sponsor-tier-header';
+      header.textContent = TIER_LABELS[tier];
+      container.appendChild(header);
+
+      group.forEach((item, posInTier) => {
+        const i = item._idx;
+        const el = document.createElement('div');
+        el.className = 'sponsor-item';
+        el.dataset.index = i;
+        el.innerHTML = `
+          <div class="sponsor-item__logo">
+            ${item.logo_url ? `<img src="${escAttr(item.logo_url)}" alt="Logo">` : `<span class="sponsor-item__logo-placeholder">Logo</span>`}
+            <input type="file" accept="image/jpeg,image/png,image/webp" data-i="${i}" aria-label="Subir logo">
+          </div>
+          <div class="sponsor-item__fields">
+            <div class="sponsor-item__row">
+              <div class="sponsor-item__switch">
+                <label class="switch switch--sm">
+                  <input type="checkbox" ${item.active !== false ? 'checked' : ''} data-field="active" data-i="${i}">
+                  <span class="switch-slider"></span>
+                </label>
+                <span style="font-size:0.68rem;color:var(--color-muted);">${item.active !== false ? 'Visible' : 'Oculto'}</span>
+              </div>
+            </div>
+            <input type="text" value="${escAttr(item.name || '')}" placeholder="Nombre del sponsor *" data-field="name" data-i="${i}" required>
+            <input type="url" value="${escAttr(item.url || '')}" placeholder="Link del sitio web (opcional)" data-field="url" data-i="${i}">
+            <select data-field="tier" data-i="${i}">
+              <option value="diamond" ${item.tier === 'diamond' ? 'selected' : ''}>Diamante</option>
+              <option value="gold" ${item.tier === 'gold' ? 'selected' : ''}>Oro</option>
+              <option value="silver" ${item.tier === 'silver' ? 'selected' : ''}>Plata</option>
+              <option value="bronze" ${item.tier === 'bronze' ? 'selected' : ''}>Bronce</option>
+            </select>
+          </div>
+          <div class="sponsor-item__actions">
+            <button type="button" class="list-item__btn" title="Mover arriba en nivel" data-action="up" data-i="${i}" ${posInTier === 0 ? 'disabled' : ''}>↑</button>
+            <button type="button" class="list-item__btn" title="Mover abajo en nivel" data-action="down" data-i="${i}" ${posInTier === group.length - 1 ? 'disabled' : ''}>↓</button>
+            <button type="button" class="list-item__btn list-item__btn--remove" title="Eliminar" data-action="remove" data-i="${i}">✕</button>
+          </div>
+        `;
+        container.appendChild(el);
+      });
+    });
+
+    // Attach field listeners
+    container.querySelectorAll('input[type="text"], input[type="url"], select').forEach(inp => {
+      inp.addEventListener('input', (e) => {
+        const idx = parseInt(e.target.dataset.i);
+        const field = e.target.dataset.field;
+        sponsorItems[idx][field] = e.target.value;
+        if (field === 'tier') {
+          renderSponsorList();
+        }
+        markDirty();
+      });
+      if (inp.tagName === 'SELECT') {
+        inp.addEventListener('change', (e) => {
+          const idx = parseInt(e.target.dataset.i);
+          sponsorItems[idx].tier = e.target.value;
+          renderSponsorList();
+          markDirty();
+        });
+      }
+    });
+
+    // Active switches
+    container.querySelectorAll('input[data-field="active"]').forEach(sw => {
+      sw.addEventListener('change', (e) => {
+        const idx = parseInt(e.target.dataset.i);
+        sponsorItems[idx].active = e.target.checked;
+        renderSponsorList();
+        markDirty();
+      });
+    });
+
+    // Logo uploads
+    container.querySelectorAll('.sponsor-item__logo input[type="file"]').forEach(inp => {
+      inp.addEventListener('change', async (e) => {
+        const idx = parseInt(e.target.dataset.i);
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+          showToast('Subiendo logo...', 'success');
+          const url = await uploadImage(file);
+          sponsorItems[idx].logo_url = url;
+          renderSponsorList();
+          markDirty();
+          showToast('Logo subido.', 'success');
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      });
+    });
+
+    // Action buttons
+    container.querySelectorAll('.list-item__btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const action = e.currentTarget.dataset.action;
+        const idx = parseInt(e.currentTarget.dataset.i);
+        if (action === 'remove') {
+          const ok = await confirmDelete('¿Eliminar este patrocinador?');
+          if (!ok) return;
+          sponsorItems.splice(idx, 1);
+          renderSponsorList();
+          markDirty();
+        } else if (action === 'up' || action === 'down') {
+          // Reorder within same tier
+          const tier = sponsorItems[idx].tier || 'bronze';
+          const tierIndices = sponsorItems
+            .map((s, i) => ({ tier: s.tier || 'bronze', i }))
+            .filter(s => s.tier === tier)
+            .map(s => s.i);
+          const posInTier = tierIndices.indexOf(idx);
+          if (action === 'up' && posInTier > 0) {
+            const swapIdx = tierIndices[posInTier - 1];
+            [sponsorItems[swapIdx], sponsorItems[idx]] = [sponsorItems[idx], sponsorItems[swapIdx]];
+            renderSponsorList();
+            markDirty();
+          } else if (action === 'down' && posInTier < tierIndices.length - 1) {
+            const swapIdx = tierIndices[posInTier + 1];
+            [sponsorItems[idx], sponsorItems[swapIdx]] = [sponsorItems[swapIdx], sponsorItems[idx]];
+            renderSponsorList();
+            markDirty();
+          }
+        }
+      });
+    });
+  }
+
+  document.getElementById('btnAddSponsor').addEventListener('click', () => {
+    sponsorItems.push({
+      id: 'sponsor_' + Date.now(),
+      name: '',
+      logo_url: '',
+      url: '',
+      tier: 'bronze',
+      order: sponsorItems.length,
+      active: true,
+    });
+    renderSponsorList();
+    markDirty();
+  });
+
+  // ── Init schedule/sponsors switch handlers ─────────────────────────────────
+  initSwitchHandler('scheduleActive', 'scheduleActiveLabel', 'blockSchedule');
+  initSwitchHandler('sponsorsActive', 'sponsorsActiveLabel', 'blockSponsors');
+  initSwitchHandler('liveStreamActive', 'liveStreamActiveLabel', 'blockLiveStream');
+  initSwitchHandler('ctaStickyActive', 'ctaStickyActiveLabel', 'blockCtaSticky');
+
+  // ── Utility: escape for attribute/html ─────────────────────────────────────
+  function escAttr(s) { return s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+
+</body>
+</html>

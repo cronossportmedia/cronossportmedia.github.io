@@ -1128,6 +1128,7 @@ ul { list-style: none; }
           <span class="dot-live"></span> En Vivo
         </a>
         <a href="noticias.html">Noticias</a>
+        <a href="eventos.html" data-nav-events>Eventos</a>
         <a href="nosotros.html">Nosotros</a>
         <a href="contacto.html">Contacto</a>
       </nav>
@@ -1183,6 +1184,7 @@ ul { list-style: none; }
     <a href="#" class="active">Inicio</a>
     <a href="en-vivo.html" style="color:var(--red)"><span class="dot-live" style="width:6px;height:6px"></span> En Vivo</a>
     <a href="noticias.html">Noticias</a>
+    <a href="eventos.html" data-nav-events>Eventos</a>
     <a href="nosotros.html">Nosotros</a>
     <a href="contacto.html">Contacto</a>
   </nav>
@@ -2088,6 +2090,14 @@ async function applySiteConfig() {
           document.querySelectorAll(selector).forEach(el => el.style.display = 'none');
         }
       });
+
+      // Events Hub nav visibility
+      if (config.sections.show_events_hub === false) {
+        document.querySelectorAll('[data-nav-events]').forEach(el => {
+          const li = el.closest('li');
+          if (li) li.hidden = true; else el.hidden = true;
+        });
+      }
     }
 
     // Social links
