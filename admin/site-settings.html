@@ -2437,7 +2437,7 @@
   document.getElementById('eventsList').addEventListener('click', (e) => {
     const editBtn = e.target.closest('[data-action="edit-blocks"]');
     if (editBtn) {
-      showToast('Próximamente — la edición de bloques se construye en la tarea EH-03.', 'success');
+      location.href = `event-editor.html?slug=${encodeURIComponent(editBtn.dataset.slug)}`;
       return;
     }
     const deleteBtn = e.target.closest('[data-action="delete"]');
