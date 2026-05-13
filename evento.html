@@ -535,8 +535,19 @@ ul { list-style: none; }
   .event-news__grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
-  .event-news__grid { grid-template-columns: 1fr; }
-  .event-news { padding: 48px 24px; }
+  .event-news { padding: 48px 16px; }
+  .event-news__grid {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 80%;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 16px;
+    padding-bottom: 8px;
+  }
+  .event-news__grid > * { scroll-snap-align: start; }
+  .event-news__grid::-webkit-scrollbar { display: none; }
 }
 
 /* ── FEATURE ──────────────────────────────────────────────── */
@@ -924,6 +935,7 @@ ul { list-style: none; }
           <span class="dot-live"></span> En Vivo
         </a>
         <a href="noticias.html">Noticias</a>
+        <a href="eventos.html" data-nav-events>Eventos</a>
         <a href="nosotros.html">Nosotros</a>
         <a href="contacto.html">Contacto</a>
       </nav>
@@ -977,6 +989,7 @@ ul { list-style: none; }
     <a href="index.html">Inicio</a>
     <a href="en-vivo.html" style="color:var(--red)"><span class="dot-live" style="width:6px;height:6px"></span> En Vivo</a>
     <a href="noticias.html">Noticias</a>
+    <a href="eventos.html" data-nav-events>Eventos</a>
     <a href="nosotros.html">Nosotros</a>
     <a href="contacto.html">Contacto</a>
   </nav>
@@ -1312,6 +1325,9 @@ menuClose.addEventListener('click', closeMenu);
 overlay.addEventListener('click', closeMenu);
 menu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 </script>
+
+<!-- Event News — EH-07: Carga noticias por tag -->
+<script type="module" src="js/event-news.js"></script>
 
 <!-- Event Renderer — EH-05 -->
 <script type="module">

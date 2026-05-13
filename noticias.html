@@ -749,6 +749,7 @@ ul { list-style: none; }
           <span class="dot-live"></span> En Vivo
         </a>
         <a href="noticias.html" class="active">Noticias</a>
+        <a href="eventos.html" data-nav-events>Eventos</a>
         <a href="nosotros.html">Nosotros</a>
         <a href="contacto.html">Contacto</a>
       </nav>
@@ -802,6 +803,7 @@ ul { list-style: none; }
     <a href="index.html">Inicio</a>
     <a href="en-vivo.html" style="color:var(--red)"><span class="dot-live" style="width:6px;height:6px"></span> En Vivo</a>
     <a href="noticias.html" class="active">Noticias</a>
+    <a href="eventos.html" data-nav-events>Eventos</a>
     <a href="nosotros.html">Nosotros</a>
     <a href="contacto.html">Contacto</a>
   </nav>
@@ -1138,6 +1140,7 @@ function categoryCatClass(cat) {
 
 // ── STATE ──────────────────────────────────────────────────────
 let currentCategory = 'all';
+let currentTag = null;
 let lastDoc = null;
 let hasMore = false;
 let isLoading = false;
@@ -1197,7 +1200,9 @@ async function fetchArticles(append) {
       limit(PAGE_SIZE + 1),
     ];
 
-    if (currentCategory !== 'all') {
+    if (currentTag) {
+      constraints.unshift(where('tags', 'array-contains', currentTag));
+    } else if (currentCategory !== 'all') {
       constraints.unshift(where('category', '==', currentCategory));
     }
 
@@ -1338,10 +1343,17 @@ async function loadCategoryCounts() {
 }
 
 // ── INIT ───────────────────────────────────────────────────────
-// Check URL params for category pre-filter
+// Check URL params for category or tag pre-filter
 const urlParams = new URLSearchParams(window.location.search);
+const urlTag = urlParams.get('tag');
 const urlCat = urlParams.get('categoria');
-if (urlCat && ['deportes', 'noticias', 'entretenimiento', 'opinion'].includes(urlCat)) {
+
+if (urlTag) {
+  currentTag = urlTag;
+  // Hide category filters when tag-filtering — different axis
+  const filterBar = document.querySelector('.filter-bar');
+  if (filterBar) filterBar.hidden = true;
+} else if (urlCat && ['deportes', 'noticias', 'entretenimiento', 'opinion'].includes(urlCat)) {
   currentCategory = urlCat;
   document.querySelectorAll('.filter-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.category === urlCat);
