@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sitemap": "node scripts/generate-sitemap.js"
+  },
+  "dependencies": {
+    "firebase": "^10.12.0"
+  }
+}

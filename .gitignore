@@ -19,3 +19,7 @@ Icon
 .com.apple.timemachine.donotpresent
 
 .agents
+
+### Node
+node_modules/
+package-lock.json
