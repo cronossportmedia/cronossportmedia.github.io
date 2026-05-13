@@ -110,15 +110,9 @@ function renderEvent(event) {
   const status = computeStatus(event);
   page.dataset.status = status;
 
-  // SEO basico
-  document.title = event.seo?.meta_title || `${event.name} — Crono Play`;
-  setMeta('description', event.seo?.meta_description);
-  setOg('og:title', event.seo?.og_title || document.title);
-  setOg('og:description', event.seo?.og_description);
-  setOg('og:image', event.seo?.og_image || event.blocks?.hero?.background_image_url);
-  document.querySelector('link[rel=canonical]')?.setAttribute(
-    'href', `https://cronoplay.com/evento.html?slug=${event.slug}`
-  );
+  // SEO completo (EH-10)
+  applySEO(event);
+  injectEventSchema(event, status);
 
   // Iterar bloques en el orden definido
   const order = Array.isArray(event.block_order) && event.block_order.length
@@ -363,16 +357,108 @@ function setText(root, selector, text) {
   if (el) el.textContent = text;
 }
 
+// ── SEO (EH-10) ─────────────────────────────────────────────
+
+function applySEO(event) {
+  const seo = event.seo || {};
+  const hero = event.blocks?.hero || {};
+  const title = seo.meta_title || `${event.name} — Crono Play`;
+  const description = (seo.meta_description ||
+    hero.subtitle || `Cobertura completa de ${event.name} en Crono Play.`).slice(0, 160);
+  const url = `https://cronoplay.com/evento.html?slug=${encodeURIComponent(event.slug)}`;
+  const image = seo.og_image || hero.background_image_url || 'https://cronoplay.com/assets/img/og-default.png';
+
+  document.title = title;
+
+  setMeta('description', description);
+  setOg('og:title', seo.og_title || title);
+  setOg('og:description', seo.og_description || description);
+  setOg('og:type', 'article');
+  setOg('og:url', url);
+  setOg('og:image', image);
+  setOg('og:site_name', 'Crono Play');
+  setMeta('twitter:card', 'summary_large_image');
+  setMeta('twitter:title', title);
+  setMeta('twitter:description', description);
+  setMeta('twitter:image', image);
+
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement('link');
+    canonical.rel = 'canonical';
+    document.head.appendChild(canonical);
+  }
+  canonical.href = url;
+}
+
+function injectEventSchema(event, status) {
+  const start = deserializeDate(event.event_date);
+  const end = deserializeDate(event.event_end_date) ?? start;
+  if (!start) return;
+
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.name,
+    startDate: start.toISOString(),
+    endDate: end.toISOString(),
+    eventStatus: mapStatusToSchema(status),
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: event.location ? { '@type': 'Place', name: event.location } : undefined,
+    image: event.blocks?.hero?.background_image_url,
+    description: event.seo?.meta_description || event.blocks?.hero?.subtitle,
+    url: `https://cronoplay.com/evento.html?slug=${event.slug}`,
+    organizer: { '@type': 'Organization', name: 'Crono Play', url: 'https://cronoplay.com' }
+  };
+
+  const sponsors = event.blocks?.sponsors?.items?.filter(s => s.active) || [];
+  if (sponsors.length) {
+    schema.sponsor = sponsors.map(s => ({
+      '@type': 'Organization',
+      name: s.name,
+      url: s.url || undefined,
+      logo: s.logo_url || undefined
+    }));
+  }
+
+  document.getElementById('event-schema')?.remove();
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = 'event-schema';
+  script.textContent = JSON.stringify(schema);
+  document.head.appendChild(script);
+}
+
+function mapStatusToSchema(status) {
+  return ({
+    upcoming: 'https://schema.org/EventScheduled',
+    live: 'https://schema.org/EventScheduled',
+    finished: 'https://schema.org/EventScheduled',
+    cancelled: 'https://schema.org/EventCancelled',
+    postponed: 'https://schema.org/EventPostponed'
+  })[status] || 'https://schema.org/EventScheduled';
+}
+
 function setMeta(name, content) {
   if (!content) return;
-  const el = document.querySelector(`meta[name="${name}"]`);
-  if (el) el.content = content;
+  let el = document.querySelector(`meta[name="${name}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.name = name;
+    document.head.appendChild(el);
+  }
+  el.content = content;
 }
 
 function setOg(prop, content) {
   if (!content) return;
-  const el = document.querySelector(`meta[property="${prop}"]`);
-  if (el) el.content = content;
+  let el = document.querySelector(`meta[property="${prop}"]`);
+  if (!el) {
+    el = document.createElement('meta');
+    el.setAttribute('property', prop);
+    document.head.appendChild(el);
+  }
+  el.content = content;
 }
 
 function showError() {

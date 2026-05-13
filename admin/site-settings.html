@@ -1361,7 +1361,7 @@
   import { onAuthStateChanged, signOut }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { doc, getDoc, setDoc, serverTimestamp,
-           collection, getDocs, deleteDoc, query, orderBy, Timestamp }
+           collection, getDocs, deleteDoc, query, orderBy, where, Timestamp }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const CLOUDINARY_CLOUD  = 'dgfmlxvfn';
@@ -1586,18 +1586,20 @@
     renderCarouselPreview();
   }
 
-  function buildSlideDestinationHTML(selectedValue) {
+  async function buildSlideDestinationHTML(selectedValue) {
     const pages = [
       { value: '/index.html', label: 'Inicio' },
       { value: '/en-vivo.html', label: 'En Vivo' },
       { value: '/podcast.html', label: 'Podcast' },
       { value: '/noticias.html', label: 'Noticias' },
+      { value: '/eventos.html', label: 'Eventos' },
       { value: '/nosotros.html', label: 'Nosotros' },
       { value: '/contacto.html', label: 'Contacto' },
     ];
     const INTERNAL_URLS = pages.map(p => p.value);
     const isPlayerUrl = selectedValue && selectedValue.includes('#player-');
-    const isCustom = selectedValue && selectedValue !== '__custom__' && !INTERNAL_URLS.includes(selectedValue) && !isPlayerUrl;
+    const isEventUrl = selectedValue && selectedValue.startsWith('evento.html?slug=');
+    const isCustom = selectedValue && selectedValue !== '__custom__' && !INTERNAL_URLS.includes(selectedValue) && !isPlayerUrl && !isEventUrl;
 
     let html = '<option value="">Sin destino</option>';
     html += '<optgroup label="Páginas">';
@@ -1612,6 +1614,16 @@
       activePlayers.forEach(p => {
         const val = `/en-vivo.html#player-${p.id}`;
         html += `<option value="${val}" ${selectedValue === val ? 'selected' : ''}>En Vivo · ${p.name}</option>`;
+      });
+      html += '</optgroup>';
+    }
+
+    const events = await loadActiveEvents();
+    if (events.length) {
+      html += '<optgroup label="Eventos">';
+      events.forEach(ev => {
+        const val = `evento.html?slug=${encodeURIComponent(ev.slug)}`;
+        html += `<option value="${val}" ${selectedValue === val ? 'selected' : ''}>${ev.name}</option>`;
       });
       html += '</optgroup>';
     }
@@ -1643,7 +1655,7 @@
     });
   }
 
-  function renderSlidesList() {
+  async function renderSlidesList() {
     const container = document.getElementById('slidesList');
     if (!carouselSlides.length) {
       container.innerHTML = '<div class="slides-empty">No hay slides configurados. Agrega el primero.</div>';
@@ -1651,13 +1663,14 @@
       return;
     }
 
-    container.innerHTML = carouselSlides.map((slide, idx) => {
+    const htmlParts = await Promise.all(carouselSlides.map(async (slide, idx) => {
       const isExpanded = expandedSlideIds.has(slide.id);
       const isFirst = idx === 0;
       const isLast = idx === carouselSlides.length - 1;
-      const INTERNAL_URLS = ['/index.html', '/en-vivo.html', '/podcast.html', '/noticias.html', '/nosotros.html', '/contacto.html'];
+      const INTERNAL_URLS = ['/index.html', '/en-vivo.html', '/podcast.html', '/noticias.html', '/eventos.html', '/nosotros.html', '/contacto.html'];
       const isPlayerUrl = slide.url_destino && slide.url_destino.includes('#player-');
-      const isCustomUrl = slide.url_destino && !INTERNAL_URLS.includes(slide.url_destino) && !isPlayerUrl;
+      const isEventUrl = slide.url_destino && slide.url_destino.startsWith('evento.html?slug=');
+      const isCustomUrl = slide.url_destino && !INTERNAL_URLS.includes(slide.url_destino) && !isPlayerUrl && !isEventUrl;
       const selectValue = isCustomUrl ? '__custom__' : (slide.url_destino || '');
       const customUrlValue = isCustomUrl ? slide.url_destino : '';
 
@@ -1718,7 +1731,7 @@
           <div class="field-group" style="margin:0;">
             <label class="field-label">Destino del slide</label>
             <select class="field-select slide-destino-select" data-slide-id="${slide.id}">
-              ${buildSlideDestinationHTML(selectValue)}
+              ${await buildSlideDestinationHTML(selectValue)}
             </select>
             <div class="slide-custom-url" style="display:${isCustomUrl ? 'block' : 'none'};margin-top:0.5rem;">
               <input class="field-input slide-custom-url-input" type="url" value="${escapeAttr(customUrlValue)}" placeholder="https://..." data-slide-id="${slide.id}">
@@ -1742,8 +1755,9 @@
           </div>
         </div>
       </div>`;
-    }).join('');
+    }));
 
+    container.innerHTML = htmlParts.join('');
     updateAddSlideButton();
   }
 
@@ -2031,6 +2045,31 @@
 
   function hidePageLoading() {
     document.getElementById('pageLoading').classList.add('hidden');
+  }
+
+  // ── Eventos activos (caché para select banner) ─────────────────────────
+
+  let cachedActiveEvents = null;
+
+  async function loadActiveEvents() {
+    if (cachedActiveEvents) return cachedActiveEvents;
+    try {
+      const q = query(
+        collection(db, 'events'),
+        where('active', '==', true),
+        orderBy('event_date', 'desc')
+      );
+      const snap = await getDocs(q);
+      cachedActiveEvents = [];
+      snap.forEach(d => {
+        const data = d.data();
+        cachedActiveEvents.push({ slug: d.id, name: data.name });
+      });
+      return cachedActiveEvents;
+    } catch (err) {
+      console.error('[banner-events]', err);
+      return [];
+    }
   }
 
   // ── Reproductores (live_players) ────────────────────────────────────────
