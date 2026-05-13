@@ -379,6 +379,8 @@ ul { list-style: none; }
 .btn--primary:hover { background: var(--orange-hi); transform: translateY(-1px); box-shadow: 0 8px 24px rgba(245,97,26,.4); }
 .btn--ghost { background: transparent; color: var(--muted-hi); border: 1.5px solid var(--border-hi); }
 .btn--ghost:hover { border-color: var(--blue); color: var(--blue); }
+/* Respeta el atributo HTML `hidden` (CSS display lo pisaria si no) */
+.btn[hidden] { display: none !important; }
 
 /* ── HERO ─────────────────────────────────────────────────── */
 .event-hero {
@@ -836,6 +838,8 @@ ul { list-style: none; }
 }
 .event-cta-sticky:hover { background: var(--orange-hi); transform: translateY(-2px); }
 .event-cta-sticky[data-mobile-only="true"] { display: none; }
+/* Respeta el atributo HTML `hidden` cuando el bloque no esta activo */
+.event-cta-sticky[hidden] { display: none !important; }
 
 @media (max-width: 768px) {
   .event-cta-sticky[data-mobile-only="true"] { display: flex; }

@@ -327,10 +327,14 @@ const BLOCK_RENDERERS = {
   cta_sticky(block) {
     const root = document.querySelector('.event-cta-sticky');
     if (!root) return;
+    // Si no hay url o texto utiles, no mostrar la barra (evita CTA vacio).
+    const url = (block.url || '').trim();
+    const text = (block.text || '').trim();
+    if (!url || !text) return;
     root.hidden = false;
     if (block.mobile_only) root.classList.add('event-cta-sticky--mobile-only');
-    root.href = block.url || '#';
-    setField(root, 'text', block.text || 'Ver mas');
+    root.href = url;
+    setField(root, 'text', text);
   }
 };
 

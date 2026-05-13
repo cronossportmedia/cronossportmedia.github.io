@@ -1375,11 +1375,12 @@
             <div class="field-group">
               <label class="field-label" for="heroCtaPrimaryText">Texto del bot&oacute;n</label>
               <input class="field-input" type="text" id="heroCtaPrimaryText" placeholder="Ej: M&aacute;s informaci&oacute;n">
+              <span class="field-error" id="heroCtaPrimaryTextError">Si pon&eacute;s un link, tambi&eacute;n necesit&aacute;s un texto para el bot&oacute;n.</span>
             </div>
             <div class="field-group">
               <label class="field-label" for="heroCtaPrimaryUrl">Link del bot&oacute;n</label>
               <input class="field-input" type="url" id="heroCtaPrimaryUrl" placeholder="https://...">
-              <span class="field-error" id="heroCtaPrimaryUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+              <span class="field-error" id="heroCtaPrimaryUrlError">Ingres&aacute; una URL v&aacute;lida (https://...) o dejala vac&iacute;a junto con el texto.</span>
             </div>
             <label class="checkbox-row">
               <input type="checkbox" id="heroCtaPrimaryNewTab">
@@ -1392,11 +1393,12 @@
             <div class="field-group">
               <label class="field-label" for="heroCtaSecondaryText">Texto del bot&oacute;n</label>
               <input class="field-input" type="text" id="heroCtaSecondaryText">
+              <span class="field-error" id="heroCtaSecondaryTextError">Si pon&eacute;s un link, tambi&eacute;n necesit&aacute;s un texto para el bot&oacute;n.</span>
             </div>
             <div class="field-group">
               <label class="field-label" for="heroCtaSecondaryUrl">Link del bot&oacute;n</label>
               <input class="field-input" type="url" id="heroCtaSecondaryUrl" placeholder="https://...">
-              <span class="field-error" id="heroCtaSecondaryUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+              <span class="field-error" id="heroCtaSecondaryUrlError">Ingres&aacute; una URL v&aacute;lida (https://...) o dejala vac&iacute;a junto con el texto.</span>
             </div>
             <label class="checkbox-row">
               <input type="checkbox" id="heroCtaSecondaryNewTab">
@@ -1816,12 +1818,13 @@
             <label class="field-label" for="ctaStickyText">Texto del bot&oacute;n</label>
             <input class="field-input" type="text" id="ctaStickyText" maxlength="30" placeholder="Ej: Ver en vivo">
             <span class="field-help">Texto del bot&oacute;n. Mantenelo corto: &laquo;Ver en vivo&raquo;, &laquo;Inscr&iacute;bete&raquo;, &laquo;Comprar entrada&raquo;.</span>
+            <span class="field-error" id="ctaStickyTextError">El texto es obligatorio cuando el bot&oacute;n flotante est&aacute; visible.</span>
           </div>
 
           <div class="field-group">
             <label class="field-label" for="ctaStickyUrl">Link del bot&oacute;n</label>
             <input class="field-input" type="url" id="ctaStickyUrl" placeholder="https://...">
-            <span class="field-error" id="ctaStickyUrlError">Ingres&aacute; una URL v&aacute;lida (https://...).</span>
+            <span class="field-error" id="ctaStickyUrlError">Ingres&aacute; una URL v&aacute;lida (https://...). El link es obligatorio cuando el bot&oacute;n est&aacute; visible.</span>
           </div>
 
           <div class="field-group">
@@ -2814,6 +2817,36 @@
         if (inp) inp.classList.add('has-error');
       }
     });
+
+    // Hero CTAs: si tienen un campo lleno, exigir el otro (evita botones vacios en el hero)
+    [
+      { textId: 'heroCtaPrimaryText', urlId: 'heroCtaPrimaryUrl', textErr: 'heroCtaPrimaryTextError', urlErr: 'heroCtaPrimaryUrlError' },
+      { textId: 'heroCtaSecondaryText', urlId: 'heroCtaSecondaryUrl', textErr: 'heroCtaSecondaryTextError', urlErr: 'heroCtaSecondaryUrlError' },
+    ].forEach(({ textId, urlId, textErr, urlErr }) => {
+      const text = document.getElementById(textId)?.value.trim() || '';
+      const url = document.getElementById(urlId)?.value.trim() || '';
+      if (text && !url) {
+        showFieldError(urlId, urlErr);
+        valid = false;
+      } else if (url && !text) {
+        showFieldError(textId, textErr);
+        valid = false;
+      }
+    });
+
+    // CTA sticky activo: text y url son obligatorios (evita la barra naranja vacia)
+    if (document.getElementById('ctaStickyActive')?.checked) {
+      const text = document.getElementById('ctaStickyText').value.trim();
+      const url = document.getElementById('ctaStickyUrl').value.trim();
+      if (!text) {
+        showFieldError('ctaStickyText', 'ctaStickyTextError');
+        valid = false;
+      }
+      if (!url) {
+        showFieldError('ctaStickyUrl', 'ctaStickyUrlError');
+        valid = false;
+      }
+    }
 
     if (!valid) {
       showToast('Revisá los campos marcados en rojo.', 'error');
