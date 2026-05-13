@@ -38,7 +38,7 @@ function toCard(event) {
       <a href="evento.html?slug=${encodeURIComponent(event.slug || event.id)}">
         <div class="event-card-public__media">
           ${heroImage
-            ? `<img src="${esc(heroImage)}" alt="" loading="lazy">`
+            ? `<img src="${esc(heroImage)}" alt="${esc(event.name)}" loading="lazy">`
             : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;
                 background:linear-gradient(135deg,var(--card),var(--border));color:var(--muted);
                 font-size:12px;font-family:var(--font-d)">Sin imagen</div>`
