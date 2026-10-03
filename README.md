@@ -1,56 +1,54 @@
-# Crono Play — Sitio Web Oficial
+# Crono Play — Sitio web oficial
 
-Sitio web oficial de **Crono Play**, agencia de noticias deportiva que forma periodistas y conecta a la audiencia venezolana con el deporte a través de radio en streaming, podcasts y transmisiones en vivo.
+Sitio web de **Crono Play**, medio venezolano de deportes y entretenimiento: radio en vivo 24/7, noticias,
+transmisiones en vivo, eventos y podcast.
 
-🌐 **Sitio en vivo**: [cronoplay.com](https://cronoplay.com)
+🌐 **[cronoplay.com](https://cronoplay.com)** · *"Donde el deporte se cuenta de verdad"*
 
----
+## Qué hay en el sitio
 
-## Stack técnico
+| Página | Contenido |
+|---|---|
+| `index.html` | Inicio: hero, banner carrusel, radio en vivo (con popup de bienvenida), últimas noticias |
+| `en-vivo.html` | Radio en vivo, YouTube Live y reproductores de emisoras aliadas |
+| `noticias.html` · `noticia.html?slug=` | Listado y detalle de noticias |
+| `eventos.html` · `evento.html?slug=` | Listado y micrositio de cada evento |
+| `podcast.html` · `nosotros.html` · `contacto.html` | Podcast, quiénes somos, contacto |
+| `admin/` | Panel de administración (requiere cuenta) |
 
-HTML estático + CSS puro, sin frameworks ni dependencias. Hosteado en GitHub Pages con deploy automático al hacer push a `main`.
+## Stack
 
-## Páginas
+- **HTML + CSS + JavaScript vanilla** (módulos ES). Sin frameworks ni build: cada página es un archivo autocontenido.
+- **GitHub Pages** para el hosting. Al hacer merge a `main` se despliega en ~1 minuto.
+- **Firebase** (Auth + Firestore) para noticias, configuración del sitio y eventos. **Cloudinary** para imágenes y audio.
+- **Zeno.fm** (radio), **YouTube Data API** (detección de lives), **Formspree** (formulario de contacto).
 
-| Archivo | Descripción |
-|---------|-------------|
-| `index.html` | Home — hero, radio, qué hacemos, podcasts |
-| `en-vivo.html` | Transmisiones — radio en vivo y YouTube Live |
-| `podcast.html` | Catálogo de episodios y plataformas |
-| `nosotros.html` | Misión, submarcas, valores y equipo |
-| `contacto.html` | Formulario de contacto (Formspree) |
+## Desarrollo local
 
-## Cómo actualizar el sitio
+Requiere Node.js 18+.
 
 ```bash
 git clone https://github.com/cronossportmedia/cronossportmedia.github.io
-# editar los archivos HTML necesarios
-git add .
-git commit -m "tipo: descripción breve"
-git push origin main
-# GitHub Pages despliega automáticamente en ~60 segundos
+cd cronossportmedia.github.io
+npm run dev        # http://localhost:5510
 ```
 
-### Convenciones de commits
+- El servidor (`scripts/dev-server.js`) no tiene dependencias. Si el puerto está ocupado: `PORT=5511 npm run dev`.
+- No abras los archivos con `file://`: los módulos y Firestore necesitan `http`.
+- En localhost es normal ver un error 403 de la API de YouTube.
+- `npm install` + `npm run sitemap` regeneran `sitemap.xml` (también lo hace un GitHub Action cada día).
 
-| Prefijo | Uso |
-|---------|-----|
-| `feat:` | Nueva funcionalidad o página |
-| `fix:` | Corrección de bug o error visual |
-| `content:` | Actualización de textos o contenido |
-| `style:` | Cambios visuales (CSS, colores) |
-| `docs:` | Cambios en documentación |
-| `chore:` | Mantenimiento y limpieza |
+## Contribuir
 
-## Pendientes antes del lanzamiento completo
+1. Crea una rama desde `main` actualizado: `feat/…`, `fix/…`, `perf/…`.
+2. Commits con prefijo: `feat:`, `fix:`, `perf:`, `style:`, `content:`, `docs:`, `chore:`, `refactor:`.
+3. Prueba en modo claro y oscuro, en móvil (375px) y en escritorio.
+4. Abre un Pull Request a `main`. El mantenedor revisa y hace el merge. Nunca hagas push directo a `main`.
 
-- [ ] Reproductor de radio (proveedor de streaming por confirmar)
-- [ ] URLs de redes sociales en el footer
-- [ ] Logo oficial SVG
-- [ ] Favicon
-- [ ] Página de contacto (`contacto.html`) — requiere cuenta en Formspree
-- [ ] Datos del equipo en `nosotros.html`
-- [ ] Títulos y descripciones de episodios en `podcast.html`
+Los textos del sitio van en español venezolano (tuteo: *escucha, síguenos*).
+
+**Agentes de IA:** lean [AGENTS.md](AGENTS.md). La documentación interna del proyecto está en un repositorio privado,
+solo para el equipo.
 
 ---
 

@@ -23,3 +23,7 @@ Icon
 ### Node
 node_modules/
 package-lock.json
+
+### Local / personal
+.claude/settings.local.json
+.env
