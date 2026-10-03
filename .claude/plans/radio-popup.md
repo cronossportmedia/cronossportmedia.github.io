@@ -10,7 +10,8 @@
 
 Crono Play is being promoted on partner radio circuits in Venezuela. People who hear about it and visit
 `cronoplay.com` should immediately get the radio player in front of them, ideally already playing, and
-see a promo for the new **weekly morning news summary** ("resumen semanal").
+see a promo for the new news-highlights program **"Compacto Deportivo Venezolano"** (official name).
+It may air weekly or daily, so the popup is **not tied to a schedule** in this first stage.
 
 ## 2. Decisions (approved by owner, 2026-10-03)
 
@@ -18,7 +19,7 @@ see a promo for the new **weekly morning news summary** ("resumen semanal").
 |---|---|
 | Autoplay | Popup opens and **tries** `audio.play()`. If the browser blocks it (`NotAllowedError`, the normal case on a first visit and always on iOS), the popup shows a large **"Escuchar ahora"** button. No hijacking of other clicks on the page. |
 | Frequency | **Once per browser session** (`sessionStorage`). |
-| Content | The existing **24/7 Zeno live stream** + a promo block for the weekly summary (name + day/time). |
+| Content | The existing **24/7 Zeno live stream** + a promo block for **"Compacto Deportivo Venezolano"** (name only; day/time optional, empty for now). |
 | Control | **Admin card** in `admin/site-settings.html` → Firestore doc `site_config/radio_popup` (on/off + texts). |
 | Scope | **`index.html` only.** The other 8 pages keep their current players untouched. |
 | "Window" | An **in-page modal (dialog)**, NOT `window.open()`. Pop-up blockers kill real windows opened without a click. |
@@ -48,8 +49,10 @@ see a promo for the new **weekly morning news summary** ("resumen semanal").
   `setBtnLoading(btn,bool)` and `showToast(msg,'success'|'error')`. `loadAllSettings()` fetches docs with `Promise.all`.
 - CSS: design tokens on `:root` (`--orange` accent, `--bg --surface --card --border --border-hi --text --muted --font-d --font-b --r --r-lg`)
   with `[data-theme="light"]` overrides. Existing z-index layers: header 100, mobile overlay/menu 150/160, sticky player 180, tweak panel 300.
-- Firestore security rules are **not in this repo** (Firebase console). `site_config/live_players` was added later and works,
-  so `site_config/*` is probably a wildcard. **Verify** that admins can write and the public can read `site_config/radio_popup`.
+- Firestore security rules are **not in this repo** (Firebase console).
+  - **Public read: verified 2026-10-03.** Anonymous `getDoc` on `site_config/radio_popup` (and on a random doc id) succeeds, so reads use a `site_config/{docId}` wildcard.
+  - **Admin write: not yet verified.** It is very likely covered, because admins already save `hero`, `banner`, `sections_visibility`, `social_links` and `live_players`.
+    Confirm in Phase 3: saving the new card must show "Cambios guardados ✓". A `permission-denied` error in the console means the rules need a change. **Never test writes anonymously** (it would touch production data).
 
 ## 4. Data model — `site_config/radio_popup`
 
@@ -58,15 +61,15 @@ see a promo for the new **weekly morning news summary** ("resumen semanal").
   activo:        true,                       // false → the popup never shows
   titulo:        "¡Crono Play está en vivo!",
   subtitulo:     "Escucha la radio mientras navegas.",
-  show_nombre:   "",                         // e.g. "Resumen Semanal" — empty → hide promo block
-  show_horario:  "",                         // free text, e.g. "Lunes · 7:00 AM"
+  show_nombre:   "Compacto Deportivo Venezolano", // empty → hide promo block
+  show_horario:  "",                         // OPTIONAL free text ("Lunes a viernes · 7:00 AM"); empty → show only the name
   updated_at:    serverTimestamp()
 }
 ```
 If the doc is missing, the popup is **on** with default texts (same `!== false` convention as `sections_visibility`).
 
-> ⚠️ **Pending from the Crono Play team:** the official name, day and time of the weekly summary, and the final popup copy.
-> Code ships with the defaults above; the team fills in the real values from the admin.
+> ✅ Official program name confirmed by the owner: **Compacto Deportivo Venezolano**. Its frequency (weekly or daily) isn't fixed, so no schedule ships now.
+> The title and subtitle copy are reasonable defaults the team can edit from the admin.
 
 ---
 
@@ -119,7 +122,7 @@ If the doc is missing, the popup is **on** with default texts (same `!== false` 
        <h2 id="radioPopupTitle"></h2>
        <p class="radio-popup__sub" id="radioPopupSub"></p>
        <div class="radio-popup__show" id="radioPopupShow" hidden>
-         <span>Nuevo</span> <b id="radioPopupShowName"></b> · <span id="radioPopupShowTime"></span>
+         <span>Nuevo</span> <b id="radioPopupShowName"></b><span id="radioPopupShowTime" hidden></span>
        </div>
        <button class="radio-popup__play" id="popupPlayBtn" aria-label="Escuchar ahora">
          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> <span>Escuchar ahora</span>
@@ -141,7 +144,7 @@ If the doc is missing, the popup is **on** with default texts (same `!== false` 
      `cronoplay.com/?radio=1`, and QA uses it too.
    - Skip if `config.sections?.radio === false`, `config.radio_popup?.activo === false`, `sessionStorage['crono-radio-popup']` is set
      (unless forced), or `CronoRadio.isPlaying()`.
-   - Fill texts from `config.radio_popup` with defaults. Show the promo block only if `show_nombre` is non-empty. Use `textContent` only (no innerHTML).
+   - Fill texts from `config.radio_popup` with defaults. Show the promo block only if `show_nombre` is non-empty (default `"Compacto Deportivo Venezolano"`). Show `#radioPopupShowTime` (prefixed with " · ") only if `show_horario` is non-empty. Use `textContent` only (no innerHTML).
    - Open: remove `hidden`, `document.body.style.overflow='hidden'` (same pattern as `openMenu`), focus `#popupPlayBtn`,
      set `sessionStorage['crono-radio-popup']='1'` (wrap storage calls in try/catch).
    - Then `const ok = await CronoRadio.tryAutoplay()`. If true: status "● Escuchando en vivo" and the button shows pause.
@@ -160,7 +163,7 @@ If the doc is missing, the popup is **on** with default texts (same `!== false` 
 
 1. In `#tab-secciones`, add a new `.card-section` titled **"Popup de Radio"** after the visibility card:
    - toggle `#popupActivo` ("Mostrar popup de radio al entrar al inicio")
-   - inputs `#popupTitulo`, `#popupSubtitulo`, `#popupShowNombre` (label "Programa destacado"), `#popupShowHorario` (label "Día y hora", placeholder "Lunes · 7:00 AM")
+   - inputs `#popupTitulo`, `#popupSubtitulo`, `#popupShowNombre` (label "Programa destacado"), `#popupShowHorario` (label "Día y hora (opcional)", placeholder "Ej: Lunes a viernes · 7:00 AM"). Pre-fill `#popupShowNombre` with "Compacto Deportivo Venezolano" when the doc is missing.
    - link "Vista previa" → `/?radio=1` with `target="_blank"`
    - button `#btnSavePopup` (same markup as `#btnSaveSecciones`: `.btn-spinner` + `.btn-label`)
 2. `loadAllSettings()`: add `getDoc(doc(db,'site_config','radio_popup'))` and populate the fields (`activo !== false` → checked).
@@ -177,7 +180,7 @@ Run `npm run dev` (or `preview_start` → `cronoplay-dev`) and check:
 - [ ] **Autoplay success path:** start Chrome with `--autoplay-policy=no-user-gesture-required` (separate profile) → audio starts with no click and the popup shows "Escuchando".
 - [ ] Close via X, Esc, backdrop and "Seguir navegando". Audio keeps playing; the sticky player remains. Focus returns.
 - [ ] Reload → no popup (session). `/?radio=1` → popup. `/?radio=0` → no popup.
-- [ ] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block.
+- [ ] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block. Empty `show_horario` → name only, no stray " · ".
 - [ ] Light and dark themes. Mobile 375px (bottom sheet, no horizontal scroll). Keyboard-only use. `prefers-reduced-motion`.
 - [ ] Phone on the same Wi‑Fi: `http://<PC-LAN-IP>:5510` (allow Node through the Windows firewall). On iPhone Safari autoplay is always blocked, so check the one-tap path.
 - [ ] Other pages (`en-vivo`, `noticias`, …) are unchanged; there are no new console errors besides the known YouTube 403.
@@ -201,6 +204,7 @@ Each new conversation should start with: *"Read `.claude/plans/radio-popup.md` a
 Each session updates the **Status** line at the top of this file and checks off the QA items it verified.
 
 ## 7. Out of scope / later ideas
-- On-demand episodes of the weekly summary (would need an audio URL per episode).
+- On-demand episodes of Compacto Deportivo Venezolano (would need an audio URL per episode).
+- A fixed schedule for the program once its frequency is decided (just fill `show_horario` from the admin).
 - Analytics (the site has none today). Could track `?utm_source=` from partner radios later.
 - Persisting playback across page navigation (each page reloads its own `<audio>`; would need an SPA or iframe shell).
