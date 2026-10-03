@@ -1,7 +1,7 @@
 # Plan — Radio Popup on Home ("La radio viene a ti")
 
 **Branch:** `feat/radio-popup` (created from `origin/main`, no upstream yet)
-**Status:** Phases 0–2 done (popup works locally; QA items for Phases 1–2 checked below). Phase 3 (admin) and the rest of Phase 4 pending.
+**Status:** Phases 0–2 done and reviewed by Opus 2026-10-03 (1 bug fixed). QA items for Phases 1–2 are checked below. Phase 3 (admin) and the rest of Phase 4 pending.
 **Merge policy:** open a PR `feat/radio-popup → main` only after local QA; the owner (Michel) approves before merge. Never push to `main` directly.
 
 ---
@@ -178,7 +178,7 @@ Run `npm run dev` (or `preview_start` → `cronoplay-dev`) and check:
 
 > Phase 1–2 QA run in the Claude preview browser (it allows autoplay, so the *blocked* path was simulated by stubbing `audio.play()` to reject with `NotAllowedError`). Still worth one real-Chrome incognito pass in Session C.
 
-- [~] New incognito window at `http://localhost:5510/`: popup appears in ~1s. Chrome blocks autoplay → big button pulses. One click → stream plays; the sticky player, header mini player and hero card all show the playing state. *(Popup appears, one-click path + all players sync verified; real Chrome-blocked case simulated, not seen.)*
+- [~] New incognito window at `http://localhost:5510/`: popup appears in ~1s. Chrome blocks autoplay → big button pulses. One click → stream plays; the sticky player, header mini player and hero card all show the playing state. *(Popup appears, one-click path + all players sync verified; real Chrome-blocked case simulated, not seen. **Opus review:** the blocked-autoplay simulation exposed an empty hint text, caused by a race with the `is-open` class set on the next frame. Fixed in `fix(radio)`, so the hint now shows "Toca el botón para escuchar en vivo". Still to do: one real check in normal Chrome (incognito).)*
 - [x] **Autoplay success path:** audio starts with no click and the popup shows "Escuchando" (the preview browser allows autoplay).
 - [x] Close via X, Esc, backdrop and "Seguir navegando". Audio keeps playing; the sticky player remains. *(Focus-return code is in place, but not meaningfully exercised: nothing had focus before open.)*
 - [x] Reload → no popup (session). `/?radio=1` → popup. `/?radio=0` → no popup.

@@ -2408,7 +2408,8 @@ async function maybeShowRadioPopup(config) {
   try { sessionStorage.setItem(POPUP_SESSION_KEY, '1'); } catch (e) {}
 
   const ok = await CronoRadio.tryAutoplay();
-  if (!ok && popup.classList.contains('is-open')) showIdle();
+  // `hidden`, not `.is-open`: that class lands on the next frame, and a blocked play() rejects before it
+  if (!ok && !popup.hidden) showIdle();
 }
 
 // Initialize
