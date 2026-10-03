@@ -1,7 +1,7 @@
 # Plan — Radio Popup on Home ("La radio viene a ti")
 
 **Branch:** `feat/radio-popup` (created from `origin/main`, no upstream yet)
-**Status:** Phases 0–2 done and reviewed by Opus 2026-10-03 (1 bug fixed). QA items for Phases 1–2 are checked below. Phase 3 (admin) and the rest of Phase 4 pending.
+**Status:** Phases 0–3 done, Phase 4 QA done except real-Chrome incognito and iPhone checks (to recheck on production). Opus reviewed Phases 1–2 on 2026-10-03 (1 bug fixed). PR to `main` opened and merged with the owner's explicit approval.
 **Merge policy:** open a PR `feat/radio-popup → main` only after local QA; the owner (Michel) approves before merge. Never push to `main` directly.
 
 ---
@@ -182,11 +182,11 @@ Run `npm run dev` (or `preview_start` → `cronoplay-dev`) and check:
 - [x] **Autoplay success path:** audio starts with no click and the popup shows "Escuchando" (the preview browser allows autoplay).
 - [x] Close via X, Esc, backdrop and "Seguir navegando". Audio keeps playing; the sticky player remains. *(Focus-return code is in place, but not meaningfully exercised: nothing had focus before open.)*
 - [x] Reload → no popup (session). `/?radio=1` → popup. `/?radio=0` → no popup.
-- [~] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block. Empty `show_horario` → name only, no stray " · ". *(Verified by injecting configs into the `crono_site_config` cache; real admin flow is Phase 3.)*
+- [~] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block. Empty `show_horario` → name only, no stray " · ". *(Verified by injecting configs into the `crono_site_config` cache. The real admin save → home round trip worked with the defaults; toggle-off and empty-name were not re-run through the admin to avoid flipping production.)*
 - [~] Light and dark themes. Mobile 375px (bottom sheet, no horizontal scroll). Keyboard-only use. `prefers-reduced-motion`. *(Light/dark, 375px sheet, no h-scroll and the Tab focus trap verified; reduced-motion is CSS-only, not exercised.)*
-- [ ] Phone on the same Wi‑Fi: `http://<PC-LAN-IP>:5510` (allow Node through the Windows firewall). On iPhone Safari autoplay is always blocked, so check the one-tap path.
+- [ ] Phone on the same Wi‑Fi: `http://<PC-LAN-IP>:5510` (allow Node through the Windows firewall). On iPhone Safari autoplay is always blocked, so check the one-tap path. *(Not run: owner approved merging without it; recheck on production after deploy. Admin toggle turns the popup off if needed.)*
 - [x] Other pages (`en-vivo`, `noticias`, …) are unchanged (diff touches only `index.html` + `js/firebase-loader.js`); no new console errors besides the known YouTube 403. The fresh-session cache now contains `radio_popup` (public Firestore read works; `{}` because the doc doesn't exist yet).
-- [ ] Firestore rules allow public read and admin write on `site_config/radio_popup` (Firebase console).
+- [x] Firestore rules allow public read and admin write on `site_config/radio_popup`. *(2026-10-03: saved from the admin card as Super Admin → "Cambios guardados ✓", no console errors; the home popup then read the saved doc from a fresh session.)*
 
 Then: `git fetch && git merge origin/main`, then commit (conventional prefixes: `feat:`, `chore:`), push `feat/radio-popup`, and open the PR to `main`
 with screenshots (desktop dark/light + mobile). **Wait for the owner's approval before merging.**
