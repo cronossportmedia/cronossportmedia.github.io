@@ -1,7 +1,7 @@
 # Plan — Radio Popup on Home ("La radio viene a ti")
 
 **Branch:** `feat/radio-popup` (created from `origin/main`, no upstream yet)
-**Status:** Phase 0 done. Phases 1–4 pending.
+**Status:** Phases 0–2 done (popup works locally; QA items for Phases 1–2 checked below). Phase 3 (admin) and the rest of Phase 4 pending.
 **Merge policy:** open a PR `feat/radio-popup → main` only after local QA; the owner (Michel) approves before merge. Never push to `main` directly.
 
 ---
@@ -176,14 +176,16 @@ updates the doc, and the home popup reflects it after clearing `sessionStorage`.
 ### Phase 4 — QA, then PR
 Run `npm run dev` (or `preview_start` → `cronoplay-dev`) and check:
 
-- [ ] New incognito window at `http://localhost:5510/`: popup appears in ~1s. Chrome blocks autoplay → big button pulses. One click → stream plays; the sticky player, header mini player and hero card all show the playing state.
-- [ ] **Autoplay success path:** start Chrome with `--autoplay-policy=no-user-gesture-required` (separate profile) → audio starts with no click and the popup shows "Escuchando".
-- [ ] Close via X, Esc, backdrop and "Seguir navegando". Audio keeps playing; the sticky player remains. Focus returns.
-- [ ] Reload → no popup (session). `/?radio=1` → popup. `/?radio=0` → no popup.
-- [ ] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block. Empty `show_horario` → name only, no stray " · ".
-- [ ] Light and dark themes. Mobile 375px (bottom sheet, no horizontal scroll). Keyboard-only use. `prefers-reduced-motion`.
+> Phase 1–2 QA run in the Claude preview browser (it allows autoplay, so the *blocked* path was simulated by stubbing `audio.play()` to reject with `NotAllowedError`). Still worth one real-Chrome incognito pass in Session C.
+
+- [~] New incognito window at `http://localhost:5510/`: popup appears in ~1s. Chrome blocks autoplay → big button pulses. One click → stream plays; the sticky player, header mini player and hero card all show the playing state. *(Popup appears, one-click path + all players sync verified; real Chrome-blocked case simulated, not seen.)*
+- [x] **Autoplay success path:** audio starts with no click and the popup shows "Escuchando" (the preview browser allows autoplay).
+- [x] Close via X, Esc, backdrop and "Seguir navegando". Audio keeps playing; the sticky player remains. *(Focus-return code is in place, but not meaningfully exercised: nothing had focus before open.)*
+- [x] Reload → no popup (session). `/?radio=1` → popup. `/?radio=0` → no popup.
+- [~] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block. Empty `show_horario` → name only, no stray " · ". *(Verified by injecting configs into the `crono_site_config` cache; real admin flow is Phase 3.)*
+- [~] Light and dark themes. Mobile 375px (bottom sheet, no horizontal scroll). Keyboard-only use. `prefers-reduced-motion`. *(Light/dark, 375px sheet, no h-scroll and the Tab focus trap verified; reduced-motion is CSS-only, not exercised.)*
 - [ ] Phone on the same Wi‑Fi: `http://<PC-LAN-IP>:5510` (allow Node through the Windows firewall). On iPhone Safari autoplay is always blocked, so check the one-tap path.
-- [ ] Other pages (`en-vivo`, `noticias`, …) are unchanged; there are no new console errors besides the known YouTube 403.
+- [x] Other pages (`en-vivo`, `noticias`, …) are unchanged (diff touches only `index.html` + `js/firebase-loader.js`); no new console errors besides the known YouTube 403. The fresh-session cache now contains `radio_popup` (public Firestore read works; `{}` because the doc doesn't exist yet).
 - [ ] Firestore rules allow public read and admin write on `site_config/radio_popup` (Firebase console).
 
 Then: `git fetch && git merge origin/main`, then commit (conventional prefixes: `feat:`, `chore:`), push `feat/radio-popup`, and open the PR to `main`

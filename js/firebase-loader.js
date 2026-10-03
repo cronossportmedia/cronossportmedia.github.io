@@ -105,7 +105,7 @@ export async function loadPublishedArticles(category = 'all', cursor = null, pag
 
 /**
  * Carga la configuración del sitio desde Firestore.
- * @returns {{ hero: object, banner: object, sections: object, social_links: object }}
+ * @returns {{ hero: object, banner: object, sections: object, social_links: object, radio_popup: object }}
  */
 export async function loadSiteConfig() {
   const CACHE_KEY = 'crono_site_config';
@@ -121,11 +121,12 @@ export async function loadSiteConfig() {
       }
     }
 
-    const [heroSnap, bannerSnap, sectionsSnap, socialSnap] = await Promise.all([
+    const [heroSnap, bannerSnap, sectionsSnap, socialSnap, radioPopupSnap] = await Promise.all([
       getDoc(doc(db, 'site_config', 'hero')),
       getDoc(doc(db, 'site_config', 'banner')),
       getDoc(doc(db, 'site_config', 'sections_visibility')),
       getDoc(doc(db, 'site_config', 'social_links')),
+      getDoc(doc(db, 'site_config', 'radio_popup')),
     ]);
 
     const bannerRaw = bannerSnap.exists() ? bannerSnap.data() : {};
@@ -149,6 +150,7 @@ export async function loadSiteConfig() {
       banner:       bannerRaw,
       sections:     sectionsSnap.exists() ? sectionsSnap.data() : {},
       social_links: socialSnap.exists()   ? socialSnap.data()   : {},
+      radio_popup:  radioPopupSnap.exists() ? radioPopupSnap.data() : {},
       _ts: Date.now(),
     };
 
@@ -156,7 +158,7 @@ export async function loadSiteConfig() {
     return config;
   } catch (err) {
     console.warn('[firebase-loader]', err);
-    return { hero: {}, banner: {}, sections: {}, social_links: {} };
+    return { hero: {}, banner: {}, sections: {}, social_links: {}, radio_popup: {} };
   }
 }
 

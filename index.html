@@ -1073,6 +1073,108 @@ ul { list-style: none; }
   .banner-carousel .carousel-cta-text { font-size: .95rem; }
 }
 
+/* ── RADIO POPUP ───────────────────────────────────────────── */
+.radio-popup {
+  position: fixed; inset: 0; z-index: 400;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+  opacity: 0; transition: opacity .25s ease;
+}
+.radio-popup[hidden] { display: none; }
+.radio-popup.is-open { opacity: 1; }
+.radio-popup__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,.6);
+  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
+}
+.radio-popup__card {
+  position: relative; width: 100%; max-width: 420px;
+  max-height: calc(100vh - 32px); overflow-y: auto; overflow-x: hidden;
+  background: var(--card); border: 1px solid var(--border-hi);
+  border-radius: var(--r-lg); padding: 32px 28px 24px;
+  text-align: center;
+  box-shadow: 0 32px 80px rgba(0,0,0,.5);
+  transform: translateY(16px); transition: transform .25s ease;
+}
+.radio-popup.is-open .radio-popup__card { transform: translateY(0); }
+[data-theme="light"] .radio-popup__card { background: #FFFFFF; box-shadow: 0 16px 48px rgba(0,0,0,.18); }
+.radio-popup__close {
+  position: absolute; top: 10px; right: 12px;
+  width: 36px; height: 36px; border-radius: 50%;
+  font-size: 26px; line-height: 1; color: var(--muted-hi);
+  display: flex; align-items: center; justify-content: center;
+  transition: color .15s, background .15s;
+}
+.radio-popup__close:hover { color: var(--text); background: var(--surface); }
+.radio-popup__logo { width: 56px; height: 56px; object-fit: contain; margin: 0 auto 10px; display: block; }
+.radio-popup__badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--red); color: #fff; border-radius: 6px;
+  padding: 4px 10px; font-family: var(--font-d);
+  font-size: 10px; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; margin-bottom: 14px;
+}
+.radio-popup__badge .dot-live { background: #fff; }
+.radio-popup__card h2 {
+  font-family: var(--font-d); font-size: 24px; font-weight: 800;
+  color: var(--text); margin-bottom: 6px; line-height: 1.2;
+}
+.radio-popup__sub { font-size: 14px; color: var(--muted-hi); margin-bottom: 18px; }
+.radio-popup__show {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 12px 14px; margin-bottom: 20px;
+  font-size: 14px; color: var(--muted-hi);
+}
+.radio-popup__show[hidden] { display: none; }
+.radio-popup__show > span:first-child {
+  display: inline-block; background: var(--orange); color: #fff;
+  border-radius: 4px; padding: 2px 7px; margin-right: 8px;
+  font-family: var(--font-d); font-size: 10px; font-weight: 800;
+  letter-spacing: .1em; text-transform: uppercase; vertical-align: 1px;
+}
+.radio-popup__show b { font-family: var(--font-d); color: var(--text); }
+.radio-popup__play {
+  position: relative; width: 100%;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  padding: 16px 24px; border-radius: 50px;
+  background: var(--orange); color: #fff;
+  font-family: var(--font-d); font-weight: 700; font-size: 17px;
+  box-shadow: 0 4px 20px rgba(245,97,26,.4);
+  transition: background .18s, transform .14s, box-shadow .18s;
+}
+.radio-popup__play::before {
+  content: ''; position: absolute; inset: -4px; border-radius: 50px;
+  border: 2px solid rgba(245,97,26,.5);
+  animation: btn-pulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+.radio-popup__play:hover { background: var(--orange-hi); transform: translateY(-2px); }
+.radio-popup__play:active { transform: scale(.98); }
+.radio-popup__play svg { width: 22px; height: 22px; fill: currentColor; flex-shrink: 0; }
+.radio-popup__play.is-playing { background: var(--orange-hi); }
+.radio-popup__play.is-playing::before { animation: none; opacity: 0; }
+.radio-popup__status { min-height: 20px; margin: 12px 0 4px; font-size: 13px; color: var(--muted-hi); }
+.radio-popup__secondary {
+  padding: 8px 16px; border-radius: 8px;
+  font-family: var(--font-d); font-weight: 600; font-size: 13px; color: var(--muted);
+  transition: color .15s;
+}
+.radio-popup__secondary:hover { color: var(--text); }
+.radio-popup button:focus-visible { outline: 2px solid var(--orange-hi); outline-offset: 3px; }
+@media (max-width: 640px) {
+  .radio-popup { align-items: flex-end; padding: 0; }
+  .radio-popup__card {
+    max-width: none; border-radius: var(--r-lg) var(--r-lg) 0 0;
+    padding: 28px 16px calc(20px + env(safe-area-inset-bottom));
+    transform: translateY(100%);
+  }
+  .radio-popup__card h2 { font-size: 21px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .radio-popup, .radio-popup__card { transition: none; }
+  .radio-popup__play::before { animation: none; }
+}
+
 </style>
 </head>
 <body>
@@ -1600,6 +1702,26 @@ ul { list-style: none; }
   </div>
 </div>
 
+<div class="radio-popup" id="radioPopup" hidden>
+  <div class="radio-popup__backdrop" data-popup-close></div>
+  <div class="radio-popup__card" role="dialog" aria-modal="true" aria-labelledby="radioPopupTitle">
+    <button class="radio-popup__close" id="popupClose" data-popup-close aria-label="Cerrar">&times;</button>
+    <img class="radio-popup__logo" src="assets/Crono_Logo_Sin_Fondo.png" alt="Crono Play">
+    <span class="radio-popup__badge"><span class="dot-live"></span> En vivo</span>
+    <h2 id="radioPopupTitle"></h2>
+    <p class="radio-popup__sub" id="radioPopupSub"></p>
+    <div class="radio-popup__show" id="radioPopupShow" hidden>
+      <span>Nuevo</span><b id="radioPopupShowName"></b><span id="radioPopupShowTime" hidden></span>
+    </div>
+    <button class="radio-popup__play" id="popupPlayBtn" aria-label="Escuchar ahora">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <span id="popupPlayLabel">Escuchar ahora</span>
+    </button>
+    <p class="radio-popup__status" id="popupStatus" aria-live="polite"></p>
+    <button class="radio-popup__secondary" data-popup-close>Seguir navegando</button>
+  </div>
+</div>
+
 <audio id="radioAudio" preload="none"><source src="https://stream.zeno.fm/twjyzsaviyivv" type="audio/mpeg"></audio>
 
 <script>
@@ -1655,11 +1777,11 @@ let loading = false;
 
 function updateAllPlayIcons(isPlaying) {
   const icon = isPlaying ? ICON_PAUSE : ICON_PLAY;
-  ['cardPlayBtn','heroPlayBtn','broadcastPlayBtn','headerPlayBtn','spPlayBtn'].forEach(id => {
+  ['cardPlayBtn','heroPlayBtn','broadcastPlayBtn','headerPlayBtn','spPlayBtn','popupPlayBtn'].forEach(id => {
     const svg = document.querySelector('#' + id + ' svg');
     if (svg) { svg.innerHTML = icon; svg.style.animation = ''; }
   });
-  ['cardPlayBtn','headerPlayer','spPlayBtn'].forEach(id => {
+  ['cardPlayBtn','headerPlayer','spPlayBtn','popupPlayBtn'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.toggle('is-playing', isPlaying);
   });
@@ -1667,7 +1789,7 @@ function updateAllPlayIcons(isPlaying) {
 
 function setLoadingState(isLoading) {
   loading = isLoading;
-  ['cardPlayBtn','heroPlayBtn','broadcastPlayBtn','headerPlayBtn','spPlayBtn'].forEach(id => {
+  ['cardPlayBtn','heroPlayBtn','broadcastPlayBtn','headerPlayBtn','spPlayBtn','popupPlayBtn'].forEach(id => {
     const svg = document.querySelector('#' + id + ' svg');
     if (!svg) return;
     if (isLoading) {
@@ -1677,21 +1799,34 @@ function setLoadingState(isLoading) {
   });
 }
 
+// silentFail: a rejected play() (e.g. autoplay blocked) is not shown as an error
+// and the UI goes back to the idle state. Resolves true when playback started.
+function startPlayback(silentFail) {
+  playing = true;
+  setLoadingState(true);
+  stickyPlayer.classList.remove('hidden');
+  document.getElementById('cardStatus').textContent = 'Conectando…';
+  document.getElementById('miniWave').style.display = 'none';
+  audio.load();
+  return audio.play().then(() => true, () => {
+    playing = false;
+    setLoadingState(false);
+    updateAllPlayIcons(false);
+    if (silentFail) {
+      stickyPlayer.classList.add('hidden');
+      document.getElementById('cardStatus').textContent = 'Presiona play para escuchar';
+    } else {
+      document.getElementById('cardStatus').textContent = 'Error al conectar';
+    }
+    return false;
+  });
+}
+
 function setPlaying(val) {
   if (loading) return;
   playing = val;
   if (playing) {
-    setLoadingState(true);
-    stickyPlayer.classList.remove('hidden');
-    document.getElementById('cardStatus').textContent = 'Conectando…';
-    document.getElementById('miniWave').style.display = 'none';
-    audio.load();
-    audio.play().catch(() => {
-      playing = false;
-      setLoadingState(false);
-      updateAllPlayIcons(false);
-      document.getElementById('cardStatus').textContent = 'Error al conectar';
-    });
+    startPlayback(false);
   } else {
     audio.pause();
     document.getElementById('cardStatus').textContent = 'Presiona play para escuchar';
@@ -1699,6 +1834,14 @@ function setPlaying(val) {
     updateAllPlayIcons(false);
   }
 }
+
+// Public API used by the radio popup (module script below)
+window.CronoRadio = {
+  isPlaying: () => playing,
+  play:  () => (playing || loading) ? Promise.resolve(playing) : startPlayback(false),
+  pause: () => { if (playing) setPlaying(false); },
+  tryAutoplay: () => (playing || loading) ? Promise.resolve(playing) : startPlayback(true),
+};
 
 audio.addEventListener('playing', () => {
   setLoadingState(false);
@@ -1882,9 +2025,8 @@ import { loadSiteConfig, loadPublishedArticles, getCloudinaryUrl, formatRelative
 function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 
 // Load site config (hero, banner, sections visibility)
-async function applySiteConfig() {
+async function applySiteConfig(config) {
   try {
-    const config = await loadSiteConfig();
 
     // Hero
     if (config.hero?.titulo) {
@@ -2168,8 +2310,111 @@ async function loadNews() {
   }
 }
 
+// ── RADIO POPUP ────────────────────────────────────────────────
+const POPUP_DEFAULTS = {
+  titulo: '¡Crono Play está en vivo!',
+  subtitulo: 'Escucha la radio mientras navegas.',
+  show_nombre: 'Compacto Deportivo Venezolano',
+};
+const POPUP_SESSION_KEY = 'crono-radio-popup';
+
+async function maybeShowRadioPopup(config) {
+  const popup = document.getElementById('radioPopup');
+  if (!popup || !window.CronoRadio) return;
+
+  const param = new URLSearchParams(location.search).get('radio');
+  if (param === '0') return;
+  const forced = param !== null;
+
+  const cfg = config.radio_popup || {};
+  if (config.sections?.radio === false || cfg.activo === false) return;
+  if (!forced) {
+    try { if (sessionStorage.getItem(POPUP_SESSION_KEY)) return; } catch (e) {}
+  }
+  if (CronoRadio.isPlaying()) return;
+
+  const $ = id => document.getElementById(id);
+  const playBtn = $('popupPlayBtn');
+  const playLabel = $('popupPlayLabel');
+  const statusEl = $('popupStatus');
+  const audioEl = $('radioAudio');
+  const text = (v, fallback) => (typeof v === 'string' && v.trim()) ? v.trim() : fallback;
+
+  $('radioPopupTitle').textContent = text(cfg.titulo, POPUP_DEFAULTS.titulo);
+  $('radioPopupSub').textContent = text(cfg.subtitulo, POPUP_DEFAULTS.subtitulo);
+
+  // Promo block: a missing doc uses the default name, an explicit empty name hides it
+  const showName = 'show_nombre' in cfg ? text(cfg.show_nombre, '') : POPUP_DEFAULTS.show_nombre;
+  const showTime = text(cfg.show_horario, '');
+  $('radioPopupShow').hidden = !showName;
+  $('radioPopupShowName').textContent = showName;
+  const timeEl = $('radioPopupShowTime');
+  timeEl.textContent = showTime ? ' · ' + showTime : '';
+  timeEl.hidden = !showTime;
+
+  // Status/label follow the audio element (also covers pauses made from other players)
+  const showIdle = () => {
+    playLabel.textContent = 'Escuchar ahora';
+    playBtn.setAttribute('aria-label', 'Escuchar ahora');
+    statusEl.textContent = 'Toca el botón para escuchar en vivo';
+  };
+  const showPlaying = () => {
+    playLabel.textContent = 'Pausar';
+    playBtn.setAttribute('aria-label', 'Pausar');
+    statusEl.textContent = '● Escuchando en vivo';
+  };
+  audioEl.addEventListener('playing', showPlaying);
+  audioEl.addEventListener('pause', showIdle);
+
+  const previousFocus = document.activeElement;
+  const focusables = () => [...popup.querySelectorAll('button')].filter(b => !b.disabled && b.offsetParent !== null);
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') { e.preventDefault(); closePopup(); return; }
+    if (e.key !== 'Tab') return;
+    const items = focusables();
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (!popup.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function closePopup() {
+    document.removeEventListener('keydown', onKeydown);
+    audioEl.removeEventListener('playing', showPlaying);
+    audioEl.removeEventListener('pause', showIdle);
+    popup.classList.remove('is-open');
+    document.body.style.overflow = '';
+    // Wait for the exit transition; audio is left untouched on purpose
+    setTimeout(() => { popup.hidden = true; }, 260);
+    if (previousFocus && previousFocus.focus) previousFocus.focus();
+  }
+
+  popup.querySelectorAll('[data-popup-close]').forEach(el => el.addEventListener('click', closePopup));
+  playBtn.addEventListener('click', async () => {
+    if (CronoRadio.isPlaying()) { CronoRadio.pause(); return; }
+    statusEl.textContent = 'Conectando…';
+    const ok = await CronoRadio.play();
+    if (!ok) statusEl.textContent = 'No se pudo conectar. Intenta de nuevo.';
+  });
+
+  // Open
+  document.addEventListener('keydown', onKeydown);
+  popup.hidden = false;
+  document.body.style.overflow = 'hidden';
+  requestAnimationFrame(() => popup.classList.add('is-open'));
+  playBtn.focus();
+  try { sessionStorage.setItem(POPUP_SESSION_KEY, '1'); } catch (e) {}
+
+  const ok = await CronoRadio.tryAutoplay();
+  if (!ok && popup.classList.contains('is-open')) showIdle();
+}
+
 // Initialize
-Promise.all([applySiteConfig(), loadNews()]).catch(console.warn);
+const configPromise = loadSiteConfig();
+configPromise.then(maybeShowRadioPopup).catch(console.warn);
+Promise.all([configPromise.then(applySiteConfig), loadNews()]).catch(console.warn);
 </script>
 
 <!-- YouTube Live Detection -->
