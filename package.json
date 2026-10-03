@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "node scripts/dev-server.js",
     "sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
