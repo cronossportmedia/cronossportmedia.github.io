@@ -280,6 +280,8 @@
     }
     .embed-video { max-width: 100%; margin: 1.5rem auto; }
     .embed-video video { width: 100%; border-radius: var(--r); background: #000; max-height: 70vh; display: block; }
+    .embed-audio { max-width: 540px; margin: 1.5rem auto; border-radius: 6px; overflow: hidden; background: #000; }
+    .embed-audio iframe { display: block; width: 100%; height: 30px; border: 0; }
 
     .article-audio {
       margin: 0 0 2.5rem;
@@ -346,10 +348,9 @@
     const params    = new URLSearchParams(window.location.search);
     const articleId = params.get('id');
 
-    if (!articleId) { renderError('No se especificó un artículo.'); return; }
-
     onAuthStateChanged(auth, async (user) => {
       if (!user) { window.location.replace('index.html'); return; }
+      if (!articleId) { renderError('No se especificó un artículo.'); return; }
 
       try {
         
@@ -444,7 +445,8 @@
         const src = iframe.getAttribute('src') || '';
         const isYouTube = src.startsWith('https://www.youtube.com/embed/');
         const isTwitter = src.startsWith('https://platform.twitter.com/embed/');
-        if (!isYouTube && !isTwitter) iframe.remove();
+        const isArchive = src.startsWith('https://archive.org/embed/');
+        if (!isYouTube && !isTwitter && !isArchive) iframe.remove();
       });
 
       
@@ -523,7 +525,7 @@
           bq.setAttribute('data-instgrm-permalink', url);
           bq.setAttribute('data-instgrm-version', '14');
           bq.style.cssText = 'max-width:540px;width:100%;margin:1rem auto;min-width:326px;';
-          bq.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">Ver en Instagram</a>`;
+          bq.innerHTML = `<a href="${esc(safeLinkUrl(url))}" target="_blank" rel="noopener noreferrer">Ver en Instagram</a>`;
           return bq;
         },
         onLoad() { if (window.instgrm) window.instgrm.Embeds.process(); }
@@ -549,7 +551,7 @@
           wrapper.appendChild(iframe);
           const fallback = document.createElement('p');
           fallback.style.cssText = 'text-align:center; margin-top:0.5rem; font-size:0.8rem;';
-          fallback.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:var(--color-accent, #F5611A);">Ver post en X</a>`;
+          fallback.innerHTML = `<a href="${esc(safeLinkUrl(url))}" target="_blank" rel="noopener noreferrer" style="color:var(--color-accent, #F5611A);">Ver post en X</a>`;
           wrapper.appendChild(fallback);
           return wrapper;
         },
@@ -585,7 +587,7 @@
           bq.setAttribute('cite', url);
           if (videoId) bq.setAttribute('data-video-id', videoId);
           bq.style.cssText = 'max-width:605px;min-width:325px;margin:1rem auto;';
-          bq.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">Ver en TikTok</a>`;
+          bq.innerHTML = `<a href="${esc(safeLinkUrl(url))}" target="_blank" rel="noopener noreferrer">Ver en TikTok</a>`;
           return bq;
         },
         onLoad() {}
@@ -610,14 +612,37 @@
           }
           video.appendChild(source);
           const fallback = document.createElement('p');
-          fallback.innerHTML = `Tu navegador no soporta este video. <a href="${url}" target="_blank" rel="noopener noreferrer">Descárgalo aquí</a>.`;
+          fallback.innerHTML = `Tu navegador no soporta este video. <a href="${esc(safeLinkUrl(url))}" target="_blank" rel="noopener noreferrer">Descárgalo aquí</a>.`;
           video.appendChild(fallback);
           wrapper.appendChild(video);
           return wrapper;
         },
         onLoad() {}
+      },
+      archive: {
+        scriptUrl: null,
+        createEmbed(url) {
+          const m = (url || '').match(/^https:\/\/archive\.org\/embed\/([A-Za-z0-9._-]{1,100})$/);
+          if (!m) return null;
+          const wrapper = document.createElement('div');
+          wrapper.className = 'embed-audio';
+          const iframe = document.createElement('iframe');
+          iframe.src = `https://archive.org/embed/${m[1]}`;
+          iframe.title = 'Reproductor de audio';
+          iframe.setAttribute('loading', 'lazy');
+          iframe.setAttribute('frameborder', '0');
+          iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+          wrapper.appendChild(iframe);
+          return wrapper;
+        },
+        onLoad() {}
       }
     };
+
+    // Only http(s) links from embed placeholders are turned into <a href>
+    function safeLinkUrl(url) {
+      return /^https?:\/\//i.test(url || '') ? url : '#';
+    }
 
     function extractYouTubeId(url) {
       for (const p of [/youtube\.com\/watch\?v=([\w-]+)/, /youtu\.be\/([\w-]+)/, /youtube\.com\/shorts\/([\w-]+)/, /youtube\.com\/embed\/([\w-]+)/]) {
@@ -652,7 +677,7 @@
         const config = EMBED_PROVIDERS[provider];
 
         if (!config) {
-          placeholder.innerHTML = `<p style="text-align:center;padding:1rem;"><a href="${url}" target="_blank" rel="noopener noreferrer">Ver contenido en ${provider}</a></p>`;
+          placeholder.innerHTML = `<p style="text-align:center;padding:1rem;"><a href="${esc(safeLinkUrl(url))}" target="_blank" rel="noopener noreferrer">Ver contenido en ${esc(provider)}</a></p>`;
           return;
         }
 
