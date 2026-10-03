@@ -412,6 +412,8 @@ ul { list-style: none; }
 .embed-tweet iframe { width: 100%; min-height: 250px; border: none; border-radius: 12px; }
 .embed-video { max-width: 100%; margin: 1.5rem auto; }
 .embed-video video { width: 100%; border-radius: var(--r); background: #000; max-height: 70vh; display: block; }
+.embed-audio { max-width: 540px; margin: 1.5rem auto; border-radius: 6px; overflow: hidden; background: #000; }
+.embed-audio iframe { display: block; width: 100%; height: 30px; border: 0; }
 
 .article-audio {
   margin: 0 0 2.5rem;
@@ -1005,6 +1007,12 @@ function renderArticle(a) {
       ${tagsHtml}
     </div>`;
 
+  // Only iframes from known players survive (same allowlist as admin/preview.html)
+  document.querySelectorAll('#articleBody iframe').forEach(iframe => {
+    const src = iframe.getAttribute('src') || '';
+    if (!ALLOWED_IFRAME_PREFIXES.some(prefix => src.startsWith(prefix))) iframe.remove();
+  });
+
   // Process embeds after DOM insertion
   hydrateEmbeds(document.getElementById('articleBody'));
 }
@@ -1083,6 +1091,22 @@ function getCatClass(c) {
 }
 
 // ── EMBED HANDLERS ──────────────────────────────────────────
+
+const ALLOWED_IFRAME_PREFIXES = [
+  'https://www.youtube.com/embed/',
+  'https://platform.twitter.com/embed/',
+  'https://archive.org/embed/'
+];
+
+// Only http(s) links from embed placeholders are turned into <a href>
+function safeLinkUrl(url) {
+  return /^https?:\/\//i.test(url || '') ? url : '';
+}
+
+function extractArchiveId(url) {
+  const m = (url || '').match(/^https:\/\/archive\.org\/embed\/([A-Za-z0-9._-]{1,100})$/);
+  return m ? m[1] : null;
+}
 
 const _loadedScripts = new Set();
 function loadScript(url) {
@@ -1172,10 +1196,26 @@ async function hydrateEmbeds(container) {
       iframe.setAttribute('allowtransparency', 'true');
       iframe.setAttribute('allowfullscreen', 'true');
       wrapper.appendChild(iframe);
-      const link = document.createElement('p');
-      link.style.cssText = 'text-align:center;margin-top:.5rem;font-size:.8rem;';
-      link.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Ver post en X</a>`;
-      wrapper.appendChild(link);
+      const href = safeLinkUrl(url);
+      if (href) {
+        const link = document.createElement('p');
+        link.style.cssText = 'text-align:center;margin-top:.5rem;font-size:.8rem;';
+        link.innerHTML = `<a href="${esc(href)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Ver post en X</a>`;
+        wrapper.appendChild(link);
+      }
+      placeholder.replaceWith(wrapper);
+    } else if (provider === 'archive') {
+      const id = extractArchiveId(url);
+      if (!id) { placeholder.remove(); return; }
+      const wrapper = document.createElement('div');
+      wrapper.className = 'embed-audio';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://archive.org/embed/${id}`;
+      iframe.title = 'Reproductor de audio';
+      iframe.setAttribute('loading', 'lazy');
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+      wrapper.appendChild(iframe);
       placeholder.replaceWith(wrapper);
     } else if (provider === 'video') {
       const wrapper = document.createElement('div');
@@ -1191,7 +1231,9 @@ async function hydrateEmbeds(container) {
       wrapper.appendChild(video);
       placeholder.replaceWith(wrapper);
     } else {
-      placeholder.innerHTML = `<p style="text-align:center;padding:1rem;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Ver contenido en ${esc(provider)}</a></p>`;
+      const href = safeLinkUrl(url);
+      if (!href) { placeholder.remove(); return; }
+      placeholder.innerHTML = `<p style="text-align:center;padding:1rem;"><a href="${esc(href)}" target="_blank" rel="noopener noreferrer" style="color:var(--blue)">Ver contenido en ${esc(provider)}</a></p>`;
     }
   });
 
