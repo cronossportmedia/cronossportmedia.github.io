@@ -74,8 +74,10 @@ If the doc is missing, the popup is **on** with default texts (same `!== false` 
 
 ### Phase 0 — Setup ✅ (done)
 - Branch `feat/radio-popup`.
-- `scripts/dev-server.js`: a zero-dependency Node static server (Python isn't installed). `npm run dev` → http://localhost:8080.
+- `scripts/dev-server.js`: a zero-dependency Node static server (Python isn't installed). `npm run dev` → http://localhost:5510.
   It serves extensionless URLs as `.html`, like GitHub Pages does.
+  **Port 5510 on purpose:** the owner runs another local Node app (Finanzas Personales). Never use 3000/8080 or kill
+  other Node processes. If 5510 is busy, the server exits with a message; use `PORT=5511 npm run dev`.
 - `.claude/launch.json`: config `cronoplay-dev`, so Claude can use `preview_start` with name `cronoplay-dev`.
 - Verified: home loads, Firestore config and news load from localhost. The console shows one **expected 403** from the
   YouTube Data API (`js/youtube-live.js`): the key is referrer-restricted to the production domain. Ignore it.
@@ -165,19 +167,19 @@ If the doc is missing, the popup is **on** with default texts (same `!== false` 
 3. Save handler: copy the `btnSaveSecciones` pattern → `setDoc(doc(db,'site_config','radio_popup'), {activo, titulo, subtitulo, show_nombre, show_horario, updated_at: serverTimestamp()}, {merge:true})`.
 4. Tell the team in the UI hint that visitors may take up to 5 minutes to see changes (sessionStorage TTL).
 
-**Done when:** saving from the admin locally (http://localhost:8080/admin/, log in with a real admin account; Firebase Auth allows `localhost` by default)
+**Done when:** saving from the admin locally (http://localhost:5510/admin/, log in with a real admin account; Firebase Auth allows `localhost` by default)
 updates the doc, and the home popup reflects it after clearing `sessionStorage`.
 
 ### Phase 4 — QA, then PR
 Run `npm run dev` (or `preview_start` → `cronoplay-dev`) and check:
 
-- [ ] New incognito window at `http://localhost:8080/`: popup appears in ~1s. Chrome blocks autoplay → big button pulses. One click → stream plays; the sticky player, header mini player and hero card all show the playing state.
+- [ ] New incognito window at `http://localhost:5510/`: popup appears in ~1s. Chrome blocks autoplay → big button pulses. One click → stream plays; the sticky player, header mini player and hero card all show the playing state.
 - [ ] **Autoplay success path:** start Chrome with `--autoplay-policy=no-user-gesture-required` (separate profile) → audio starts with no click and the popup shows "Escuchando".
 - [ ] Close via X, Esc, backdrop and "Seguir navegando". Audio keeps playing; the sticky player remains. Focus returns.
 - [ ] Reload → no popup (session). `/?radio=1` → popup. `/?radio=0` → no popup.
 - [ ] Admin toggle off → no popup (clear `sessionStorage` first). Empty `show_nombre` → no promo block.
 - [ ] Light and dark themes. Mobile 375px (bottom sheet, no horizontal scroll). Keyboard-only use. `prefers-reduced-motion`.
-- [ ] Phone on the same Wi‑Fi: `http://<PC-LAN-IP>:8080` (allow Node through the Windows firewall). On iPhone Safari autoplay is always blocked, so check the one-tap path.
+- [ ] Phone on the same Wi‑Fi: `http://<PC-LAN-IP>:5510` (allow Node through the Windows firewall). On iPhone Safari autoplay is always blocked, so check the one-tap path.
 - [ ] Other pages (`en-vivo`, `noticias`, …) are unchanged; there are no new console errors besides the known YouTube 403.
 - [ ] Firestore rules allow public read and admin write on `site_config/radio_popup` (Firebase console).
 

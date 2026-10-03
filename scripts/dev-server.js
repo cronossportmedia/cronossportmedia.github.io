@@ -1,7 +1,7 @@
 /**
  * dev-server.js
  * Servidor estático local para probar el sitio antes de hacer push.
- * Sin dependencias. Uso: npm run dev  →  http://localhost:8080
+ * Sin dependencias. Uso: npm run dev  →  http://localhost:5510
  */
 
 import { createServer } from 'node:http';
@@ -10,7 +10,7 @@ import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const PORT = Number(process.env.PORT) || 8080;
+const PORT = Number(process.env.PORT) || 5510;
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -49,6 +49,13 @@ createServer(async (req, res) => {
   } catch {
     res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }).end('404 — no encontrado');
   }
+}).on('error', (err) => {
+  // No tomar otro puerto en silencio: puede haber otra app local (p. ej. Finanzas Personales)
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Puerto ${PORT} ocupado. Usa otro: PORT=5511 npm run dev`);
+    process.exit(1);
+  }
+  throw err;
 }).listen(PORT, () => {
   console.log(`Crono Play dev server → http://localhost:${PORT}`);
 });
