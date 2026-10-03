@@ -1211,6 +1211,65 @@
             </button>
           </div>
         </div>
+
+        <div class="card-section">
+          <div class="card-section-title">Popup de Radio</div>
+
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <div class="toggle-label">Mostrar popup de radio al entrar al inicio</div>
+              <div class="toggle-desc">Se muestra una vez por sesión y intenta reproducir la radio en vivo</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="popupActivo" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="field-group" style="margin-top:1.25rem;">
+            <label class="field-label" for="popupTitulo">
+              Título
+              <span class="field-hint">máx 60 caracteres</span>
+            </label>
+            <input class="field-input" type="text" id="popupTitulo" maxlength="60" placeholder="¡Crono Play está en vivo!">
+          </div>
+
+          <div class="field-group">
+            <label class="field-label" for="popupSubtitulo">
+              Subtítulo
+              <span class="field-hint">máx 120 caracteres</span>
+            </label>
+            <input class="field-input" type="text" id="popupSubtitulo" maxlength="120" placeholder="Escucha la radio mientras navegas.">
+          </div>
+
+          <div class="form-row">
+            <div class="field-group">
+              <label class="field-label" for="popupShowNombre">
+                Programa destacado
+                <span class="field-hint">vacío = sin bloque de programa</span>
+              </label>
+              <input class="field-input" type="text" id="popupShowNombre" maxlength="80" placeholder="Compacto Deportivo Venezolano">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="popupShowHorario">
+                Día y hora (opcional)
+              </label>
+              <input class="field-input" type="text" id="popupShowHorario" maxlength="60" placeholder="Ej: Lunes a viernes · 7:00 AM">
+            </div>
+          </div>
+
+          <div class="toggle-desc" style="margin-bottom:0.25rem;">
+            Los visitantes pueden tardar hasta 5 minutos en ver los cambios.
+            <a href="/?radio=1" target="_blank" rel="noopener" style="color:var(--color-accent); font-weight:600;">Vista previa ↗</a>
+          </div>
+
+          <div class="section-actions">
+            <button class="btn btn-primary" id="btnSavePopup">
+              <div class="btn-spinner"></div>
+              <span class="btn-label">Guardar popup</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="tab-panel" id="tab-reproductores">
@@ -1392,11 +1451,12 @@
   });
 
   async function loadAllSettings() {
-    const [heroSnap, bannerSnap, redesSnap, secSnap] = await Promise.all([
+    const [heroSnap, bannerSnap, redesSnap, secSnap, popupSnap] = await Promise.all([
       getDoc(doc(db, 'site_config', 'hero')),
       getDoc(doc(db, 'site_config', 'banner')),
       getDoc(doc(db, 'site_config', 'social_links')),
       getDoc(doc(db, 'site_config', 'sections_visibility')),
+      getDoc(doc(db, 'site_config', 'radio_popup')),
     ]);
 
     if (heroSnap.exists()) {
@@ -1430,6 +1490,14 @@
       document.getElementById('secStats').checked   = s.stats   !== false;
       document.getElementById('secBanner').checked  = s.banner  !== false;
     }
+
+    // Popup de radio: sin documento el popup está activo con el programa por defecto
+    const p = popupSnap.exists() ? popupSnap.data() : null;
+    document.getElementById('popupActivo').checked = !p || p.activo !== false;
+    setVal('popupTitulo',      p?.titulo      || '');
+    setVal('popupSubtitulo',   p?.subtitulo   || '');
+    setVal('popupShowNombre',  p ? (p.show_nombre || '') : 'Compacto Deportivo Venezolano');
+    setVal('popupShowHorario', p?.show_horario || '');
   }
 
   function setVal(id, val) {
@@ -1490,6 +1558,27 @@
         banner:     document.getElementById('secBanner').checked,
         sponsors:   false,
         updated_at: serverTimestamp(),
+      }, { merge: true });
+      showToast('Cambios guardados ✓', 'success');
+    } catch (e) {
+      showToast('Error al guardar. Intenta de nuevo.', 'error');
+      console.error(e);
+    } finally {
+      setBtnLoading(btn, false);
+    }
+  });
+
+  document.getElementById('btnSavePopup').addEventListener('click', async () => {
+    const btn = document.getElementById('btnSavePopup');
+    setBtnLoading(btn, true);
+    try {
+      await setDoc(doc(db, 'site_config', 'radio_popup'), {
+        activo:       document.getElementById('popupActivo').checked,
+        titulo:       document.getElementById('popupTitulo').value.trim(),
+        subtitulo:    document.getElementById('popupSubtitulo').value.trim(),
+        show_nombre:  document.getElementById('popupShowNombre').value.trim(),
+        show_horario: document.getElementById('popupShowHorario').value.trim(),
+        updated_at:   serverTimestamp(),
       }, { merge: true });
       showToast('Cambios guardados ✓', 'success');
     } catch (e) {
